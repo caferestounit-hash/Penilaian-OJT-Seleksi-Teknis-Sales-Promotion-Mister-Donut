@@ -535,7 +535,13 @@
             if(window.userRole === 'ETD') {
                 cardHist.style.display = 'block'; document.getElementById('history-card-title').innerText = "Antrean Approve ETD"; document.getElementById('history-card-desc').innerText = "Approve form dari mentor sebelum rekapan MO."; document.getElementById('history-view-title').innerText = "Antrean Approve ETD";
                 document.getElementById('etd-notification-bell').classList.remove('hidden');
-                try { if(window.etdUnsubscribe) window.etdUnsubscribe(); window.etdUnsubscribe = onSnapshot(collection(db, 'artifacts', appId, 'public', 'forms'), (snap) => { let pa=0, pu=0; snap.forEach(d=>{ let dt=d.data(); if(dt.isDeleted)return; if(!dt.isApprovedByETD)pa++; if(dt.hasUnreadUpdate)pu++; }); window.etdNotifData = {pa, pu}; if(pa>0||pu>0) document.getElementById('etd-notification-dot').classList.remove('hidden'); else document.getElementById('etd-notification-dot').classList.add('hidden'); }); } catch(e){}
+                try { 
+                    if(window.etdUnsubscribe) window.etdUnsubscribe(); 
+                    // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
+                    window.etdUnsubscribe = onSnapshot(collection(db, 'artifacts', appId, 'forms'), (snap) => { 
+                        let pa=0, pu=0; snap.forEach(d=>{ let dt=d.data(); if(dt.isDeleted)return; if(!dt.isApprovedByETD)pa++; if(dt.hasUnreadUpdate)pu++; }); window.etdNotifData = {pa, pu}; if(pa>0||pu>0) document.getElementById('etd-notification-dot').classList.remove('hidden'); else document.getElementById('etd-notification-dot').classList.add('hidden'); 
+                    }); 
+                } catch(e){ console.error(e); }
             } else if(window.userRole === 'USER') {
                 cardHist.style.display = 'block'; document.getElementById('history-card-title').innerText = "Riwayat Terkirim"; document.getElementById('history-card-desc').innerText = "Daftar form yang disubmit ke sistem."; document.getElementById('history-view-title').innerText = "Riwayat Penilaian";
                 document.getElementById('etd-notification-bell').classList.add('hidden'); if(window.etdUnsubscribe){window.etdUnsubscribe(); window.etdUnsubscribe=null;}
@@ -734,19 +740,19 @@
 
         window.handleSaveDraft = async function() {
             if(!currentUser) return; window.showModal('loading', 'Menyimpan...', '');
-            try { await setDoc(doc(db, 'artifacts', appId, 'public', 'drafts', window.currentDraftId), { updatedAt: Date.now(), globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target }); window.showModal('success', 'Tersimpan', 'Draft berhasil disimpan.'); } catch(e) { window.showModal('error', 'Gagal', 'Terjadi kesalahan.'); }
+            try { 
+                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
+                await setDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId), { updatedAt: Date.now(), globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target }); 
+                window.showModal('success', 'Tersimpan', 'Draft berhasil disimpan.'); 
+            } catch(e) { console.error(e); window.showModal('error', 'Gagal', 'Terjadi kesalahan.'); }
         }
 
         window.handleSubmitAll = async function() {
-            // Validasi Input Mandatori Seluruh Form (kecuali checklist)
             for(let p=0; p<window.globalStore.participantCount; p++) {
-                // Validasi Non Teknis
                 for(let i=0; i<nonTeknisItems.length; i++) if(!window.data_non_teknis[p]?.scores?.[i]) return window.showModal('error', 'Belum Lengkap', `Form Non Teknis: Nilai poin ke-${i+1} Peserta ${p+1} belum diisi.`);
                 if(!window.data_non_teknis[p]?.comment || !window.data_non_teknis[p]?.comment.trim()) return window.showModal('error', 'Belum Lengkap', `Form Non Teknis: Komentar Peserta ${p+1} belum diisi.`);
-                // Validasi Teknis
                 for(let i=0; i<teknisItems.length; i++) if(!window.data_teknis[p]?.scores?.[i]) return window.showModal('error', 'Belum Lengkap', `Form Teknis: Nilai poin ke-${i+1} Peserta ${p+1} belum diisi.`);
                 if(!window.data_teknis[p]?.comment || !window.data_teknis[p]?.comment.trim()) return window.showModal('error', 'Belum Lengkap', `Form Teknis: Komentar Peserta ${p+1} belum diisi.`);
-                // Validasi Sisa dan Target
                 for(let d=0; d<2; d++) {
                     let s = window.data_sisa[p]?.[d];
                     if(!s || !s.date || s.datang==='' || s.terjual==='' || s.sisa==='') return window.showModal('error', 'Belum Lengkap', `Form Pengurangan Barang Sisa: Hari ke-${d+1} Peserta ${p+1} belum lengkap.`);
@@ -759,16 +765,20 @@
             const btn = document.getElementById('btnSubmitAll'); btn.disabled = true; btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Mengirim...`;
             try {
                 const p = { createdAt: Date.now(), mentorUid: currentUser.uid, batch: window.globalStore.batch, globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target, userApprovals: window.userApprovals, moApprovals: window.moApprovals, isApprovedByETD: false, isDeleted: false, hasUnreadUpdate: true };
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'forms', window.currentDraftId), p);
-                try{ await deleteDoc(doc(db, 'artifacts', appId, 'public', 'drafts', window.currentDraftId)); }catch(e){}
+                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
+                await setDoc(doc(db, 'artifacts', appId, 'forms', window.currentDraftId), p);
+                try{ await deleteDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId)); }catch(e){}
                 window.showModal('success', 'Terkirim', 'Form berhasil disubmit.'); setTimeout(()=>window.showView('dashboard'), 2000);
-            } catch(e) { window.showModal('error', 'Gagal', 'Kesalahan saat mengirim.'); } finally { btn.disabled = false; btn.innerHTML = `<i data-lucide="send" class="w-5 h-5"></i> Kirim & Selesai`; }
+            } catch(e) { console.error(e); window.showModal('error', 'Gagal', 'Kesalahan saat mengirim.'); } finally { btn.disabled = false; btn.innerHTML = `<i data-lucide="send" class="w-5 h-5"></i> Kirim & Selesai`; }
         }
 
         window.loadList = async function(col) {
             const c = document.getElementById(`${col}-list-container`); c.innerHTML = `<div class="col-span-full p-8 text-center text-gray-500"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Memuat...</div>`;
             try {
-                const snap = await getDocs(collection(db, 'artifacts', appId, 'public', col==='drafts'?'drafts':'forms')); let data = [];
+                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
+                const targetCollection = col === 'drafts' ? 'drafts' : 'forms';
+                const snap = await getDocs(collection(db, 'artifacts', appId, targetCollection)); 
+                let data = [];
                 snap.forEach(d => { let obj = d.data(); if(col==='trash' && obj.isDeleted) data.push({id: d.id, ...obj}); else if(col==='history' && !obj.isDeleted) { if(window.userRole==='ETD' && !obj.isApprovedByETD) data.push({id: d.id, ...obj}); else if(window.userRole!=='ETD') data.push({id: d.id, ...obj}); } else if(col==='drafts') data.push({id: d.id, ...obj}); });
                 data.sort((a,b) => (b.createdAt||b.updatedAt) - (a.createdAt||a.updatedAt));
                 if(data.length === 0) return c.innerHTML = `<div class="col-span-full p-8 text-center border-dashed border border-gray-300 rounded-xl">Kosong.</div>`;
@@ -778,7 +788,6 @@
                     if(col === 'trash') actions = `<button onclick="window.restoreDoc('${d.id}')" class="px-3 py-2 bg-green-100 text-green-700 rounded-lg text-xs font-bold shadow-sm hover:bg-green-200 border border-green-200">Restore</button>`;
                     let stBadge = ''; if(col==='history'){ stBadge = d.isApprovedByETD ? '<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-bold">Approved</span>' : '<span class="bg-amber-100 text-amber-700 px-2 py-0.5 rounded text-[10px] font-bold">Pending ETD</span>'; }
                     
-                    // PENAMBAHAN optional chaining (?.) untuk menghindari error jika data lama tidak punya struktur ini
                     const flagship = d?.globalStore?.flagship || 'Toko';
                     const batch = d?.globalStore?.batch || '-';
                     const date = d?.globalStore?.date || '-';
@@ -795,24 +804,27 @@
                     </div>`;
                 }).join(''); if(window.lucide) window.lucide.createIcons();
             } catch(e) { 
-                console.error("Firebase Load Error:", e); // LOGGING UNTUK DEBUGGING
+                console.error("Firebase Load Error:", e); 
                 c.innerHTML = `<div class="text-red-500 font-bold">Gagal memuat. Periksa koneksi atau console (F12).<br><span class="text-xs font-normal text-gray-400">${e.message}</span></div>`; 
             }
         }
         
-        window.deleteDocForm = async function(id) { if(!confirm("Hapus form ini? Data masuk ke Trash.")) return; window.showModal('loading', 'Menghapus...', ''); try{ await updateDoc(doc(db, 'artifacts', appId, 'public', 'forms', id), {isDeleted: true}); window.closeModal(); window.loadList('history'); }catch(e){} }
-        window.restoreDoc = async function(id) { if(!confirm("Restore form ini?")) return; window.showModal('loading', 'Memulihkan...', ''); try{ await updateDoc(doc(db, 'artifacts', appId, 'public', 'forms', id), {isDeleted: false}); window.closeModal(); window.loadList('trash'); }catch(e){} }
+        // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
+        window.deleteDocForm = async function(id) { if(!confirm("Hapus form ini? Data masuk ke Trash.")) return; window.showModal('loading', 'Menghapus...', ''); try{ await updateDoc(doc(db, 'artifacts', appId, 'forms', id), {isDeleted: true}); window.closeModal(); window.loadList('history'); }catch(e){console.error(e);} }
+        window.restoreDoc = async function(id) { if(!confirm("Restore form ini?")) return; window.showModal('loading', 'Memulihkan...', ''); try{ await updateDoc(doc(db, 'artifacts', appId, 'forms', id), {isDeleted: false}); window.closeModal(); window.loadList('trash'); }catch(e){console.error(e);} }
 
         window.openDoc = async function(col, id) {
             window.showModal('loading', 'Membuka...', '');
             try {
-                const snap = await getDoc(doc(db, 'artifacts', appId, 'public', col==='drafts'?'drafts':'forms', id));
+                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
+                const targetCollection = col === 'drafts' ? 'drafts' : 'forms';
+                const snap = await getDoc(doc(db, 'artifacts', appId, targetCollection, id));
                 if(snap.exists()) {
                     const d = snap.data(); window.currentDraftId = id; window.viewMode = col==='drafts'?'DRAFT':'READONLY';
                     window.globalStore = d.globalStore; window.data_checklist = d.data_checklist||[]; window.data_non_teknis = d.data_non_teknis||[]; window.data_teknis = d.data_teknis||[]; window.data_sisa = d.data_sisa||[]; window.data_target = d.data_target||[]; window.userApprovals = d.userApprovals||[]; window.moApprovals = d.moApprovals||[]; window.isApprovedByETD = d.isApprovedByETD;
                     window.applyStateToDOM(); document.getElementById('display-draft-id').innerText = id; window.closeModal(); window.showView('form'); window.goToStep(1);
                 }
-            } catch(e) { window.showModal('error', 'Gagal', 'Tidak dapat membuka dokumen.'); }
+            } catch(e) { console.error(e); window.showModal('error', 'Gagal', 'Tidak dapat membuka dokumen.'); }
         }
 
         window.applyStateToDOM = function() {
@@ -845,13 +857,15 @@
 
         window.handleETDApprove = async function() {
             if(!confirm('Approve dokumen ini?')) return; window.showModal('loading', 'Approve...', '');
-            try { await updateDoc(doc(db, 'artifacts', appId, 'public', 'forms', window.currentDraftId), { isApprovedByETD: true }); window.showModal('success', 'Approved', 'Masuk ke rekapan MO.'); setTimeout(()=>window.showView('history'), 1500); } catch(e){}
+            // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
+            try { await updateDoc(doc(db, 'artifacts', appId, 'forms', window.currentDraftId), { isApprovedByETD: true }); window.showModal('success', 'Approved', 'Masuk ke rekapan MO.'); setTimeout(()=>window.showView('history'), 1500); } catch(e){console.error(e);}
         }
 
         window.loadMOView = async function(view) {
             const c = document.getElementById(view==='rekapan'?'mo-rekapan-tbody':'mo-hasil-container'); c.innerHTML = `<tr><td colspan="12" class="p-8 text-center"><i data-lucide="loader-2" class="animate-spin mx-auto w-6 h-6"></i></td></tr>`;
             try {
-                const s = await getDocs(collection(db, 'artifacts', appId, 'public', 'forms')); window.moParticipantRecords = [];
+                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
+                const s = await getDocs(collection(db, 'artifacts', appId, 'forms')); window.moParticipantRecords = [];
                 const yearSet = new Set(); const batchSet = new Set();
                 s.forEach(d => { let obj = d.data(); if(obj.isApprovedByETD && !obj.isDeleted) { 
                     const yr = new Date(obj.createdAt).getFullYear().toString(); yearSet.add(yr); if(obj.globalStore?.batch) batchSet.add(obj.globalStore.batch);
@@ -862,7 +876,7 @@
                 document.getElementById(view==='rekapan'?'mo-year-filter-rekap':'mo-year-filter-hasil').innerHTML = optY;
                 document.getElementById(view==='rekapan'?'mo-batch-filter-rekap':'mo-batch-filter-hasil').innerHTML = optB;
                 if(view==='rekapan') window.renderMOTableData(); else window.renderMOCardsData();
-            } catch(e) {}
+            } catch(e) {console.error(e);}
         }
 
         window.renderMOTableData = function() {
@@ -909,27 +923,29 @@
             if(!window.activeAction) return; const { fId, pIdx, st, role } = window.activeAction; let reason = '';
             if(role==='USER') { reason=document.getElementById('userActionReason').value; if(!reason.trim()) return window.showModal('error', 'Wajib Diisi', 'Isi alasan.'); document.getElementById('userActionConfirmBtn').innerText="Proses..."; } else document.getElementById('moActionConfirmBtn').innerText="Proses...";
             try {
-                const ref = doc(db, 'artifacts', appId, 'public', 'forms', fId); const s = await getDoc(ref);
+                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
+                const ref = doc(db, 'artifacts', appId, 'forms', fId); const s = await getDoc(ref);
                 if(s.exists()) {
                     let d = s.data(); let up = {hasUnreadUpdate: true};
                     if(role==='USER') { if(!d.userApprovals) d.userApprovals=Array(d.globalStore?.participantCount||1).fill({status:'PENDING',reason:''}); d.userApprovals[pIdx]={status:st, reason}; up.userApprovals = d.userApprovals; }
                     if(role==='MO') { if(!d.moApprovals) d.moApprovals=Array(d.globalStore?.participantCount||1).fill({status:'PENDING',reason:''}); d.moApprovals[pIdx]={status:st, reason:''}; up.moApprovals = d.moApprovals; }
                     await updateDoc(ref, up); window.showModal('success', 'Berhasil', 'Tersimpan.'); window.loadMOView('rekapan');
                 }
-            } catch(e) {} finally { window.closeUserModal(); window.closeMOModal(); }
+            } catch(e) {console.error(e);} finally { window.closeUserModal(); window.closeMOModal(); }
         }
 
         window.undoAction = async function(fId, pIdx, role) {
             if(!confirm(`Undo keputusan ${role}?`)) return; window.showModal('loading', 'Undo...', '');
             try {
-                const ref = doc(db, 'artifacts', appId, 'public', 'forms', fId); const s = await getDoc(ref);
+                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
+                const ref = doc(db, 'artifacts', appId, 'forms', fId); const s = await getDoc(ref);
                 if(s.exists()) {
                     let d = s.data(); let up = {};
                     if(role==='USER'){ d.userApprovals[pIdx]={status:'PENDING',reason:''}; up.userApprovals=d.userApprovals; }
                     if(role==='MO'){ d.moApprovals[pIdx]={status:'PENDING',reason:''}; up.moApprovals=d.moApprovals; }
                     await updateDoc(ref, up); window.closeModal(); window.loadMOView('rekapan');
                 }
-            } catch(e){}
+            } catch(e){console.error(e);}
         }
 
         let sig = { cv: null, ctx: null, isD: false };
