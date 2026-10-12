@@ -475,7 +475,7 @@
         
         /* DATA DEFINITIONS SPG */
         const checklistCategories = [
-            { cat: 'KEDISIPLINAN', items: ['Selalu dalam keadaan bersih, rapi dan segar (rambut, tidak bau badan, kuku dipotong pendek) setiap waktu', 'Menggunakan pakaian & perlengkapan sesuai ketentuan training (kemeja putih, celana kain hitam, ikat pinggang hitam, sepatu hitam polos, kaos kaki gelap, name tag)', 'Datang tepat waktu sesuai dengan ketentuan shift yang diatur oleh Kepala Toko', 'Tidak melakukan hal-hal yang dilarang di toko (menggunakan HP, mengobrol, bersandar/duduk dilantai, menerima telepon toko saat melayani pelanggan, berdiam diri tidak bekerja)'] },
+            { cat: 'KEDISIPLINAN', items: ['Selalu dalam keadaan bersih, rapi dan segar (rambut, tidak bau badan, kuku dipotong pendek) setiap waktu', 'Menggunakan pakaian & perlengkapan sesuai ketentuan training (kemeja putih, celana kain hitam, ikat pinggang hitam, sepatu hitam polos, kaos kaki gelap, name tag)', 'Datang tepat waktu sesuai dengan ketentuan shift yang diatur oleh Kepala Toko', 'Tidak melakukan hal-hal yang dilarang di toko (menggunakan HP, mengobrol, bersandar/duduk lantai, menerima telepon toko saat melayani pelanggan, berdiam diri tidak bekerja)'] },
             { cat: 'PELAYANAN', items: ['Melakukan sapaan saat konsumen datang "Selamat Datang di Indomaret" dan mengucapkan terima kasih seusai transaksi atau ketika konsumen meninggalkan toko', 'Melakukan sapaan "Silahkan Mister Donut-nya" kepada pelanggan masuk ke toko', 'Menanggapi pertanyaan dari pelanggan dengan sopan dan ramah', 'Berinisiatif membantu pelanggan yang bingung/mengalami kesulitan', 'Selalu mengutamakan pelanggan saat melakukan kegiatan apapun'] },
             { cat: 'PRODUCT KNOWLEDGE', items: ['Mengetahui jenis jenis produk Mister Donut yang dijual di Indomaret', 'Mengetahui jenis filling dan topping produk Mister Donut'] },
             { cat: 'PENJUALAN DAN PENAWARAN PROMOSI', items: ['Memberikan rekomendasi produk kepada konsumen', 'Mempunyai inisiatif untuk membagikan sarana promosi ke konsumen (leaflet, produk sample)', 'Bersemangat dalam menawarkan promosi agar konsumen melakukan pembelian', 'Mengkonfirmasi kepada konsumen untuk item yang dipilih', 'Melakukan penjualan donut sesuai target', 'Selalu tersenyum dan ramah kepada konsumen selama proses transaksi', 'Berkoordinasi dengan baik ke pimpinan shift yang sedang bertugas maupun store crew lainnya'] },
@@ -559,8 +559,6 @@
             if(window.lucide) window.lucide.createIcons();
         }
 
-        // PERBAIKAN: Mengembalikan fungsi fetch persis ke versi original tapi dengan try/catch block 
-        // untuk menangani error tak terduga tanpa break aplikasi
         window.fetchMasterData = async function() {
             const btn = document.getElementById('btnSyncMaster'); if(btn) btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i> Sync...`;
             try {
@@ -578,7 +576,6 @@
                 
                 window.availableBatches = Array.from(new Set(window.allMasterParticipants.map(p => p.batch).filter(Boolean))); 
                 
-                // Panggil populateBatchSelect
                 window.populateBatchSelect();
                 
                 if(btn) btn.innerHTML = `<i data-lucide="check" class="w-3 h-3 text-green-600"></i> Sync OK`;
