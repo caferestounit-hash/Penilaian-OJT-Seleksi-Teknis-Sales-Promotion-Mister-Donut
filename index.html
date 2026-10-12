@@ -537,7 +537,6 @@
                 document.getElementById('etd-notification-bell').classList.remove('hidden');
                 try { 
                     if(window.etdUnsubscribe) window.etdUnsubscribe(); 
-                    // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
                     window.etdUnsubscribe = onSnapshot(collection(db, 'artifacts', appId, 'forms'), (snap) => { 
                         let pa=0, pu=0; snap.forEach(d=>{ let dt=d.data(); if(dt.isDeleted)return; if(!dt.isApprovedByETD)pa++; if(dt.hasUnreadUpdate)pu++; }); window.etdNotifData = {pa, pu}; if(pa>0||pu>0) document.getElementById('etd-notification-dot').classList.remove('hidden'); else document.getElementById('etd-notification-dot').classList.add('hidden'); 
                     }); 
@@ -567,11 +566,16 @@
                 window.allMasterParticipants = json.table.rows.map((r, i) => { const c = r.c||[]; return { no: c[0]?.v||i+1, idPelamar: c[1]?.v?String(c[1].v):'', namaPeserta: c[2]?.v?String(c[2].v):'', batch: c[3]?.v?String(c[3].v):'', penempatan: c[4]?.v?String(c[4].v):'' }; }).filter(p => p.namaPeserta);
                 window.availableBatches = Array.from(new Set(window.allMasterParticipants.map(p => p.batch).filter(Boolean))); window.populateBatchSelect();
                 if(btn) btn.innerHTML = `<i data-lucide="check" class="w-3 h-3 text-green-600"></i> Sync OK`;
-            } catch(e) { if(btn) btn.innerHTML = `<i data-lucide="x" class="w-3 h-3 text-red-600"></i> Gagal`; }
+            } catch(e) { console.error("Sync Error:", e); if(btn) btn.innerHTML = `<i data-lucide="x" class="w-3 h-3 text-red-600"></i> Gagal`; }
             if(window.lucide) window.lucide.createIcons();
         }
 
-        window.populateBatchSelect = function() { const sel = document.getElementById('global_batch_select'); sel.innerHTML = `<option value="">-- Pilih Batch --</option>` + window.availableBatches.map(b => `<option value="${b}">${b}</option>`).join(''); sel.value = window.globalStore.batch || ''; }
+        window.populateBatchSelect = function() { 
+            const sel = document.getElementById('global_batch_select'); 
+            sel.innerHTML = `<option value="">-- Pilih Batch --</option>` + window.availableBatches.map(b => `<option value="${b}">${b}</option>`).join(''); 
+            sel.value = window.globalStore.batch || ''; 
+        }
+        
         window.handleBatchSelect = function(v) { window.globalStore.batch = v; window.globalStore.selectedParticipants = Array(window.globalStore.participantCount).fill(null); window.renderParticipantInputs(); window.reRenderAll(); }
         window.syncGlobalData = function(f, v) { window.globalStore[f] = v; }
         window.updateMentorName = function(n) { window.globalStore.mentorName = n; }
@@ -741,7 +745,6 @@
         window.handleSaveDraft = async function() {
             if(!currentUser) return; window.showModal('loading', 'Menyimpan...', '');
             try { 
-                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
                 await setDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId), { updatedAt: Date.now(), globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target }); 
                 window.showModal('success', 'Tersimpan', 'Draft berhasil disimpan.'); 
             } catch(e) { console.error(e); window.showModal('error', 'Gagal', 'Terjadi kesalahan.'); }
@@ -765,7 +768,6 @@
             const btn = document.getElementById('btnSubmitAll'); btn.disabled = true; btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Mengirim...`;
             try {
                 const p = { createdAt: Date.now(), mentorUid: currentUser.uid, batch: window.globalStore.batch, globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target, userApprovals: window.userApprovals, moApprovals: window.moApprovals, isApprovedByETD: false, isDeleted: false, hasUnreadUpdate: true };
-                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
                 await setDoc(doc(db, 'artifacts', appId, 'forms', window.currentDraftId), p);
                 try{ await deleteDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId)); }catch(e){}
                 window.showModal('success', 'Terkirim', 'Form berhasil disubmit.'); setTimeout(()=>window.showView('dashboard'), 2000);
@@ -775,7 +777,6 @@
         window.loadList = async function(col) {
             const c = document.getElementById(`${col}-list-container`); c.innerHTML = `<div class="col-span-full p-8 text-center text-gray-500"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Memuat...</div>`;
             try {
-                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
                 const targetCollection = col === 'drafts' ? 'drafts' : 'forms';
                 const snap = await getDocs(collection(db, 'artifacts', appId, targetCollection)); 
                 let data = [];
@@ -809,14 +810,12 @@
             }
         }
         
-        // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
         window.deleteDocForm = async function(id) { if(!confirm("Hapus form ini? Data masuk ke Trash.")) return; window.showModal('loading', 'Menghapus...', ''); try{ await updateDoc(doc(db, 'artifacts', appId, 'forms', id), {isDeleted: true}); window.closeModal(); window.loadList('history'); }catch(e){console.error(e);} }
         window.restoreDoc = async function(id) { if(!confirm("Restore form ini?")) return; window.showModal('loading', 'Memulihkan...', ''); try{ await updateDoc(doc(db, 'artifacts', appId, 'forms', id), {isDeleted: false}); window.closeModal(); window.loadList('trash'); }catch(e){console.error(e);} }
 
         window.openDoc = async function(col, id) {
             window.showModal('loading', 'Membuka...', '');
             try {
-                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
                 const targetCollection = col === 'drafts' ? 'drafts' : 'forms';
                 const snap = await getDoc(doc(db, 'artifacts', appId, targetCollection, id));
                 if(snap.exists()) {
@@ -828,8 +827,18 @@
         }
 
         window.applyStateToDOM = function() {
-            document.getElementById('global_flagship').value = window.globalStore?.flagship||''; document.getElementById('global_batch_select').value = window.globalStore?.batch||''; document.getElementById('global_date').value = window.globalStore?.date||''; document.getElementById('global_participantCount').value = window.globalStore?.participantCount||1; document.getElementById('global_mentor').value = window.globalStore?.mentorName||''; document.getElementById('global_comments').value = window.globalStore?.finalComments||'';
-            if(window.globalStore?.signatureDataUrl) { const i = new Image(); i.onload=()=>{const c=document.getElementById('signatureCanvas_global'); const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); ctx.drawImage(i,0,0);}; i.src=window.globalStore.signatureDataUrl; } else window.clearGlobalSignature();
+            document.getElementById('global_flagship').value = window.globalStore.flagship || ''; 
+            document.getElementById('global_batch_select').value = window.globalStore.batch || ''; 
+            document.getElementById('global_date').value = window.globalStore.date || ''; 
+            document.getElementById('global_participantCount').value = window.globalStore.participantCount || 1; 
+            document.getElementById('global_mentor').value = window.globalStore.mentorName || ''; 
+            document.getElementById('global_comments').value = window.globalStore.finalComments || '';
+            
+            if(window.globalStore.signatureDataUrl) { 
+                const i = new Image(); i.onload=()=>{const c=document.getElementById('signatureCanvas_global'); const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); ctx.drawImage(i,0,0);}; i.src=window.globalStore.signatureDataUrl; 
+            } else {
+                window.clearGlobalSignature();
+            }
             window.renderParticipantInputs(); window.reRenderAll(); window.renderMOStampsInForm(); window.toggleFormReadonly(window.viewMode === 'READONLY');
         }
         
@@ -857,14 +866,12 @@
 
         window.handleETDApprove = async function() {
             if(!confirm('Approve dokumen ini?')) return; window.showModal('loading', 'Approve...', '');
-            // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
             try { await updateDoc(doc(db, 'artifacts', appId, 'forms', window.currentDraftId), { isApprovedByETD: true }); window.showModal('success', 'Approved', 'Masuk ke rekapan MO.'); setTimeout(()=>window.showView('history'), 1500); } catch(e){console.error(e);}
         }
 
         window.loadMOView = async function(view) {
             const c = document.getElementById(view==='rekapan'?'mo-rekapan-tbody':'mo-hasil-container'); c.innerHTML = `<tr><td colspan="12" class="p-8 text-center"><i data-lucide="loader-2" class="animate-spin mx-auto w-6 h-6"></i></td></tr>`;
             try {
-                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
                 const s = await getDocs(collection(db, 'artifacts', appId, 'forms')); window.moParticipantRecords = [];
                 const yearSet = new Set(); const batchSet = new Set();
                 s.forEach(d => { let obj = d.data(); if(obj.isApprovedByETD && !obj.isDeleted) { 
@@ -923,7 +930,6 @@
             if(!window.activeAction) return; const { fId, pIdx, st, role } = window.activeAction; let reason = '';
             if(role==='USER') { reason=document.getElementById('userActionReason').value; if(!reason.trim()) return window.showModal('error', 'Wajib Diisi', 'Isi alasan.'); document.getElementById('userActionConfirmBtn').innerText="Proses..."; } else document.getElementById('moActionConfirmBtn').innerText="Proses...";
             try {
-                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
                 const ref = doc(db, 'artifacts', appId, 'forms', fId); const s = await getDoc(ref);
                 if(s.exists()) {
                     let d = s.data(); let up = {hasUnreadUpdate: true};
@@ -937,7 +943,6 @@
         window.undoAction = async function(fId, pIdx, role) {
             if(!confirm(`Undo keputusan ${role}?`)) return; window.showModal('loading', 'Undo...', '');
             try {
-                // PERBAIKAN: Gunakan path koleksi ganjil (3 segmen)
                 const ref = doc(db, 'artifacts', appId, 'forms', fId); const s = await getDoc(ref);
                 if(s.exists()) {
                     let d = s.data(); let up = {};
