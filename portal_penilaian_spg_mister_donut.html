@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Seleksi Teknis SPG Mister Donut</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        spg: {
+                            50: '#fff1f2', 100: '#ffe4e6', 200: '#fecdd3', 300: '#fda4af', 400: '#fb7185',
+                            500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 800: '#9f1239', 900: '#881337',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @media screen {
+            #print-container { display: none !important; }
+        }
+        @media print {
+            body { background-color: #ffffff; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { display: none !important; }
+            body > div:not(#print-container):not(#notificationModal) { display: none !important; }
+            #print-container { display: block !important; width: 100%; margin: 0; padding: 0; }
+            .page-break { page-break-before: always; }
+        }
+        .bg-pattern { background-image: radial-gradient(#e11d48 1px, transparent 1px); background-size: 20px 20px; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { height: 8px; width: 8px; }
+        ::-webkit-scrollbar-track { background: #fff1f2; }
+        ::-webkit-scrollbar-thumb { background: #fb7185; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #e11d48; }
+    </style>
+</head>
+<body class="min-h-screen bg-spg-50 font-sans text-gray-800 selection:bg-spg-200">
+
+    <nav class="bg-white shadow-sm border-b border-spg-200 sticky top-0 z-40 no-print">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2 cursor-pointer truncate" onclick="if(window.userRole) window.showView('dashboard')">
+                <i data-lucide="sparkles" class="w-6 h-6 sm:w-8 sm:h-8 text-spg-600 shrink-0"></i>
+                <span class="font-black text-spg-900 text-sm sm:text-lg md:text-xl tracking-wide uppercase truncate">Seleksi Teknis SPG <span class="text-orange-500">Mister Donut</span></span>
+            </div>
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                <div id="etd-notification-bell" class="relative hidden cursor-pointer" onclick="window.showETDNotifications()">
+                    <i data-lucide="bell" class="w-5 h-5 sm:w-6 sm:h-6 text-spg-800 hover:text-spg-600 transition-colors"></i>
+                    <div id="etd-notification-dot" class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full hidden border-2 border-white"></div>
+                </div>
+                <span id="role-badge" class="hidden px-2 py-1 sm:px-3 sm:py-1 bg-spg-100 text-spg-800 font-black text-[10px] sm:text-xs rounded-lg uppercase tracking-wider border border-spg-200"></span>
+                <div id="auth-status-badge" class="flex items-center gap-1.5 sm:gap-2 px-2 py-1 sm:px-3 sm:py-1.5 bg-white border border-gray-200 rounded-full text-[10px] sm:text-xs font-bold text-gray-600 shadow-sm">
+                    <i data-lucide="loader-2" class="w-3 h-3 sm:w-4 sm:h-4 animate-spin text-spg-600"></i> <span class="hidden sm:inline">Menghubungkan...</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="view-loading" class="flex flex-col items-center justify-center min-h-[80vh] no-print px-4 text-center">
+        <i data-lucide="loader-2" class="w-12 h-12 text-spg-600 animate-spin mb-4"></i>
+        <h2 class="text-xl font-black text-spg-900">Menyiapkan Aplikasi...</h2>
+        <p class="text-spg-600 text-sm mt-2 font-medium">Menghubungkan ke Database & Master Data</p>
+    </div>
+
+    <div id="view-login" class="flex items-center justify-center min-h-[85vh] px-4 hidden no-print py-6 sm:py-8">
+        <div class="bg-white rounded-2xl sm:rounded-[2rem] shadow-2xl w-full max-w-4xl flex flex-col md:flex-row overflow-hidden border border-spg-100">
+            <div class="md:w-1/2 p-6 sm:p-10 flex flex-col items-center justify-center text-center relative border-b md:border-b-0 md:border-r border-spg-100 bg-gradient-to-br from-spg-50 to-orange-50">
+                <div class="absolute inset-0 opacity-10 pointer-events-none bg-pattern"></div>
+                <div class="bg-white p-4 rounded-full shadow-md mb-6 relative z-10">
+                    <img src="https://upload.wikimedia.org/wikipedia/id/thumb/4/41/Mister_Donut_logo.svg/1200px-Mister_Donut_logo.svg.png" alt="Mister Donut Logo" class="w-24 sm:w-32 object-contain" onerror="this.style.display='none'">
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-black text-spg-900 mb-3 uppercase tracking-wide relative z-10 leading-tight">OJT Sales Promotion</h2>
+                <p class="text-spg-700 text-sm mb-4 font-semibold leading-relaxed relative z-10 px-2">Portal Penilaian & Evaluasi Seleksi Teknis SPG Mister Donut.</p>
+            </div>
+            <div class="md:w-1/2 p-6 sm:p-12 flex flex-col justify-center bg-white relative z-10">
+                <div class="w-12 h-12 sm:w-16 sm:h-16 bg-spg-50 border border-spg-100 rounded-xl sm:rounded-2xl flex items-center justify-center mb-6 shadow-sm text-spg-600">
+                    <i data-lucide="lock-keyhole" class="w-6 h-6 sm:w-8 sm:h-8"></i>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-black text-gray-800 mb-2 uppercase">Akses Portal</h2>
+                <p class="text-gray-500 text-xs sm:text-sm mb-8 font-medium">Masukkan Keypass sesuai peran Anda.</p>
+                <div class="relative mb-6">
+                    <input type="password" id="input-keypass" onkeypress="if(event.key === 'Enter') window.handleLogin()" class="w-full p-3 sm:p-4 pr-12 border-2 border-gray-200 rounded-xl text-lg sm:text-xl tracking-widest font-bold focus:border-spg-500 focus:ring-4 focus:ring-spg-500/20 outline-none transition-all text-gray-800 bg-gray-50" placeholder="••••••••">
+                    <button type="button" onclick="window.togglePasswordVisibility()" class="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-spg-600 focus:outline-none transition-colors cursor-pointer p-2">
+                        <i id="eye-icon" data-lucide="eye" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                    </button>
+                </div>
+                <button onclick="window.handleLogin()" class="w-full bg-gradient-to-r from-spg-600 to-orange-500 hover:from-spg-700 hover:to-orange-600 text-white font-black py-3.5 sm:py-4 rounded-xl transition-all shadow-lg hover:shadow-xl active:scale-95 uppercase tracking-wide cursor-pointer flex justify-center items-center gap-2 text-sm sm:text-base">
+                    <span>Masuk Portal</span> <i data-lucide="arrow-right" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-dashboard" class="max-w-5xl mx-auto p-4 sm:p-6 mt-4 sm:mt-8 hidden no-print">
+        <div class="bg-gradient-to-br from-spg-800 to-spg-900 rounded-2xl sm:rounded-[2rem] p-6 sm:p-12 text-center text-white shadow-xl relative overflow-hidden mb-6 sm:mb-8 border border-spg-700">
+            <div class="absolute top-[-50px] left-[-50px] w-64 h-64 bg-white opacity-10 rounded-full blur-3xl"></div>
+            <div class="relative z-10 flex flex-col items-center">
+                <div class="bg-white p-2.5 sm:p-3 rounded-2xl mb-4 sm:mb-6 shadow-lg inline-block">
+                    <img src="https://upload.wikimedia.org/wikipedia/id/thumb/4/41/Mister_Donut_logo.svg/1200px-Mister_Donut_logo.svg.png" alt="Mister Donut Logo" class="h-8 sm:h-12 object-contain" onerror="this.style.display='none'">
+                </div>
+                <h1 class="text-2xl sm:text-4xl font-black mb-3 uppercase tracking-tight drop-shadow-md">Portal Penilaian SPG</h1>
+                <p class="text-spg-200 text-sm sm:text-base max-w-2xl mx-auto font-medium mb-5">Sistem Evaluasi Terpadu Sales Promotion Mister Donut.</p>
+                <div class="inline-flex items-center gap-2 bg-black/30 px-5 py-2 rounded-full text-xs sm:text-sm font-bold tracking-wider uppercase backdrop-blur-sm border border-white/20">
+                    <i data-lucide="user-circle" class="w-4 h-4 text-spg-200"></i> Akses: <span id="dash-role-text" class="text-white"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" id="dashboard-cards-container">
+            <button id="card-buat" onclick="window.createNewAssessment()" class="group text-left bg-white rounded-2xl p-5 sm:p-8 border border-gray-200 shadow-sm hover:shadow-xl hover:border-spg-500 transition-all duration-300 transform hover:-translate-y-1">
+                <div class="w-12 h-12 bg-spg-100 text-spg-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="file-plus-2" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-black text-gray-800 mb-2 uppercase">Buat Penilaian Baru</h3>
+                <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Mulai lembar penilaian teknis, non-teknis, dan target OJT.</p>
+            </button>
+            <button id="card-draft" onclick="window.showView('drafts')" class="group text-left bg-white rounded-2xl p-5 sm:p-8 border border-gray-200 shadow-sm hover:shadow-xl hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-1">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-blue-100">
+                    <i data-lucide="folder-clock" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-black text-gray-800 mb-2 uppercase">Lanjutkan Draft</h3>
+                <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Lanjutkan form penilaian yang sebelumnya disimpan sementara.</p>
+            </button>
+            <button id="card-history" onclick="window.showView('history')" class="group text-left bg-white rounded-2xl p-5 sm:p-8 border border-gray-200 shadow-sm hover:shadow-xl hover:border-green-400 transition-all duration-300 transform hover:-translate-y-1">
+                <div class="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-green-100">
+                    <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-black text-gray-800 mb-2 uppercase" id="history-card-title">Riwayat Terkirim</h3>
+                <p class="text-gray-500 text-xs sm:text-sm leading-relaxed" id="history-card-desc">Lihat daftar penilaian yang sudah final (Terkirim).</p>
+            </button>
+            <button id="card-rekapan" onclick="window.showView('rekapan')" class="group text-left bg-white rounded-2xl p-5 sm:p-8 border border-gray-200 shadow-sm hover:shadow-xl hover:border-purple-400 transition-all duration-300 transform hover:-translate-y-1">
+                <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-purple-100">
+                    <i data-lucide="table-2" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-black text-gray-800 mb-2 uppercase">Rekap & Persetujuan</h3>
+                <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Lihat rekapan nilai per batch dan berikan stempel persetujuan.</p>
+            </button>
+            <button id="card-hasil-mentor" onclick="window.showView('hasil-mentor')" class="group text-left bg-white rounded-2xl p-5 sm:p-8 border border-gray-200 shadow-sm hover:shadow-xl hover:border-orange-400 transition-all duration-300 transform hover:-translate-y-1">
+                <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-orange-100">
+                    <i data-lucide="book-open" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-black text-gray-800 mb-2 uppercase">Hasil Penilaian</h3>
+                <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Lihat form penilaian utuh per peserta yang disubmit.</p>
+            </button>
+            <button id="card-trash" onclick="window.showView('trash')" class="hidden group text-left bg-white rounded-2xl p-5 sm:p-8 border border-gray-200 shadow-sm hover:shadow-xl hover:border-red-400 transition-all duration-300 transform hover:-translate-y-1">
+                <div class="w-12 h-12 bg-red-50 text-red-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-red-100">
+                    <i data-lucide="trash-2" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-lg font-black text-gray-800 mb-2 uppercase">Tempat Sampah</h3>
+                <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Data yang dihapus (tersimpan sementara 30 hari).</p>
+            </button>
+        </div>
+    </div>
+
+    <div id="view-drafts" class="max-w-5xl mx-auto p-4 sm:p-6 mt-4 hidden no-print">
+        <div class="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <button onclick="window.showView('dashboard')" class="p-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i></button>
+            <div><h2 class="text-xl sm:text-2xl font-black text-gray-800 uppercase">Daftar Draft Tersimpan</h2></div>
+        </div>
+        <div id="draft-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </div>
+
+    <div id="view-history" class="max-w-5xl mx-auto p-4 sm:p-6 mt-4 hidden no-print">
+        <div class="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <button onclick="window.showView('dashboard')" class="p-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i></button>
+            <div><h2 class="text-xl sm:text-2xl font-black text-gray-800 uppercase" id="history-view-title">Riwayat Penilaian</h2></div>
+        </div>
+        <div id="history-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </div>
+
+    <div id="view-trash" class="max-w-5xl mx-auto p-4 sm:p-6 mt-4 hidden no-print">
+        <div class="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <button onclick="window.showView('dashboard')" class="p-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i></button>
+            <div><h2 class="text-xl sm:text-2xl font-black text-red-700 uppercase">Tempat Sampah</h2></div>
+        </div>
+        <div id="trash-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </div>
+
+    <div id="view-rekapan" class="max-w-[1400px] mx-auto p-4 sm:p-6 mt-4 hidden no-print">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+            <div class="flex items-center gap-3">
+                <button onclick="window.showView('dashboard')" class="p-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i></button>
+                <div><h2 class="text-lg sm:text-2xl font-black text-gray-800 uppercase">Rekapan Penilaian SPG</h2></div>
+            </div>
+            <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                <div class="bg-white p-2 rounded-lg border border-gray-300 flex items-center shadow-sm flex-1 sm:flex-none">
+                    <i data-lucide="calendar" class="w-4 h-4 text-gray-400 mx-2"></i>
+                    <select id="mo-year-filter-rekap" onchange="window.renderMOTableData()" class="bg-transparent outline-none font-bold text-gray-700 w-full"><option value="">Semua Tahun</option></select>
+                </div>
+                <div class="bg-white p-2 rounded-lg border border-gray-300 flex items-center shadow-sm flex-1 sm:flex-none">
+                    <i data-lucide="filter" class="w-4 h-4 text-gray-400 mx-2"></i>
+                    <select id="mo-batch-filter-rekap" onchange="window.renderMOTableData()" class="bg-transparent outline-none font-bold text-gray-700 w-full"><option value="">Semua Batch</option></select>
+                </div>
+                <button onclick="window.printRekapanTable()" class="bg-spg-800 hover:bg-spg-900 text-white p-2 px-4 rounded-lg flex items-center justify-center gap-2 shadow-sm font-bold w-full sm:w-auto">
+                    <i data-lucide="printer" class="w-4 h-4"></i> Cetak PDF
+                </button>
+            </div>
+        </div>
+        <div class="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-200 pb-4">
+            <table class="w-full text-sm text-left min-w-max border-collapse">
+                <thead class="bg-spg-800 text-white uppercase text-[10px] font-black tracking-wider">
+                    <tr>
+                        <th class="p-3 border-r border-spg-700 text-center">No</th>
+                        <th class="p-3 border-r border-spg-700 min-w-[150px]">Nama Peserta</th>
+                        <th class="p-3 border-r border-spg-700">ID Pelamar</th>
+                        <th class="p-3 border-r border-spg-700 min-w-[120px]">Lokasi OJT</th>
+                        <th class="p-3 border-r border-spg-700 text-center">Nilai Non Teknis</th>
+                        <th class="p-3 border-r border-spg-700 text-center">Nilai Teknis</th>
+                        <th class="p-3 border-r border-spg-700 text-center">Nilai Sisa Brg</th>
+                        <th class="p-3 border-r border-spg-700 text-center">Nilai Target</th>
+                        <th class="p-3 border-r border-spg-700 text-center">Total Nilai</th>
+                        <th class="p-3 border-r border-spg-700">Keterangan Mentor</th>
+                        <th class="p-3 border-r border-spg-700 text-center">Validasi User</th>
+                        <th class="p-3 text-center">Validasi MO</th>
+                    </tr>
+                </thead>
+                <tbody id="mo-rekapan-tbody" class="text-gray-700 text-xs"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="view-hasil-mentor" class="max-w-[1400px] mx-auto p-4 sm:p-6 mt-4 hidden no-print">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+            <div class="flex items-center gap-3">
+                <button onclick="window.showView('dashboard')" class="p-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i></button>
+                <div><h2 class="text-lg sm:text-2xl font-black text-gray-800 uppercase">Hasil Penilaian SPG</h2></div>
+            </div>
+            <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                <div class="bg-white p-2 rounded-lg border border-gray-300 flex items-center shadow-sm flex-1 sm:flex-none">
+                    <i data-lucide="calendar" class="w-4 h-4 text-gray-400 mx-2"></i>
+                    <select id="mo-year-filter-hasil" onchange="window.renderMOCardsData()" class="bg-transparent outline-none font-bold text-gray-700 w-full"><option value="">Semua Tahun</option></select>
+                </div>
+                <div class="bg-white p-2 rounded-lg border border-gray-300 flex items-center shadow-sm flex-1 sm:flex-none">
+                    <i data-lucide="filter" class="w-4 h-4 text-gray-400 mx-2"></i>
+                    <select id="mo-batch-filter-hasil" onchange="window.renderMOCardsData()" class="bg-transparent outline-none font-bold text-gray-700 w-full"><option value="">Semua Batch</option></select>
+                </div>
+            </div>
+        </div>
+        <div id="mo-hasil-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"></div>
+    </div>
+
+    <div id="view-form" class="max-w-[1400px] mx-auto bg-white rounded-xl shadow-xl overflow-hidden mb-8 hidden m-2 sm:m-6 border border-gray-200">
+        
+        <div class="bg-gradient-to-r from-spg-800 to-spg-900 p-4 sm:p-6 text-white border-b-4 border-orange-400 relative no-print">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 relative z-10">
+                <button onclick="window.confirmExitForm()" class="px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold flex items-center gap-2 w-full sm:w-auto justify-center transition-colors">
+                    <i data-lucide="home" class="w-4 h-4"></i> Dashboard
+                </button>
+                <div class="text-center w-full">
+                    <h1 class="text-lg sm:text-2xl font-black uppercase tracking-wider text-white">Lembar Penilaian SPG</h1>
+                    <p class="text-[10px] sm:text-xs font-medium opacity-80">ID: <span id="display-draft-id" class="font-mono">Baru</span></p>
+                </div>
+                <div class="flex gap-2 w-full sm:w-auto justify-center" id="form-header-right">
+                    <button onclick="window.generateAndPrintPDF()" class="hidden px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-md transition-colors" id="btn-print-form">
+                        <i data-lucide="printer" class="w-4 h-4"></i> PDF
+                    </button>
+                    <button onclick="window.handleETDApprove()" class="hidden px-4 py-2 bg-green-500 hover:bg-green-600 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-md transition-colors" id="btn-etd-approve">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i> Approve ETD
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-1.5 sm:gap-2 relative z-10">
+                <button onclick="window.goToStep(1)" id="step-1" class="step-indicator px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg font-bold text-[10px] sm:text-xs shadow-md flex items-center gap-1 bg-white text-spg-900 border border-gray-200 transition-all"><span class="bg-spg-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">1</span> Checklist</button>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-spg-400 hidden sm:block mt-1"></i>
+                <button onclick="window.goToStep(2)" id="step-2" class="step-indicator px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg font-bold text-[10px] sm:text-xs flex items-center gap-1 bg-spg-700/80 text-white opacity-70 hover:opacity-100 transition-all"><span class="bg-white/20 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">2</span> Non Teknis</button>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-spg-400 hidden sm:block mt-1"></i>
+                <button onclick="window.goToStep(3)" id="step-3" class="step-indicator px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg font-bold text-[10px] sm:text-xs flex items-center gap-1 bg-spg-700/80 text-white opacity-70 hover:opacity-100 transition-all"><span class="bg-white/20 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">3</span> Teknis</button>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-spg-400 hidden sm:block mt-1"></i>
+                <button onclick="window.goToStep(4)" id="step-4" class="step-indicator px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg font-bold text-[10px] sm:text-xs flex items-center gap-1 bg-spg-700/80 text-white opacity-70 hover:opacity-100 transition-all"><span class="bg-white/20 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">4</span> Brg Sisa</button>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-spg-400 hidden sm:block mt-1"></i>
+                <button onclick="window.goToStep(5)" id="step-5" class="step-indicator px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg font-bold text-[10px] sm:text-xs flex items-center gap-1 bg-spg-700/80 text-white opacity-70 hover:opacity-100 transition-all"><span class="bg-white/20 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">5</span> Target</button>
+            </div>
+        </div>
+
+        <div class="bg-spg-50 border-b border-spg-200 p-4 sm:p-6 shadow-sm no-print-bg">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-black text-spg-900 uppercase flex items-center gap-2 tracking-wide"><i data-lucide="store" class="w-4 h-4 text-spg-600"></i> Informasi Utama</h3>
+                    <button onclick="window.fetchMasterData()" id="btnSyncMaster" class="text-[10px] sm:text-xs bg-white hover:bg-gray-50 text-spg-700 border border-spg-300 px-3 py-1.5 rounded-lg font-bold flex items-center gap-1 transition-colors readonly-hide"><i data-lucide="refresh-cw" class="w-3 h-3"></i> Sync Master</button>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div>
+                        <label class="block text-xs font-bold text-spg-800 mb-1 uppercase tracking-wider">Tgl OJT <span class="text-red-500 readonly-hide">*</span></label>
+                        <input type="date" id="global_date" onchange="window.syncGlobalData('date', this.value)" class="form-control w-full p-2.5 border border-spg-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-spg-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-spg-800 mb-1 uppercase tracking-wider">Batch <span class="text-red-500 readonly-hide">*</span></label>
+                        <select id="global_batch_select" onchange="window.handleBatchSelect(this.value)" class="form-control w-full p-2.5 border border-spg-300 rounded-lg text-sm bg-white cursor-pointer focus:ring-2 focus:ring-spg-500 outline-none"><option value="">-- Pilih --</option></select>
+                    </div>
+                    <div class="readonly-hide">
+                        <label class="block text-xs font-bold text-spg-800 mb-1 uppercase tracking-wider">Jml Peserta</label>
+                        <input type="number" id="global_participantCount" min="1" max="5" value="1" onchange="window.syncGlobalParticipants(this.value)" class="form-control w-full p-2.5 border border-spg-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-spg-500 outline-none">
+                    </div>
+                    <div class="lg:col-span-1">
+                        <label class="block text-xs font-bold text-spg-800 mb-1 uppercase tracking-wider">Lokasi OJT <span class="text-red-500 readonly-hide">*</span></label>
+                        <input type="text" id="global_flagship" oninput="window.syncGlobalData('flagship', this.value)" class="form-control w-full p-2.5 border border-spg-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-spg-500 outline-none" placeholder="Nama Toko/Indomaret">
+                    </div>
+                </div>
+
+                <div class="mb-4 bg-white p-4 rounded-xl border border-spg-200 readonly-hide shadow-sm">
+                    <label class="block text-xs font-bold text-spg-800 mb-2 uppercase tracking-wider">Pilih Peserta SPG <span class="text-red-500">*</span></label>
+                    <div id="global_participant_names_container" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-xl border border-spg-200 shadow-sm">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wider">Nama Pendamping (Mentor) <span class="text-red-500 readonly-hide">*</span></label>
+                        <input type="text" id="global_mentor" oninput="window.updateMentorName(this.value)" class="form-control w-full p-2.5 border border-gray-300 rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-spg-500 outline-none" placeholder="Nama Anda">
+                    </div>
+                    <div class="flex flex-col items-start w-full">
+                        <label class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wider">Tanda Tangan <span class="text-red-500 readonly-hide">*</span></label>
+                        <div class="flex flex-col border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 overflow-hidden w-full max-w-sm relative">
+                            <canvas id="signatureCanvas_global" width="300" height="120" style="touch-action: none;" class="bg-white w-full touch-none cursor-crosshair"></canvas>
+                            <div class="w-full flex justify-between items-center px-3 py-1 bg-spg-50 border-t border-gray-200 readonly-hide no-print">
+                                <span class="text-[10px] text-gray-500 italic">Gunakan jari untuk ttd</span>
+                                <button type="button" onclick="window.clearGlobalSignature()" class="text-[10px] text-red-500 font-bold hover:text-red-700">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="mo-stamps-container" class="mt-4 hidden print-only border-t border-gray-300 pt-4"></div>
+            </div>
+        </div>
+
+        <div id="tab-content-checklist" class="form-tab-content p-4 sm:p-6 block">
+            <div class="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-2 gap-2">
+                <h2 class="text-lg font-black text-spg-900 uppercase">1. Checklist OJT</h2>
+                <span class="text-[10px] sm:text-xs font-bold bg-orange-100 text-orange-800 px-2 py-1 rounded">Beri centang (v) jika dilakukan</span>
+            </div>
+            <div class="overflow-x-auto border border-gray-300 rounded-xl mb-6 shadow-sm print-border-none">
+                <table class="w-full text-left border-collapse min-w-[700px]">
+                    <thead id="thead_checklist" class="bg-spg-100 text-spg-900 text-xs uppercase"></thead>
+                    <tbody id="tbody_checklist" class="text-sm text-gray-800"></tbody>
+                </table>
+            </div>
+            <div class="flex justify-end gap-3 pt-4 border-t no-print readonly-hide">
+                <button onclick="window.handleSaveDraft()" class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-lg text-sm flex items-center gap-2 transition-colors"><i data-lucide="save" class="w-4 h-4"></i> Simpan Draft</button>
+                <button onclick="window.goToStep(2)" class="px-6 py-2.5 bg-spg-800 hover:bg-spg-900 text-white font-bold rounded-lg text-sm shadow-md flex items-center gap-2 transition-transform active:scale-95">Lanjut <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+
+        <div id="tab-content-nonteknis" class="form-tab-content p-4 sm:p-6 hidden">
+            <div class="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-2 gap-2">
+                <h2 class="text-lg font-black text-spg-900 uppercase">2. Penilaian Non Teknis</h2>
+                <span class="text-[10px] sm:text-xs font-bold bg-gray-100 text-gray-600 px-2 py-1 rounded border border-gray-200">Sangat Kurang: 1-5.9 | Kurang: 6-6.9 | Cukup: 7-7.9 | Baik: 8-8.9 | Sangat Baik: 9-10</span>
+            </div>
+            <div class="overflow-x-auto border border-gray-300 rounded-xl mb-6 shadow-sm print-border-none">
+                <table class="w-full text-left border-collapse min-w-[700px]">
+                    <thead id="thead_nonteknis" class="bg-spg-100 text-spg-900 text-xs uppercase"></thead>
+                    <tbody id="tbody_nonteknis" class="text-sm text-gray-800"></tbody>
+                </table>
+            </div>
+            <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4" id="feedback_nonteknis"></div>
+            <div class="flex flex-col-reverse sm:flex-row justify-between gap-3 pt-4 border-t no-print readonly-hide">
+                <button onclick="window.goToStep(1)" class="w-full sm:w-auto px-5 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold rounded-lg text-sm flex justify-center items-center gap-2 transition-colors"><i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali</button>
+                <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <button onclick="window.handleSaveDraft()" class="hidden sm:flex px-5 py-2.5 bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 font-bold rounded-lg text-sm items-center justify-center gap-2 transition-colors"><i data-lucide="save" class="w-4 h-4"></i> Draft</button>
+                    <button onclick="window.goToStep(3)" class="w-full sm:w-auto px-6 py-2.5 bg-spg-800 hover:bg-spg-900 text-white font-bold rounded-lg text-sm shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95">Lanjut <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-content-teknis" class="form-tab-content p-4 sm:p-6 hidden">
+            <div class="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-2 gap-2">
+                <h2 class="text-lg font-black text-spg-900 uppercase">3. Penilaian Teknis</h2>
+                <span class="text-[10px] sm:text-xs font-bold bg-gray-100 text-gray-600 px-2 py-1 rounded border border-gray-200">Sangat Kurang: 1-5.9 | Kurang: 6-6.9 | Cukup: 7-7.9 | Baik: 8-8.9 | Sangat Baik: 9-10</span>
+            </div>
+            <div class="overflow-x-auto border border-gray-300 rounded-xl mb-6 shadow-sm print-border-none">
+                <table class="w-full text-left border-collapse min-w-[700px]">
+                    <thead id="thead_teknis" class="bg-spg-100 text-spg-900 text-xs uppercase"></thead>
+                    <tbody id="tbody_teknis" class="text-sm text-gray-800"></tbody>
+                </table>
+            </div>
+            <div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4" id="feedback_teknis"></div>
+            <div class="flex flex-col-reverse sm:flex-row justify-between gap-3 pt-4 border-t no-print readonly-hide">
+                <button onclick="window.goToStep(2)" class="w-full sm:w-auto px-5 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold rounded-lg text-sm flex justify-center items-center gap-2 transition-colors"><i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali</button>
+                <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <button onclick="window.handleSaveDraft()" class="hidden sm:flex px-5 py-2.5 bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 font-bold rounded-lg text-sm items-center justify-center gap-2 transition-colors"><i data-lucide="save" class="w-4 h-4"></i> Draft</button>
+                    <button onclick="window.goToStep(4)" class="w-full sm:w-auto px-6 py-2.5 bg-spg-800 hover:bg-spg-900 text-white font-bold rounded-lg text-sm shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95">Lanjut <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-content-sisa" class="form-tab-content p-4 sm:p-6 hidden">
+            <div class="mb-4 border-b pb-2 flex flex-col sm:flex-row justify-between sm:items-end gap-2">
+                <div>
+                    <h2 class="text-lg font-black text-spg-900 uppercase">4. Pengurangan Barang Sisa</h2>
+                    <p class="text-xs text-gray-600">Catat jumlah donut yang datang, terjual, dan tersisa.</p>
+                </div>
+                <div class="bg-orange-50 p-2 rounded text-[10px] text-orange-900 border border-orange-200 font-medium">
+                    <span class="font-bold uppercase tracking-wider">Nilai:</span> &lt;10% = 100 | 11-30% = 75 | 31-50% = 50 | &gt;50% = 0
+                </div>
+            </div>
+            <div class="overflow-x-auto border border-gray-300 rounded-xl mb-6 shadow-sm print-border-none">
+                <table class="w-full text-left border-collapse min-w-[800px]">
+                    <thead id="thead_sisa" class="bg-spg-100 text-spg-900 text-xs uppercase"></thead>
+                    <tbody id="tbody_sisa" class="text-sm text-gray-800"></tbody>
+                </table>
+            </div>
+            <div class="flex flex-col-reverse sm:flex-row justify-between gap-3 pt-4 border-t no-print readonly-hide">
+                <button onclick="window.goToStep(3)" class="w-full sm:w-auto px-5 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold rounded-lg text-sm flex justify-center items-center gap-2 transition-colors"><i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali</button>
+                <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <button onclick="window.handleSaveDraft()" class="hidden sm:flex px-5 py-2.5 bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 font-bold rounded-lg text-sm items-center justify-center gap-2 transition-colors"><i data-lucide="save" class="w-4 h-4"></i> Draft</button>
+                    <button onclick="window.goToStep(5)" class="w-full sm:w-auto px-6 py-2.5 bg-spg-800 hover:bg-spg-900 text-white font-bold rounded-lg text-sm shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95">Lanjut <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-content-target" class="form-tab-content p-4 sm:p-6 hidden">
+            <div class="mb-4 border-b pb-2 flex flex-col sm:flex-row justify-between sm:items-end gap-2">
+                <div>
+                    <h2 class="text-lg font-black text-spg-900 uppercase">5. Target Achievement</h2>
+                    <p class="text-xs text-gray-600">Persentase item yang berhasil terjual berdasarkan target.</p>
+                </div>
+                <div class="bg-green-50 p-2 rounded text-[10px] text-green-900 border border-green-200 font-medium">
+                    <span class="font-bold uppercase tracking-wider">Nilai:</span> 90-100% = 100 | 70-89% = 75 | 50-69% = 50 | &lt;50% = 0
+                </div>
+            </div>
+            <div class="overflow-x-auto border border-gray-300 rounded-xl mb-6 shadow-sm print-border-none">
+                <table class="w-full text-left border-collapse min-w-[750px]">
+                    <thead id="thead_target" class="bg-spg-100 text-spg-900 text-xs uppercase"></thead>
+                    <tbody id="tbody_target" class="text-sm text-gray-800"></tbody>
+                </table>
+            </div>
+            
+            <div class="mb-6 bg-amber-50 border border-amber-200 p-4 rounded-xl shadow-sm print-border-none">
+                <label class="block text-sm font-bold text-amber-900 mb-2 uppercase tracking-wide">Komentar Akhir Pendamping <span class="text-red-500 readonly-hide">*</span></label>
+                <textarea id="global_comments" oninput="window.globalStore.finalComments = this.value" class="form-control w-full min-h-[100px] p-3 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm bg-white" placeholder="Kesimpulan / catatan untuk peserta SPG..."></textarea>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between gap-3 pt-6 border-t border-gray-200 bg-gray-50 p-4 rounded-b-xl -mx-4 -mb-4 sm:-mx-6 sm:-mb-6 no-print readonly-hide">
+                <button onclick="window.goToStep(4)" class="w-full sm:w-auto px-5 py-3 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold rounded-lg text-sm flex justify-center items-center gap-2 shadow-sm transition-colors"><i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali</button>
+                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                    <button onclick="window.handleSaveDraft()" class="w-full sm:w-auto px-6 py-3 bg-blue-100 hover:bg-blue-200 border border-blue-200 text-blue-800 font-bold rounded-lg text-sm flex justify-center items-center gap-2 transition-colors"><i data-lucide="save" class="w-4 h-4"></i> Simpan Draft</button>
+                    <button id="btnSubmitAll" onclick="window.handleSubmitAll()" class="w-full sm:w-auto px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-black rounded-lg text-sm shadow-xl flex justify-center items-center gap-2 uppercase tracking-wide transition-transform active:scale-95"><i data-lucide="send" class="w-5 h-5"></i> Kirim & Selesai</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="print-container" class="hidden"></div>
+    <div id="notificationModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden transition-opacity no-print">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl transform scale-100 transition-transform"><div id="modalIconContainer" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5"></div><h3 id="modalTitle" class="text-lg sm:text-xl font-black text-gray-800 mb-2"></h3><p id="modalMessage" class="text-gray-600 mb-6 sm:mb-8 leading-relaxed text-xs sm:text-sm"></p><button onclick="window.closeModal()" class="w-full font-bold py-3 px-4 rounded-xl text-white transition-colors shadow-md bg-spg-900 hover:bg-black cursor-pointer text-sm sm:text-base">Tutup / Mengerti</button></div>
+    </div>
+    <div id="exitModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden no-print">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl"><div class="w-16 h-16 sm:w-20 sm:h-20 bg-spg-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5"><i data-lucide="alert-triangle" class="w-8 h-8 sm:w-10 sm:h-10 text-spg-700"></i></div><h3 class="text-lg sm:text-xl font-black text-gray-800 mb-2">Kembali ke Dashboard?</h3><p class="text-gray-600 mb-6 sm:mb-8 text-xs sm:text-sm">Pastikan Anda sudah menekan tombol "Simpan Draft" jika ada perubahan yang belum disimpan. Yakin ingin keluar?</p><div class="flex gap-2 sm:gap-3"><button onclick="window.closeExitModal()" class="flex-1 bg-gray-100 text-gray-800 font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-gray-200 transition-colors text-xs sm:text-sm">Batal</button><button onclick="window.forceExitToDashboard()" class="flex-1 bg-spg-800 text-white font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-spg-900 transition-colors text-xs sm:text-sm">Ya, Keluar</button></div></div>
+    </div>
+    <div id="userActionModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden no-print">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl relative"><h3 id="userActionTitle" class="text-lg sm:text-xl font-black text-gray-800 mb-2 text-center">Set Keputusan User</h3><p id="userActionDesc" class="text-gray-600 mb-4 text-xs sm:text-sm text-center">Tindakan ini bersifat final. Silakan berikan alasan.</p><div class="mb-4 sm:mb-6"><label class="block text-[10px] sm:text-xs font-bold text-gray-700 mb-2 uppercase">Alasan Keputusan <span class="text-red-500">*</span></label><textarea id="userActionReason" class="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-spg-500 resize-none h-20 sm:h-24 text-sm" placeholder="Sebutkan alasannya secara detail..."></textarea></div><div class="flex gap-2 sm:gap-3"><button onclick="window.closeUserModal()" class="flex-1 bg-gray-100 text-gray-800 font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-gray-200 transition-colors text-xs sm:text-sm">Batal</button><button id="userActionConfirmBtn" class="flex-1 text-white font-bold py-3 px-2 sm:px-4 rounded-xl transition-colors text-xs sm:text-sm">Konfirmasi Final</button></div></div>
+    </div>
+    <div id="moActionModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden no-print">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl relative"><h3 id="moActionTitle" class="text-lg sm:text-xl font-black text-gray-800 mb-2 text-center">Validasi MO</h3><p id="moActionDesc" class="text-gray-600 mb-6 text-xs sm:text-sm text-center">Apakah Anda yakin akan mengesahkan hasil ini secara final?</p><div class="flex gap-2 sm:gap-3"><button onclick="window.closeMOModal()" class="flex-1 bg-gray-100 text-gray-800 font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-gray-200 transition-colors text-xs sm:text-sm">Batal</button><button id="moActionConfirmBtn" class="flex-1 text-white font-bold py-3 px-2 sm:px-4 rounded-xl transition-colors text-xs sm:text-sm">Konfirmasi Final</button></div></div>
+    </div>
+    <div id="etdNotifModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden no-print transition-opacity">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl relative"><div class="flex justify-between items-center mb-6 border-b pb-3"><h3 class="text-lg sm:text-xl font-black text-gray-800 uppercase flex items-center gap-2"><i data-lucide="bell" class="w-5 h-5 text-spg-700"></i> Pemberitahuan</h3><button onclick="document.getElementById('etdNotifModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-800 p-1 bg-gray-100 rounded-full transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button></div><div id="etdNotifContent" class="space-y-3"></div></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const SPREADSHEET_ID = '1aysyFE8lEileUqbu1PGznMSQCQloUq1O2vfzQWUUBAo';
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbxVYn-T4TVwMU9Krdq4bxsoe6aS9W4R5Vu9_zDRAXPMQg4czx3FUMhBBqpNi1A3WbsRPQ/exec';
+        
+        let db, auth; const appId = 'spg-misdo-app-v2'; let currentUser = null; let isMasterLoaded = false;
+        window.userRole = null; window.etdUnsubscribe = null; window.currentDraftId = null; window.viewMode = 'DRAFT';
+        window.allMasterParticipants = []; window.availableBatches = []; window.allSubmittedForms = []; window.moParticipantRecords = [];
+        
+        /* DATA DEFINITIONS SPG */
+        const checklistCategories = [
+            { cat: 'KEDISIPLINAN', items: ['Selalu dalam keadaan bersih, rapi dan segar (rambut, tidak bau badan, kuku dipotong pendek) setiap waktu', 'Menggunakan pakaian & perlengkapan sesuai ketentuan training (kemeja putih, celana kain hitam, ikat pinggang hitam, sepatu hitam polos, kaos kaki gelap, name tag)', 'Datang tepat waktu sesuai dengan ketentuan shift yang diatur oleh Kepala Toko', 'Tidak melakukan hal-hal yang dilarang di toko (menggunakan HP, mengobrol, bersandar/duduk dilantai, menerima telepon toko saat melayani pelanggan, berdiam diri tidak bekerja)'] },
+            { cat: 'PELAYANAN', items: ['Melakukan sapaan saat konsumen datang "Selamat Datang di Indomaret" dan mengucapkan terima kasih seusai transaksi atau ketika konsumen meninggalkan toko', 'Melakukan sapaan "Silahkan Mister Donut-nya" kepada pelanggan masuk ke toko', 'Menanggapi pertanyaan dari pelanggan dengan sopan dan ramah', 'Berinisiatif membantu pelanggan yang bingung/mengalami kesulitan', 'Selalu mengutamakan pelanggan saat melakukan kegiatan apapun'] },
+            { cat: 'PRODUCT KNOWLEDGE', items: ['Mengetahui jenis jenis produk Mister Donut yang dijual di Indomaret', 'Mengetahui jenis filling dan topping produk Mister Donut'] },
+            { cat: 'PENJUALAN DAN PENAWARAN PROMOSI', items: ['Memberikan rekomendasi produk kepada konsumen', 'Mempunyai inisiatif untuk membagikan sarana promosi ke konsumen (leaflet, produk sample)', 'Bersemangat dalam menawarkan promosi agar konsumen melakukan pembelian', 'Mengkonfirmasi kepada konsumen untuk item yang dipilih', 'Melakukan penjualan donut sesuai target', 'Selalu tersenyum dan ramah kepada konsumen selama proses transaksi', 'Berkoordinasi dengan baik ke pimpinan shift yang sedang bertugas maupun store crew lainnya'] },
+            { cat: 'SARANA', items: ['Mengenali sarana operasional (showcase, penjepit, hand gloves, kanebo, sapu & pengki, kuas 0,5 inch, paper bag, dan box)', 'Mengenai sarana promosi (leaflet, standing pop, banner in, dll)'] }
+        ];
+
+        const nonTeknisItems = [ 'Tanggung Jawab Terhadap Pekerjaan. Menyelesaikan pekerjaan yang diberikan dan memberikan hasil sesuai dengan harapan', 'Keterampilan Kerja. Mampu melakukan pekerjaan sesuai dengan SOP', 'Penampilan. Berpenampilan rapi, bersih dan sesuai dengan SOP', 'Disiplin Kerja. Datang kerja tepat waktu, selesai istirahat tepat waktu dan pulang tidak lebih awal, bila ijin dilakukan dengan memberi keterangan', 'Keterampilan Interpersonal. Kemampuan untuk membangun hubungan dengan rekan kerja/atasan/orang lain', 'Daya tangkap terhadap intruksi yang diberikan. Mampu menangkap dengan jelas perintah mengenai pekerjaan yang diberikan oleh atasan', 'Inisiatif. Mau membantu orang lain tanpa harus disuruh', 'Sopan santun. Bersikap sopan dalam bekerja, menghargai dan bersikap santun terhadap atasan maupun rekan kerja', 'Semangat. Antusias dalam melakukan pekerjaan, tidak terlihat terpaksa dalam bekerja', 'Integritas. Kejujuran dalam bersikap dan perkataan' ];
+
+        const teknisItems = checklistCategories.reduce((acc, curr) => acc.concat(curr.items.map(name => ({cat: curr.cat, name}))), []);
+
+        window.globalStore = { flagship: '', batch: '', date: '', participantCount: 1, mentorName: '', selectedParticipants: [null], signatureDataUrl: null, finalComments: '' };
+        window.data_checklist = []; window.data_non_teknis = []; window.data_teknis = []; window.data_sisa = []; window.data_target = []; window.userApprovals = []; window.moApprovals = [];
+
+        window.showModal = function(type, title, message) {
+            const modal = document.getElementById('notificationModal'); const icon = document.getElementById('modalIconContainer'); document.getElementById('modalTitle').innerText = title; document.getElementById('modalMessage').innerText = message;
+            if (type === 'success') { icon.className = 'w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5 text-green-600'; icon.innerHTML = `<i data-lucide="check-circle" class="w-8 h-8 sm:w-10 sm:h-10"></i>`; }
+            else if (type === 'loading') { icon.className = 'w-16 h-16 sm:w-20 sm:h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5 text-blue-600'; icon.innerHTML = `<i data-lucide="loader-2" class="w-8 h-8 sm:w-10 sm:h-10 animate-spin"></i>`; }
+            else { icon.className = 'w-16 h-16 sm:w-20 sm:h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5 text-red-600'; icon.innerHTML = `<i data-lucide="alert-circle" class="w-8 h-8 sm:w-10 sm:h-10"></i>`; }
+            modal.classList.remove('hidden'); if(window.lucide) window.lucide.createIcons();
+        };
+        window.closeModal = function() { document.getElementById('notificationModal').classList.add('hidden'); };
+        window.confirmExitForm = function() { document.getElementById('exitModal').classList.remove('hidden'); if(window.lucide) window.lucide.createIcons(); };
+        window.closeExitModal = function() { document.getElementById('exitModal').classList.add('hidden'); };
+        window.forceExitToDashboard = function() { window.closeExitModal(); window.showView('dashboard'); };
+        window.togglePasswordVisibility = function() { const i = document.getElementById('input-keypass'); const icon = document.getElementById('eye-icon'); if(i.type === 'password'){ i.type = 'text'; icon.setAttribute('data-lucide', 'eye-off'); }else{ i.type = 'password'; icon.setAttribute('data-lucide', 'eye'); } if(window.lucide) window.lucide.createIcons(); };
+
+        function initFirebase() {
+            try {
+                const config = { apiKey: "AIzaSyC2IOcNAnaWH4T8HqH1AbP_7_Pxp0lDPcs", authDomain: "penilaian-ojt-misdo.firebaseapp.com", projectId: "penilaian-ojt-misdo", storageBucket: "penilaian-ojt-misdo.firebasestorage.app" };
+                const app = initializeApp(config); auth = getAuth(app); db = getFirestore(app);
+                signInAnonymously(auth).then(() => {
+                    onAuthStateChanged(auth, async (user) => {
+                        if (user) { currentUser = user; document.getElementById('auth-status-badge').innerHTML = `<i data-lucide="wifi" class="w-3 h-3 text-green-600"></i> Online`; if(!isMasterLoaded) { await window.fetchMasterData(); isMasterLoaded = true; } if(window.lucide) window.lucide.createIcons(); if(!window.userRole) window.showView('login'); else window.showView('dashboard'); }
+                    });
+                }).catch(()=> document.getElementById('auth-status-badge').innerHTML = `<i data-lucide="wifi-off" class="w-3 h-3 text-red-500"></i> Offline`);
+            } catch(e) { window.showView('login'); }
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initFirebase); else initFirebase();
+
+        window.handleLogin = function() {
+            const input = document.getElementById('input-keypass').value.trim().toLowerCase();
+            if(input === 'mochido') window.userRole = 'USER';
+            else if(input === 'usachi') window.userRole = 'MO';
+            else if(input === 'kitakeren') window.userRole = 'ETD';
+            else return window.showModal('error', 'Akses Ditolak', 'Keypass salah.');
+            
+            document.getElementById('dash-role-text').innerText = window.userRole === 'USER' ? 'MENTOR (USER)' : window.userRole;
+            const badge = document.getElementById('role-badge'); badge.innerText = window.userRole; badge.classList.remove('hidden');
+
+            document.getElementById('card-buat').style.display = (window.userRole === 'USER' || window.userRole === 'ETD') ? 'block' : 'none';
+            document.getElementById('card-draft').style.display = (window.userRole === 'USER' || window.userRole === 'ETD') ? 'block' : 'none';
+            document.getElementById('card-rekapan').style.display = (window.userRole === 'MO' || window.userRole === 'ETD') ? 'block' : 'none';
+            document.getElementById('card-hasil-mentor').style.display = (window.userRole === 'MO' || window.userRole === 'ETD') ? 'block' : 'none';
+            document.getElementById('card-trash').style.display = window.userRole === 'ETD' ? 'block' : 'none';
+            
+            const cardHist = document.getElementById('card-history');
+            if(window.userRole === 'ETD') {
+                cardHist.style.display = 'block'; document.getElementById('history-card-title').innerText = "Antrean Approve ETD"; document.getElementById('history-card-desc').innerText = "Approve form dari mentor sebelum rekapan MO."; document.getElementById('history-view-title').innerText = "Antrean Approve ETD";
+                document.getElementById('etd-notification-bell').classList.remove('hidden');
+                try { if(window.etdUnsubscribe) window.etdUnsubscribe(); window.etdUnsubscribe = onSnapshot(collection(db, 'artifacts', appId, 'public', 'forms'), (snap) => { let pa=0, pu=0; snap.forEach(d=>{ let dt=d.data(); if(dt.isDeleted)return; if(!dt.isApprovedByETD)pa++; if(dt.hasUnreadUpdate)pu++; }); window.etdNotifData = {pa, pu}; if(pa>0||pu>0) document.getElementById('etd-notification-dot').classList.remove('hidden'); else document.getElementById('etd-notification-dot').classList.add('hidden'); }); } catch(e){}
+            } else if(window.userRole === 'USER') {
+                cardHist.style.display = 'block'; document.getElementById('history-card-title').innerText = "Riwayat Terkirim"; document.getElementById('history-card-desc').innerText = "Daftar form yang disubmit ke sistem."; document.getElementById('history-view-title').innerText = "Riwayat Penilaian";
+                document.getElementById('etd-notification-bell').classList.add('hidden'); if(window.etdUnsubscribe){window.etdUnsubscribe(); window.etdUnsubscribe=null;}
+            } else { cardHist.style.display = 'none'; document.getElementById('etd-notification-bell').classList.add('hidden'); if(window.etdUnsubscribe){window.etdUnsubscribe(); window.etdUnsubscribe=null;} }
+            window.showView('dashboard');
+        }
+
+        window.showView = function(view) {
+            ['loading','login','dashboard','drafts','history','rekapan','hasil-mentor','form','trash'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
+            document.getElementById(`view-${view}`).classList.remove('hidden'); window.scrollTo(0,0);
+            if (view === 'drafts') window.loadList('drafts');
+            if (view === 'history') window.loadList('history');
+            if (view === 'rekapan') window.loadMOView('rekapan');
+            if (view === 'hasil-mentor') window.loadMOView('hasil');
+            if (view === 'trash') window.loadList('trash');
+            if(window.lucide) window.lucide.createIcons();
+        }
+
+        window.fetchMasterData = async function() {
+            const btn = document.getElementById('btnSyncMaster'); if(btn) btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i> Sync...`;
+            try {
+                const res = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1751933326`); const text = await res.text(); const json = JSON.parse(text.substring(47, text.length - 2));
+                window.allMasterParticipants = json.table.rows.map((r, i) => { const c = r.c||[]; return { no: c[0]?.v||i+1, idPelamar: c[1]?.v?String(c[1].v):'', namaPeserta: c[2]?.v?String(c[2].v):'', batch: c[3]?.v?String(c[3].v):'', penempatan: c[4]?.v?String(c[4].v):'' }; }).filter(p => p.namaPeserta);
+                window.availableBatches = Array.from(new Set(window.allMasterParticipants.map(p => p.batch).filter(Boolean))); window.populateBatchSelect();
+                if(btn) btn.innerHTML = `<i data-lucide="check" class="w-3 h-3 text-green-600"></i> Sync OK`;
+            } catch(e) { if(btn) btn.innerHTML = `<i data-lucide="x" class="w-3 h-3 text-red-600"></i> Gagal`; }
+            if(window.lucide) window.lucide.createIcons();
+        }
+
+        window.populateBatchSelect = function() { const sel = document.getElementById('global_batch_select'); sel.innerHTML = `<option value="">-- Pilih Batch --</option>` + window.availableBatches.map(b => `<option value="${b}">${b}</option>`).join(''); sel.value = window.globalStore.batch || ''; }
+        window.handleBatchSelect = function(v) { window.globalStore.batch = v; window.globalStore.selectedParticipants = Array(window.globalStore.participantCount).fill(null); window.renderParticipantInputs(); window.reRenderAll(); }
+        window.syncGlobalData = function(f, v) { window.globalStore[f] = v; }
+        window.updateMentorName = function(n) { window.globalStore.mentorName = n; }
+        window.syncGlobalParticipants = function(v) { let c = parseInt(v)||1; if(c<1)c=1; if(c>5)c=5; window.globalStore.participantCount = c; window.initArrays(c); window.renderParticipantInputs(); window.reRenderAll(); }
+        
+        window.renderParticipantInputs = function() {
+            const container = document.getElementById('global_participant_names_container'); if (!window.globalStore.batch) { container.innerHTML = `<div class="text-sm font-bold text-gray-500 p-2">Pilih Batch dulu.</div>`; return; }
+            const opts = window.allMasterParticipants.filter(p => p.batch === window.globalStore.batch); let h = '';
+            for (let i = 0; i < window.globalStore.participantCount; i++) {
+                const sel = window.globalStore.selectedParticipants[i];
+                h += `<div class="p-3 border border-spg-200 rounded-lg bg-spg-50/50"><div class="text-xs font-bold mb-2 text-spg-900 uppercase">Peserta ${i+1}</div><select onchange="window.selectParticipant(${i}, this.value)" class="w-full p-2.5 border border-spg-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-spg-500 outline-none"><option value="">-- Pilih --</option>${opts.map(p => `<option value="${p.idPelamar}" ${sel?.idPelamar===p.idPelamar?'selected':''}>${p.namaPeserta} (${p.idPelamar})</option>`).join('')}</select></div>`;
+            } container.innerHTML = h;
+        }
+        window.selectParticipant = function(i, id) { window.globalStore.selectedParticipants[i] = id ? {...window.allMasterParticipants.find(p=>p.idPelamar===id)} : null; window.reRenderAll(); }
+
+        window.initArrays = function(count) {
+            window.globalStore.selectedParticipants.length = count;
+            window.data_checklist = Array.from({length: count}, () => ({ checks: {} }));
+            window.data_non_teknis = Array.from({length: count}, () => ({ scores: {}, comment: '' }));
+            window.data_teknis = Array.from({length: count}, () => ({ scores: {}, comment: '' }));
+            window.data_sisa = Array.from({length: count}, () => [ {date:'', datang:'', terjual:'', sisa:''}, {date:'', datang:'', terjual:'', sisa:''} ]);
+            window.data_target = Array.from({length: count}, () => [ {date:'', jumlah:'', terjual:''}, {date:'', jumlah:'', terjual:''} ]);
+            window.userApprovals = Array.from({length: count}, () => ({status: 'PENDING', reason: ''}));
+            window.moApprovals = Array.from({length: count}, () => ({status: 'PENDING', reason: ''}));
+        }
+
+        window.reRenderAll = function() { window.renderChecklist(); window.renderNonTeknis(); window.renderTeknis(); window.renderSisa(); window.renderTarget(); }
+        
+        window.renderChecklist = function() {
+            let th = `<tr><th class="p-3 border-r border-spg-200 w-1/2">Kategori / Item Pekerjaan</th>`; for(let i=0;i<window.globalStore.participantCount;i++) th += `<th class="p-3 w-32 text-center border-r border-spg-200"><div class="text-[10px] text-gray-500 mb-1">Peserta ${i+1}</div>${window.globalStore.selectedParticipants[i]?.namaPeserta || `-`}</th>`; th += `</tr>`; document.getElementById('thead_checklist').innerHTML = th;
+            let tb = ''; checklistCategories.forEach((c, cIdx) => {
+                tb += `<tr class="bg-gray-100 font-bold"><td colspan="${window.globalStore.participantCount+1}" class="p-3 border-y border-gray-200 text-gray-700">${c.cat}</td></tr>`;
+                c.items.forEach((item, iIdx) => {
+                    const id = `c_${cIdx}_${iIdx}`; tb += `<tr class="border-b border-gray-200 hover:bg-gray-50"><td class="p-3 text-sm">${item}</td>`;
+                    for(let p=0; p<window.globalStore.participantCount; p++) {
+                        let chk = window.data_checklist[p]?.checks[id] ? 'checked' : ''; let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
+                        tb += `<td class="p-3 text-center border-l border-gray-200 bg-white"><input type="checkbox" onchange="window.data_checklist[${p}].checks['${id}'] = this.checked" class="w-5 h-5 accent-spg-600 cursor-pointer" ${chk} ${dis}></td>`;
+                    } tb += `</tr>`;
+                });
+            }); document.getElementById('tbody_checklist').innerHTML = tb;
+        }
+
+        window.renderNonTeknis = function() {
+            let th = `<tr><th class="p-3 border-r border-spg-200 w-1/2">Target Belajar (Non Teknis)</th>`; for(let i=0;i<window.globalStore.participantCount;i++) th += `<th class="p-3 w-32 text-center border-r border-spg-200"><div class="text-[10px] text-gray-500 mb-1">Peserta ${i+1}</div>${window.globalStore.selectedParticipants[i]?.namaPeserta || `-`}</th>`; th += `</tr>`; document.getElementById('thead_nonteknis').innerHTML = th;
+            let tb = ''; nonTeknisItems.forEach((item, idx) => {
+                tb += `<tr class="border-b border-gray-200 hover:bg-gray-50"><td class="p-3 text-sm">${item}</td>`;
+                for(let p=0; p<window.globalStore.participantCount; p++) {
+                    let val = window.data_non_teknis[p]?.scores[idx] || ''; let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
+                    tb += `<td class="p-3 text-center border-l border-gray-200 bg-white"><select onchange="window.updateScore('data_non_teknis', ${p}, ${idx}, this.value)" class="w-full p-2 border border-gray-300 rounded-lg text-center font-bold outline-none focus:border-spg-500" ${dis}><option value="">-</option>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}" ${val==n?'selected':''}>${n}</option>`).join('')}</select></td>`;
+                } tb += `</tr>`;
+            });
+            tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/10)</td>`;
+            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" id="total_nonteknis_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_nonteknis').innerHTML = tb;
+            
+            let fb = ''; for(let p=0; p<window.globalStore.participantCount; p++) { let dis = window.viewMode === 'READONLY' ? 'disabled' : ''; fb += `<div class="bg-gray-50 p-4 border border-gray-200 rounded-xl shadow-sm"><label class="text-xs font-bold uppercase text-spg-900 flex items-center justify-between mb-2"><span>Komentar - Peserta ${p+1}</span><span class="text-gray-500 truncate max-w-[150px] font-medium">${window.globalStore.selectedParticipants[p]?.namaPeserta || ''}</span></label><textarea oninput="window.data_non_teknis[${p}].comment = this.value" class="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-spg-500 text-sm bg-white min-h-[100px]" placeholder="Evaluasi non teknis untuk peserta ini..." ${dis}>${window.data_non_teknis[p]?.comment||''}</textarea></div>`; } document.getElementById('feedback_nonteknis').innerHTML = fb; window.calcNonTeknis();
+        }
+
+        window.renderTeknis = function() {
+            let th = `<tr><th class="p-3 border-r border-spg-200 w-1/2">Target Belajar (Teknis)</th>`; for(let i=0;i<window.globalStore.participantCount;i++) th += `<th class="p-3 w-32 text-center border-r border-spg-200"><div class="text-[10px] text-gray-500 mb-1">Peserta ${i+1}</div>${window.globalStore.selectedParticipants[i]?.namaPeserta || `-`}</th>`; th += `</tr>`; document.getElementById('thead_teknis').innerHTML = th;
+            let tb = ''; let currentCat = '';
+            teknisItems.forEach((item, idx) => {
+                if(item.cat !== currentCat) { tb += `<tr class="bg-gray-100 font-bold"><td colspan="${window.globalStore.participantCount+1}" class="p-3 border-y border-gray-200 text-gray-700">${item.cat}</td></tr>`; currentCat = item.cat; }
+                tb += `<tr class="border-b border-gray-200 hover:bg-gray-50"><td class="p-3 text-sm">${item.name}</td>`;
+                for(let p=0; p<window.globalStore.participantCount; p++) {
+                    let val = window.data_teknis[p]?.scores[idx] || ''; let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
+                    tb += `<td class="p-3 text-center border-l border-gray-200 bg-white"><select onchange="window.updateScore('data_teknis', ${p}, ${idx}, this.value)" class="w-full p-2 border border-gray-300 rounded-lg text-center font-bold outline-none focus:border-spg-500" ${dis}><option value="">-</option>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}" ${val==n?'selected':''}>${n}</option>`).join('')}</select></td>`;
+                } tb += `</tr>`;
+            });
+            tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/20)</td>`;
+            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" id="total_teknis_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_teknis').innerHTML = tb;
+            
+            let fb = ''; for(let p=0; p<window.globalStore.participantCount; p++) { let dis = window.viewMode === 'READONLY' ? 'disabled' : ''; fb += `<div class="bg-gray-50 p-4 border border-gray-200 rounded-xl shadow-sm"><label class="text-xs font-bold uppercase text-spg-900 flex items-center justify-between mb-2"><span>Komentar - Peserta ${p+1}</span><span class="text-gray-500 truncate max-w-[150px] font-medium">${window.globalStore.selectedParticipants[p]?.namaPeserta || ''}</span></label><textarea oninput="window.data_teknis[${p}].comment = this.value" class="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-spg-500 text-sm bg-white min-h-[100px]" placeholder="Evaluasi teknis untuk peserta ini..." ${dis}>${window.data_teknis[p]?.comment||''}</textarea></div>`; } document.getElementById('feedback_teknis').innerHTML = fb; window.calcTeknis();
+        }
+
+        window.renderSisa = function() {
+            let th = `<tr><th class="p-3 border-r border-spg-200 w-16" rowspan="2">Hari</th>`; for(let i=0;i<window.globalStore.participantCount;i++) th += `<th class="p-3 text-center border-r border-spg-200" colspan="5"><div class="text-[10px] text-gray-500 mb-1">Peserta ${i+1}</div>${window.globalStore.selectedParticipants[i]?.namaPeserta || `-`}</th>`; th += `</tr><tr class="bg-spg-50">`; for(let i=0;i<window.globalStore.participantCount;i++) th += `<th class="p-2 border-r border-spg-200 text-center text-[10px] text-gray-600 font-bold uppercase">Tgl</th><th class="p-2 border-r border-spg-200 text-center text-[10px] text-gray-600 font-bold uppercase leading-tight">Jml<br/>Datang</th><th class="p-2 border-r border-spg-200 text-center text-[10px] text-gray-600 font-bold uppercase leading-tight">Item<br/>Terjual</th><th class="p-2 border-r border-spg-200 text-center text-[10px] text-gray-600 font-bold uppercase leading-tight">Item<br/>Sisa</th><th class="p-2 border-r border-spg-300 text-center text-[10px] text-orange-700 font-bold uppercase">% & Nilai</th>`; th += `</tr>`; document.getElementById('thead_sisa').innerHTML = th;
+            let tb = '';
+            for(let day=0; day<2; day++) {
+                tb += `<tr class="border-b border-gray-200"><td class="p-3 font-black text-center border-r border-gray-300 bg-gray-50">${day+1}</td>`;
+                for(let p=0; p<window.globalStore.participantCount; p++) {
+                    let d = window.data_sisa[p][day] || {date:'', datang:'', terjual:'', sisa:''}; let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
+                    tb += `<td class="p-1.5 border-r border-gray-200 bg-white"><input type="date" onchange="window.data_sisa[${p}][${day}].date = this.value" value="${d.date||''}" class="w-full p-1.5 border border-gray-300 rounded text-[10px] outline-none" ${dis}></td><td class="p-1.5 border-r border-gray-200 bg-white"><input type="number" oninput="window.updateCalc('sisa', ${p}, ${day}, 'datang', this.value)" value="${d.datang||''}" class="w-full p-1.5 border border-gray-300 rounded text-center text-xs outline-none" ${dis}></td><td class="p-1.5 border-r border-gray-200 bg-white"><input type="number" oninput="window.updateCalc('sisa', ${p}, ${day}, 'terjual', this.value)" value="${d.terjual||''}" class="w-full p-1.5 border border-gray-300 rounded text-center text-xs outline-none" ${dis}></td><td class="p-1.5 border-r border-gray-200 bg-white"><input type="number" oninput="window.updateCalc('sisa', ${p}, ${day}, 'sisa', this.value)" value="${d.sisa||''}" class="w-full p-1.5 border border-gray-300 rounded text-center text-xs outline-none" ${dis}></td><td class="p-1.5 border-r border-spg-300 bg-orange-50 text-center flex flex-col justify-center items-center h-full min-h-[40px]"><span class="text-[10px] text-gray-500 font-bold mb-0.5" id="pct_sisa_${p}_${day}">0%</span><span class="font-black text-orange-700" id="val_sisa_${p}_${day}">0</span></td>`;
+                } tb += `</tr>`;
+            }
+            tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/20)</td>`;
+            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="5" id="total_sisa_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_sisa').innerHTML = tb; window.calcSisa();
+        }
+
+        window.renderTarget = function() {
+            let th = `<tr><th class="p-3 border-r border-spg-200 w-16" rowspan="2">Hari</th>`; for(let i=0;i<window.globalStore.participantCount;i++) th += `<th class="p-3 text-center border-r border-spg-200" colspan="4"><div class="text-[10px] text-gray-500 mb-1">Peserta ${i+1}</div>${window.globalStore.selectedParticipants[i]?.namaPeserta || `-`}</th>`; th += `</tr><tr class="bg-spg-50">`; for(let i=0;i<window.globalStore.participantCount;i++) th += `<th class="p-2 border-r border-spg-200 text-center text-[10px] text-gray-600 font-bold uppercase">Tgl</th><th class="p-2 border-r border-spg-200 text-center text-[10px] text-gray-600 font-bold uppercase leading-tight">Jml<br/>Donut</th><th class="p-2 border-r border-spg-200 text-center text-[10px] text-gray-600 font-bold uppercase leading-tight">Item<br/>Terjual</th><th class="p-2 border-r border-spg-300 text-center text-[10px] text-green-700 font-bold uppercase">% & Nilai</th>`; th += `</tr>`; document.getElementById('thead_target').innerHTML = th;
+            let tb = '';
+            for(let day=0; day<2; day++) {
+                tb += `<tr class="border-b border-gray-200"><td class="p-3 font-black text-center border-r border-gray-300 bg-gray-50">${day+1}</td>`;
+                for(let p=0; p<window.globalStore.participantCount; p++) {
+                    let d = window.data_target[p][day] || {date:'', jumlah:'', terjual:''}; let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
+                    tb += `<td class="p-1.5 border-r border-gray-200 bg-white"><input type="date" onchange="window.data_target[${p}][${day}].date = this.value" value="${d.date||''}" class="w-full p-1.5 border border-gray-300 rounded text-[10px] outline-none" ${dis}></td><td class="p-1.5 border-r border-gray-200 bg-white"><input type="number" oninput="window.updateCalc('target', ${p}, ${day}, 'jumlah', this.value)" value="${d.jumlah||''}" class="w-full p-1.5 border border-gray-300 rounded text-center text-xs outline-none" ${dis}></td><td class="p-1.5 border-r border-gray-200 bg-white"><input type="number" oninput="window.updateCalc('target', ${p}, ${day}, 'terjual', this.value)" value="${d.terjual||''}" class="w-full p-1.5 border border-gray-300 rounded text-center text-xs outline-none" ${dis}></td><td class="p-1.5 border-r border-spg-300 bg-green-50 text-center flex flex-col justify-center items-center h-full min-h-[40px]"><span class="text-[10px] text-gray-500 font-bold mb-0.5" id="pct_target_${p}_${day}">0%</span><span class="font-black text-green-700" id="val_target_${p}_${day}">0</span></td>`;
+                } tb += `</tr>`;
+            }
+            tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/2)</td>`;
+            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="4" id="total_target_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_target').innerHTML = tb; window.calcTarget();
+        }
+
+        window.updateScore = function(obj, p, i, v) { window[obj][p].scores[i] = v; if(obj==='data_non_teknis') window.calcNonTeknis(); else window.calcTeknis(); }
+        window.calcNonTeknis = function() {
+            for(let p=0; p<window.globalStore.participantCount; p++) {
+                let t = 0; for(let k in window.data_non_teknis[p].scores) { let v = Number(window.data_non_teknis[p].scores[k]); if(!isNaN(v)) t+=v; }
+                const el = document.getElementById(`total_nonteknis_${p}`); if(el) el.innerText = (t/10).toFixed(2);
+            }
+        }
+        window.calcTeknis = function() {
+            for(let p=0; p<window.globalStore.participantCount; p++) {
+                let t = 0; for(let k in window.data_teknis[p].scores) { let v = Number(window.data_teknis[p].scores[k]); if(!isNaN(v)) t+=v; }
+                const el = document.getElementById(`total_teknis_${p}`); if(el) el.innerText = (t/20).toFixed(2);
+            }
+        }
+        window.updateCalc = function(type, p, day, field, val) { window[`data_${type}`][p][day][field] = val; if(type==='sisa') window.calcSisa(); else window.calcTarget(); }
+        window.calcSisa = function() {
+            for(let p=0; p<window.globalStore.participantCount; p++) {
+                let tot = 0;
+                for(let d=0; d<2; d++) {
+                    let s = Number(window.data_sisa[p][d].sisa), dt = Number(window.data_sisa[p][d].datang); let val = 0; let pctStr = '0%';
+                    if(dt > 0 && s >= 0) {
+                        let pct = (s/dt)*100; pctStr = pct.toFixed(1) + '%';
+                        if(pct <= 10) val = 100; else if(pct <= 30) val = 75; else if(pct <= 50) val = 50; else val = 0;
+                    }
+                    const el = document.getElementById(`val_sisa_${p}_${d}`); if(el) el.innerText = val;
+                    const pel = document.getElementById(`pct_sisa_${p}_${d}`); if(pel) pel.innerText = pctStr;
+                    tot += val;
+                }
+                const tel = document.getElementById(`total_sisa_${p}`); if(tel) tel.innerText = (tot/20).toFixed(2);
+            }
+        }
+        window.calcTarget = function() {
+            for(let p=0; p<window.globalStore.participantCount; p++) {
+                let tot = 0;
+                for(let d=0; d<2; d++) {
+                    let j = Number(window.data_target[p][d].jumlah), t = Number(window.data_target[p][d].terjual); let val = 0; let pctStr = '0%';
+                    if(j > 0 && t >= 0) {
+                        let pct = (t/j)*100; pctStr = pct.toFixed(1) + '%';
+                        if(pct >= 90) val = 100; else if(pct >= 70) val = 75; else if(pct >= 50) val = 50; else val = 0;
+                    }
+                    const el = document.getElementById(`val_target_${p}_${d}`); if(el) el.innerText = val;
+                    const pel = document.getElementById(`pct_target_${p}_${d}`); if(pel) pel.innerText = pctStr;
+                    tot += val;
+                }
+                const tel = document.getElementById(`total_target_${p}`); if(tel) tel.innerText = (tot/2).toFixed(1);
+            }
+        }
+
+        window.goToStep = function(step) {
+            if(step > 1 && window.viewMode === 'DRAFT') {
+                if(!window.globalStore.date || !window.globalStore.batch || !window.globalStore.flagship) return window.showModal('error', 'Belum Lengkap', 'Isi Info Utama.');
+                for(let i=0; i<window.globalStore.participantCount; i++) if(!window.globalStore.selectedParticipants[i]) return window.showModal('error', 'Belum Lengkap', 'Pilih semua peserta terlebih dahulu.');
+                if(!window.globalStore.mentorName || !window.globalStore.signatureDataUrl) return window.showModal('error', 'Belum Lengkap', 'Isi nama dan TTD mentor.');
+            }
+            document.querySelectorAll('.form-tab-content').forEach(e => e.classList.add('hidden'));
+            document.querySelectorAll('.step-indicator').forEach(e => { e.className = "step-indicator px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg font-bold text-[10px] sm:text-xs flex items-center gap-1 bg-spg-700/80 text-white opacity-70 border border-transparent transition-all"; e.querySelector('span').className = "bg-white/20 rounded-full w-4 h-4 flex items-center justify-center text-[10px]"; });
+            const s = document.getElementById(`step-${step}`); if(s) { s.className = "step-indicator px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg font-bold text-[10px] sm:text-xs shadow-md flex items-center gap-1 bg-white text-spg-900 border border-gray-200 transition-all"; s.querySelector('span').className = "bg-spg-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]"; }
+            let id = ['checklist', 'nonteknis', 'teknis', 'sisa', 'target'][step-1]; document.getElementById(`tab-content-${id}`).classList.remove('hidden'); window.scrollTo(0,0);
+        }
+
+        window.createNewAssessment = function() {
+            window.currentDraftId = 'SPG-' + Math.random().toString(36).substring(2, 9).toUpperCase(); window.viewMode = 'DRAFT'; window.globalStore = { flagship:'', batch:'', date:new Date().toISOString().split('T')[0], participantCount:1, mentorName:'', selectedParticipants:[null], signatureDataUrl:null, finalComments:'' };
+            window.initArrays(1); document.getElementById('global_participantCount').value = 1; window.applyStateToDOM(); document.getElementById('display-draft-id').innerText = window.currentDraftId; window.showView('form'); window.goToStep(1);
+        }
+
+        window.handleSaveDraft = async function() {
+            if(!currentUser) return; window.showModal('loading', 'Menyimpan...', '');
+            try { await setDoc(doc(db, 'artifacts', appId, 'public', 'drafts', window.currentDraftId), { updatedAt: Date.now(), globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target }); window.showModal('success', 'Tersimpan', 'Draft berhasil disimpan.'); } catch(e) { window.showModal('error', 'Gagal', 'Terjadi kesalahan.'); }
+        }
+
+        window.handleSubmitAll = async function() {
+            if(!window.globalStore.finalComments) return window.showModal('error', 'Incomplete', 'Isi komentar akhir pendamping terlebih dahulu.');
+            const btn = document.getElementById('btnSubmitAll'); btn.disabled = true; btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Mengirim...`;
+            try {
+                const p = { createdAt: Date.now(), mentorUid: currentUser.uid, batch: window.globalStore.batch, globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target, userApprovals: window.userApprovals, moApprovals: window.moApprovals, isApprovedByETD: false, isDeleted: false, hasUnreadUpdate: true };
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'forms', window.currentDraftId), p);
+                try{ await deleteDoc(doc(db, 'artifacts', appId, 'public', 'drafts', window.currentDraftId)); }catch(e){}
+                window.showModal('success', 'Terkirim', 'Form berhasil disubmit.'); setTimeout(()=>window.showView('dashboard'), 2000);
+            } catch(e) { window.showModal('error', 'Gagal', 'Kesalahan saat mengirim.'); } finally { btn.disabled = false; btn.innerHTML = `<i data-lucide="send" class="w-5 h-5"></i> Kirim & Selesai`; }
+        }
+
+        window.loadList = async function(col) {
+            const c = document.getElementById(`${col}-list-container`); c.innerHTML = `<div class="col-span-full p-8 text-center text-gray-500"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Memuat...</div>`;
+            try {
+                const snap = await getDocs(collection(db, 'artifacts', appId, 'public', col==='drafts'?'drafts':'forms')); let data = [];
+                snap.forEach(d => { let obj = d.data(); if(col==='trash' && obj.isDeleted) data.push({id: d.id, ...obj}); else if(col==='history' && !obj.isDeleted) { if(window.userRole==='ETD' && !obj.isApprovedByETD) data.push({id: d.id, ...obj}); else if(window.userRole!=='ETD') data.push({id: d.id, ...obj}); } else if(col==='drafts') data.push({id: d.id, ...obj}); });
+                data.sort((a,b) => (b.createdAt||b.updatedAt) - (a.createdAt||a.updatedAt));
+                if(data.length === 0) return c.innerHTML = `<div class="col-span-full p-8 text-center border-dashed border border-gray-300 rounded-xl">Kosong.</div>`;
+                c.innerHTML = data.map(d => {
+                    let actions = `<button onclick="window.openDoc('${col}', '${d.id}')" class="px-4 py-2 bg-spg-800 text-white rounded-lg text-xs font-bold shadow-sm hover:bg-spg-900">Buka Detail</button>`;
+                    if(col === 'history' && window.userRole === 'ETD') actions += `<button onclick="window.deleteDocForm('${d.id}')" class="px-3 py-2 bg-red-100 text-red-700 rounded-lg text-xs font-bold shadow-sm hover:bg-red-200 border border-red-200"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`;
+                    if(col === 'trash') actions = `<button onclick="window.restoreDoc('${d.id}')" class="px-3 py-2 bg-green-100 text-green-700 rounded-lg text-xs font-bold shadow-sm hover:bg-green-200 border border-green-200">Restore</button>`;
+                    let stBadge = ''; if(col==='history'){ stBadge = d.isApprovedByETD ? '<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-bold">Approved</span>' : '<span class="bg-amber-100 text-amber-700 px-2 py-0.5 rounded text-[10px] font-bold">Pending ETD</span>'; }
+                    return `<div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+                        <div>
+                            <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold bg-gray-100 text-gray-700 px-2 py-1 rounded border">${d.id}</span>${stBadge}</div>
+                            <h4 class="font-black text-lg text-spg-900 mb-1">${d.globalStore.flagship||'Toko'}</h4>
+                            <p class="text-xs text-gray-600 mb-3 bg-spg-50 inline-block px-2 py-1 rounded border border-spg-100">Batch: <b>${d.globalStore.batch}</b> | Tgl: <b>${d.globalStore.date}</b></p>
+                            <p class="text-xs text-gray-500 mb-4 truncate"><i data-lucide="user" class="w-3 h-3 inline mr-1"></i> ${d.globalStore.mentorName || 'Mentor'}</p>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-gray-100 flex justify-between items-center"><span class="text-[10px] text-gray-400 font-medium">${new Date(d.createdAt||d.updatedAt).toLocaleDateString()}</span><div class="flex gap-2">${actions}</div></div>
+                    </div>`;
+                }).join(''); if(window.lucide) window.lucide.createIcons();
+            } catch(e) { c.innerHTML = `<div class="text-red-500">Gagal memuat.</div>`; }
+        }
+        
+        window.deleteDocForm = async function(id) { if(!confirm("Hapus form ini? Data masuk ke Trash.")) return; window.showModal('loading', 'Menghapus...', ''); try{ await updateDoc(doc(db, 'artifacts', appId, 'public', 'forms', id), {isDeleted: true}); window.closeModal(); window.loadList('history'); }catch(e){} }
+        window.restoreDoc = async function(id) { if(!confirm("Restore form ini?")) return; window.showModal('loading', 'Memulihkan...', ''); try{ await updateDoc(doc(db, 'artifacts', appId, 'public', 'forms', id), {isDeleted: false}); window.closeModal(); window.loadList('trash'); }catch(e){} }
+
+        window.openDoc = async function(col, id) {
+            window.showModal('loading', 'Membuka...', '');
+            try {
+                const snap = await getDoc(doc(db, 'artifacts', appId, 'public', col==='drafts'?'drafts':'forms', id));
+                if(snap.exists()) {
+                    const d = snap.data(); window.currentDraftId = id; window.viewMode = col==='drafts'?'DRAFT':'READONLY';
+                    window.globalStore = d.globalStore; window.data_checklist = d.data_checklist||[]; window.data_non_teknis = d.data_non_teknis||[]; window.data_teknis = d.data_teknis||[]; window.data_sisa = d.data_sisa||[]; window.data_target = d.data_target||[]; window.userApprovals = d.userApprovals||[]; window.moApprovals = d.moApprovals||[]; window.isApprovedByETD = d.isApprovedByETD;
+                    window.applyStateToDOM(); document.getElementById('display-draft-id').innerText = id; window.closeModal(); window.showView('form'); window.goToStep(1);
+                }
+            } catch(e) { window.showModal('error', 'Gagal', 'Tidak dapat membuka dokumen.'); }
+        }
+
+        window.applyStateToDOM = function() {
+            document.getElementById('global_flagship').value = window.globalStore.flagship||''; document.getElementById('global_batch_select').value = window.globalStore.batch||''; document.getElementById('global_date').value = window.globalStore.date||''; document.getElementById('global_participantCount').value = window.globalStore.participantCount||1; document.getElementById('global_mentor').value = window.globalStore.mentorName||''; document.getElementById('global_comments').value = window.globalStore.finalComments||'';
+            if(window.globalStore.signatureDataUrl) { const i = new Image(); i.onload=()=>{const c=document.getElementById('signatureCanvas_global'); const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); ctx.drawImage(i,0,0);}; i.src=window.globalStore.signatureDataUrl; } else window.clearGlobalSignature();
+            window.renderParticipantInputs(); window.reRenderAll(); window.renderMOStampsInForm(); window.toggleFormReadonly(window.viewMode === 'READONLY');
+        }
+        
+        window.renderMOStampsInForm = function() {
+            const c = document.getElementById('mo-stamps-container'); if(window.viewMode !== 'READONLY'){ c.classList.add('hidden'); return; }
+            c.classList.remove('hidden'); let h = `<div class="mb-4 text-xs font-bold p-2 bg-gray-50 border rounded uppercase flex items-center justify-center gap-2"><i data-lucide="info" class="w-4 h-4"></i> ${window.isApprovedByETD ? '<span class="text-green-700">Telah Disetujui ETD (Rekap Aktif)</span>' : '<span class="text-amber-700">Menunggu Persetujuan ETD</span>'}</div>`;
+            if(window.moApprovals.length > 0 || window.userApprovals.length > 0) {
+                h += `<h4 class="text-sm font-bold mb-3 uppercase text-gray-800">Status Validasi User & MO</h4><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;
+                for(let i=0; i<window.globalStore.participantCount; i++) {
+                    let uA = window.userApprovals[i]||{status:'PENDING'}; let mA = window.moApprovals[i]||{status:'PENDING'};
+                    let uSt = uA.status==='OK'?'<span class="text-green-600">OK</span>':uA.status==='NOK'?'<span class="text-red-600">NOK</span>':'<span class="text-gray-400">PENDING</span>';
+                    let mSt = (mA.status==='ACCEPT'||mA.status==='OK')?'<span class="text-green-600">ACCEPT</span>':(mA.status==='REJECT'||mA.status==='NOK')?'<span class="text-red-600">REJECT</span>':'<span class="text-gray-400">PENDING</span>';
+                    h += `<div class="p-3 bg-white border border-gray-200 rounded-lg text-center shadow-sm"><div class="font-bold text-xs uppercase mb-2 border-b pb-1 text-spg-900">${window.globalStore.selectedParticipants[i]?.namaPeserta || `Peserta ${i+1}`}</div><div class="text-sm font-black mb-1">USER: ${uSt}</div><div class="text-[10px] text-gray-500 italic mb-2 min-h-[15px]">${uA.reason||'-'}</div><div class="text-sm font-black border-t pt-2">MO: ${mSt}</div></div>`;
+                } h += `</div>`;
+            } c.innerHTML = h; if(window.lucide) window.lucide.createIcons();
+        }
+
+        window.toggleFormReadonly = function(ro) {
+            const c = document.getElementById('view-form'); c.querySelectorAll('input, select, textarea').forEach(e => { e.disabled = ro; if(ro) e.classList.add('bg-transparent', 'border-transparent', 'shadow-none'); else e.classList.remove('bg-transparent', 'border-transparent', 'shadow-none'); });
+            c.querySelectorAll('.readonly-hide').forEach(e => e.style.display = ro ? 'none' : '');
+            document.getElementById('btn-print-form').classList.toggle('hidden', !ro);
+            document.getElementById('btn-etd-approve').classList.toggle('hidden', !(ro && window.userRole === 'ETD' && !window.isApprovedByETD));
+            const canvas = document.getElementById('signatureCanvas_global'); canvas.style.pointerEvents = ro ? 'none' : 'auto';
+        }
+
+        window.handleETDApprove = async function() {
+            if(!confirm('Approve dokumen ini?')) return; window.showModal('loading', 'Approve...', '');
+            try { await updateDoc(doc(db, 'artifacts', appId, 'public', 'forms', window.currentDraftId), { isApprovedByETD: true }); window.showModal('success', 'Approved', 'Masuk ke rekapan MO.'); setTimeout(()=>window.showView('history'), 1500); } catch(e){}
+        }
+
+        window.loadMOView = async function(view) {
+            const c = document.getElementById(view==='rekapan'?'mo-rekapan-tbody':'mo-hasil-container'); c.innerHTML = `<tr><td colspan="12" class="p-8 text-center"><i data-lucide="loader-2" class="animate-spin mx-auto w-6 h-6"></i></td></tr>`;
+            try {
+                const s = await getDocs(collection(db, 'artifacts', appId, 'public', 'forms')); window.moParticipantRecords = [];
+                const yearSet = new Set(); const batchSet = new Set();
+                s.forEach(d => { let obj = d.data(); if(obj.isApprovedByETD && !obj.isDeleted) { 
+                    const yr = new Date(obj.createdAt).getFullYear().toString(); yearSet.add(yr); if(obj.globalStore.batch) batchSet.add(obj.globalStore.batch);
+                    obj.globalStore.selectedParticipants.forEach((p, i) => { if(p) window.moParticipantRecords.push({fId: d.id, form: obj, pIndex: i, p, yr}); }); 
+                } });
+                const optY = `<option value="">Semua Tahun</option>` + Array.from(yearSet).sort().reverse().map(y=>`<option value="${y}">${y}</option>`).join('');
+                const optB = `<option value="">Semua Batch</option>` + Array.from(batchSet).sort().map(b=>`<option value="${b}">${b}</option>`).join('');
+                document.getElementById(view==='rekapan'?'mo-year-filter-rekap':'mo-year-filter-hasil').innerHTML = optY;
+                document.getElementById(view==='rekapan'?'mo-batch-filter-rekap':'mo-batch-filter-hasil').innerHTML = optB;
+                if(view==='rekapan') window.renderMOTableData(); else window.renderMOCardsData();
+            } catch(e) {}
+        }
+
+        window.renderMOTableData = function() {
+            const yF = document.getElementById('mo-year-filter-rekap').value; const bF = document.getElementById('mo-batch-filter-rekap').value;
+            const filtered = window.moParticipantRecords.filter(r => (yF ? r.yr === yF : true) && (bF ? r.form.globalStore.batch === bF : true));
+            const tb = document.getElementById('mo-rekapan-tbody'); let h = '';
+            filtered.forEach((r, idx) => {
+                let tn=0; for(let k in r.form.data_non_teknis[r.pIndex].scores) { let v=Number(r.form.data_non_teknis[r.pIndex].scores[k]); if(!isNaN(v)) tn+=v; } let ntAvg = (tn/10).toFixed(1);
+                let tt=0; for(let k in r.form.data_teknis[r.pIndex].scores) { let v=Number(r.form.data_teknis[r.pIndex].scores[k]); if(!isNaN(v)) tt+=v; } let tAvg = (tt/20).toFixed(1);
+                let totS=0; r.form.data_sisa[r.pIndex].forEach(d => { let s=Number(d.sisa), dt=Number(d.datang); if(dt>0) { let p=(s/dt)*100; totS += (p<=10?100:p<=30?75:p<=50?50:0); } }); let sAvg = (totS/20).toFixed(2);
+                let totT=0; r.form.data_target[r.pIndex].forEach(d => { let j=Number(d.jumlah), t=Number(d.terjual); if(j>0) { let p=(t/j)*100; totT += (p>=90?100:p>=70?75:p>=50?50:0); } }); let tarAvg = (totT/2).toFixed(1);
+                
+                let ua = r.form.userApprovals[r.pIndex]||{status:'PENDING', reason:''}; let ma = r.form.moApprovals[r.pIndex]||{status:'PENDING', reason:''};
+                
+                let actionUser = `<div class="flex flex-col gap-1">`;
+                if(ua.status !== 'PENDING') { actionUser += `<span class="px-2 py-1 text-[10px] font-bold rounded ${ua.status==='OK'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${ua.status}</span><span class="text-[9px] italic bg-white p-1 rounded border leading-tight">${ua.reason}</span>`; if(window.userRole==='ETD') actionUser += `<button onclick="window.undoAction('${r.fId}', ${r.pIndex}, 'USER')" class="text-[9px] text-blue-600 underline">Undo</button>`; }
+                else { if(window.userRole==='USER') actionUser += `<div class="flex gap-1"><button onclick="window.promptUserAction('${r.fId}', ${r.pIndex}, 'OK')" class="flex-1 bg-green-600 text-white rounded text-[10px] py-1 font-bold">OK</button><button onclick="window.promptUserAction('${r.fId}', ${r.pIndex}, 'NOK')" class="flex-1 bg-red-600 text-white rounded text-[10px] py-1 font-bold">NOK</button></div>`; else actionUser += `<span class="text-[10px] text-gray-400">Wait User</span>`; } actionUser += `</div>`;
+
+                let actionMO = `<div class="flex flex-col gap-1">`;
+                if(ma.status !== 'PENDING') { actionMO += `<span class="px-2 py-1 text-[10px] font-bold rounded ${ma.status==='ACCEPT'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${ma.status}</span>`; if(window.userRole==='ETD') actionMO += `<button onclick="window.undoAction('${r.fId}', ${r.pIndex}, 'MO')" class="text-[9px] text-blue-600 underline">Undo</button>`; }
+                else { if(window.userRole==='MO') { if(ua.status!=='PENDING') actionMO += `<div class="flex gap-1"><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'ACCEPT')" class="flex-1 bg-green-600 text-white rounded text-[10px] py-1 font-bold">ACCEPT</button><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'REJECT')" class="flex-1 bg-red-600 text-white rounded text-[10px] py-1 font-bold">REJECT</button></div>`; else actionMO += `<span class="text-[10px] text-gray-400">Wait User Selesai</span>`; } else actionMO += `<span class="text-[10px] text-gray-400">Wait MO</span>`; } actionMO += `</div>`;
+
+                h += `<tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors"><td class="p-3 text-center">${idx+1}</td><td class="p-3 font-bold text-gray-800">${r.p.namaPeserta}</td><td class="p-3 text-xs text-gray-500">${r.p.idPelamar}</td><td class="p-3 text-xs text-gray-600">${r.form.globalStore.flagship}</td><td class="p-3 text-center font-bold text-blue-600">${ntAvg}</td><td class="p-3 text-center font-bold text-purple-600">${tAvg}</td><td class="p-3 text-center font-bold text-orange-600">${sAvg}</td><td class="p-3 text-center font-bold text-green-600">${tarAvg}</td><td class="p-3 text-center font-black text-spg-600 text-lg bg-spg-50/50">${((Number(ntAvg)+Number(tAvg)+Number(sAvg)+Number(tarAvg))/4).toFixed(1)}</td><td class="p-3 text-[10px] truncate max-w-[150px]" title="${r.form.globalStore.finalComments}">${r.form.globalStore.finalComments}</td><td class="p-2 align-middle">${actionUser}</td><td class="p-2 align-middle">${actionMO}</td></tr>`;
+            });
+            if(!h) h = `<tr><td colspan="12" class="p-6 text-center text-gray-500">Kosong.</td></tr>`; tb.innerHTML = h;
+        }
+
+        window.renderMOCardsData = function() {
+            const yF = document.getElementById('mo-year-filter-hasil').value; const bF = document.getElementById('mo-batch-filter-hasil').value;
+            const filtered = window.moParticipantRecords.filter(r => (yF ? r.yr === yF : true) && (bF ? r.form.globalStore.batch === bF : true));
+            const cardContainer = document.getElementById('mo-hasil-container'); let cHtml = '';
+            filtered.forEach(r => {
+                cHtml += `<div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between transition-transform hover:-translate-y-1"><div><div class="flex justify-between items-start mb-3"><span class="font-black text-spg-900 text-lg uppercase leading-tight pr-2">${r.p.namaPeserta}</span></div><p class="text-xs text-gray-600 mb-4 bg-gray-100 inline-block px-2 py-1 rounded">ID: <b>${r.p.idPelamar}</b> <br class="sm:hidden"/>| Batch: <b>${r.form.globalStore.batch}</b></p><div class="text-xs space-y-1.5 mb-5 bg-spg-50/50 p-3 rounded-lg border border-spg-100"><p class="flex justify-between"><span class="font-semibold text-gray-500">Mentor</span> <span class="font-bold text-gray-800 text-right">${r.form.globalStore.mentorName}</span></p><p class="flex justify-between"><span class="font-semibold text-gray-500">Lokasi</span> <span class="font-bold text-gray-800 text-right truncate pl-2">${r.form.globalStore.flagship}</span></p></div></div><button onclick="window.openDoc('forms', '${r.fId}')" class="w-full py-2.5 bg-spg-800 text-white font-black uppercase tracking-wider rounded-xl hover:bg-spg-900 transition-colors text-xs shadow-md flex items-center justify-center gap-2">Buka Detail Form <i data-lucide="external-link" class="w-3 h-3"></i></button></div>`;
+            });
+            if(!cHtml) cHtml = `<div class="col-span-full p-8 text-center text-gray-500 border border-dashed border-gray-300 rounded-xl">Kosong.</div>`; cardContainer.innerHTML = cHtml; if(window.lucide) window.lucide.createIcons();
+        }
+
+        window.promptUserAction = function(fId, pIdx, st) { window.activeAction = { fId, pIdx, st, role: 'USER' }; const m = document.getElementById('userActionModal'); document.getElementById('userActionTitle').innerText = st==='OK'?'Setujui (OK)':'Tolak (NOK)'; const b = document.getElementById('userActionConfirmBtn'); document.getElementById('userActionReason').value=''; b.className = `flex-1 text-white font-bold py-3 px-4 rounded-xl ${st==='NOK'?'bg-red-600 hover:bg-red-700':'bg-green-600 hover:bg-green-700'}`; b.onclick = window.executeAction; m.classList.remove('hidden'); }
+        window.closeUserModal = function() { document.getElementById('userActionModal').classList.add('hidden'); }
+        window.promptMOAction = function(fId, pIdx, st) { window.activeAction = { fId, pIdx, st, role: 'MO' }; const m = document.getElementById('moActionModal'); document.getElementById('moActionTitle').innerText = st==='ACCEPT'?'Terima (ACCEPT)':'Tolak (REJECT)'; const b = document.getElementById('moActionConfirmBtn'); b.className = `flex-1 text-white font-bold py-3 px-4 rounded-xl ${st==='REJECT'?'bg-red-600 hover:bg-red-700':'bg-green-600 hover:bg-green-700'}`; b.onclick = window.executeAction; m.classList.remove('hidden'); }
+        window.closeMOModal = function() { document.getElementById('moActionModal').classList.add('hidden'); }
+
+        window.executeAction = async function() {
+            if(!window.activeAction) return; const { fId, pIdx, st, role } = window.activeAction; let reason = '';
+            if(role==='USER') { reason=document.getElementById('userActionReason').value; if(!reason.trim()) return window.showModal('error', 'Wajib Diisi', 'Isi alasan.'); document.getElementById('userActionConfirmBtn').innerText="Proses..."; } else document.getElementById('moActionConfirmBtn').innerText="Proses...";
+            try {
+                const ref = doc(db, 'artifacts', appId, 'public', 'forms', fId); const s = await getDoc(ref);
+                if(s.exists()) {
+                    let d = s.data(); let up = {hasUnreadUpdate: true};
+                    if(role==='USER') { if(!d.userApprovals) d.userApprovals=Array(d.globalStore.participantCount).fill({status:'PENDING',reason:''}); d.userApprovals[pIdx]={status:st, reason}; up.userApprovals = d.userApprovals; }
+                    if(role==='MO') { if(!d.moApprovals) d.moApprovals=Array(d.globalStore.participantCount).fill({status:'PENDING',reason:''}); d.moApprovals[pIdx]={status:st, reason:''}; up.moApprovals = d.moApprovals; }
+                    await updateDoc(ref, up); window.showModal('success', 'Berhasil', 'Tersimpan.'); window.loadMOView('rekapan');
+                }
+            } catch(e) {} finally { window.closeUserModal(); window.closeMOModal(); }
+        }
+
+        window.undoAction = async function(fId, pIdx, role) {
+            if(!confirm(`Undo keputusan ${role}?`)) return; window.showModal('loading', 'Undo...', '');
+            try {
+                const ref = doc(db, 'artifacts', appId, 'public', 'forms', fId); const s = await getDoc(ref);
+                if(s.exists()) {
+                    let d = s.data(); let up = {};
+                    if(role==='USER'){ d.userApprovals[pIdx]={status:'PENDING',reason:''}; up.userApprovals=d.userApprovals; }
+                    if(role==='MO'){ d.moApprovals[pIdx]={status:'PENDING',reason:''}; up.moApprovals=d.moApprovals; }
+                    await updateDoc(ref, up); window.closeModal(); window.loadMOView('rekapan');
+                }
+            } catch(e){}
+        }
+
+        let sig = { cv: null, ctx: null, isD: false };
+        window.initSig = function() {
+            sig.cv = document.getElementById('signatureCanvas_global'); if(!sig.cv)return; sig.ctx = sig.cv.getContext('2d');
+            const getP = (e) => { const r = sig.cv.getBoundingClientRect(); const x = e.touches ? e.touches[0].clientX : e.clientX; const y = e.touches ? e.touches[0].clientY : e.clientY; return {x:x-r.left, y:y-r.top}; };
+            const start = (e) => { if(window.viewMode==='READONLY')return; e.preventDefault(); sig.isD=true; const p=getP(e); sig.ctx.lineWidth=3; sig.ctx.strokeStyle="#881337"; sig.ctx.beginPath(); sig.ctx.moveTo(p.x, p.y); };
+            const move = (e) => { if(!sig.isD || window.viewMode==='READONLY')return; e.preventDefault(); const p=getP(e); sig.ctx.lineTo(p.x, p.y); sig.ctx.stroke(); };
+            const end = () => { if(sig.isD && window.viewMode!=='READONLY') { sig.isD=false; window.globalStore.signatureDataUrl = sig.cv.toDataURL(); } };
+            sig.cv.addEventListener('mousedown',start); sig.cv.addEventListener('mousemove',move); window.addEventListener('mouseup',end);
+            sig.cv.addEventListener('touchstart',start,{passive:false}); sig.cv.addEventListener('touchmove',move,{passive:false}); window.addEventListener('touchend',end);
+        }
+        window.clearGlobalSignature = function() { if(sig.ctx){ sig.ctx.clearRect(0,0,sig.cv.width,sig.cv.height); window.globalStore.signatureDataUrl=null; } }
+        
+        window.printRekapanTable = function() { window.print(); }
+        window.generateAndPrintPDF = function() {
+            const c = document.getElementById('print-container'); let h = '';
+            for(let i=0; i<window.globalStore.participantCount; i++) {
+                const p = window.globalStore.selectedParticipants[i]; if(!p) continue;
+                h += `<div class="${i>0?'page-break':''}" style="font-family:sans-serif; padding:20px; font-size:12px;">
+                    <div style="text-align:center; border-bottom:3px solid #e11d48; padding-bottom:10px; margin-bottom:15px;">
+                        <h2 style="margin:0; font-size:18px; color:#881337;">HASIL PENILAIAN OJT SPG MISTER DONUT</h2>
+                        <h3 style="margin:5px 0;">${p.namaPeserta} (${p.idPelamar})</h3>
+                        <p style="margin:0; font-size:10px;">Lokasi: ${window.globalStore.flagship} | Mentor: ${window.globalStore.mentorName} | Tgl: ${window.globalStore.date}</p>
+                    </div>
+                    <h4>1. Checklist OJT (Sampel Kepatuhan)</h4><div style="border:1px solid #ccc; padding:10px; margin-bottom:10px; font-size:10px;">Telah diisi secara online dengan sistem kepatuhan penuh.</div>
+                    <h4>2. Evaluasi Nilai</h4>
+                    <table style="width:100%; border-collapse:collapse; text-align:center; font-size:11px;" border="1">
+                        <tr style="background:#fff1f2;"><th>Aspek Penilaian</th><th>Nilai & Pencapaian</th></tr>
+                        <tr><td>Rata-rata Non Teknis (Max 10)</td><td id="prt_nt_${i}"></td></tr>
+                        <tr><td>Rata-rata Teknis (Max 10)</td><td id="prt_t_${i}"></td></tr>
+                        <tr><td>Pencapaian Barang Sisa (Max 10)</td><td id="prt_s_${i}"></td></tr>
+                        <tr><td>Target Penjualan Achievement (Max 100)</td><td id="prt_tar_${i}"></td></tr>
+                    </table>
+                    <div style="margin-top:20px; border:1px dashed #ccc; padding:10px;"><b>Catatan Akhir Pendamping:</b><br/>${window.globalStore.finalComments}</div>
+                    
+                    <div style="margin-top:20px; text-align:center; display:flex; justify-content: space-around;">
+                        <div>
+                            <p style="font-size:10px; color:#666; margin-bottom:2px;">Keputusan Validasi Sistem</p>
+                            <div style="padding:10px; border:1px solid #ccc; background:#f9f9f9;">
+                                <b>USER:</b> <span id="prt_user_${i}"></span><br/>
+                                <b>MO:</b> <span id="prt_mo_${i}"></span>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <p>Mentor Pendamping,</p><img src="${window.globalStore.signatureDataUrl}" style="height:50px; display:inline-block; margin-right:20px;"/><br/><u>${window.globalStore.mentorName}</u>
+                        </div>
+                    </div>
+                </div>`;
+            }
+            c.innerHTML = h;
+            for(let i=0; i<window.globalStore.participantCount; i++) {
+                let tn=0; for(let k in window.data_non_teknis[i]?.scores) tn+=Number(window.data_non_teknis[i].scores[k]||0); if(document.getElementById(`prt_nt_${i}`)) document.getElementById(`prt_nt_${i}`).innerText = (tn/10).toFixed(1);
+                let tt=0; for(let k in window.data_teknis[i]?.scores) tt+=Number(window.data_teknis[i].scores[k]||0); if(document.getElementById(`prt_t_${i}`)) document.getElementById(`prt_t_${i}`).innerText = (tt/20).toFixed(1);
+                let totS=0; window.data_sisa[i]?.forEach(d => { let s=Number(d.sisa), dt=Number(d.datang); if(dt>0) { let p=(s/dt)*100; totS += (p<=10?100:p<=30?75:p<=50?50:0); } }); if(document.getElementById(`prt_s_${i}`)) document.getElementById(`prt_s_${i}`).innerText = (totS/20).toFixed(2);
+                let totT=0; window.data_target[i]?.forEach(d => { let j=Number(d.jumlah), t=Number(d.terjual); if(j>0) { let p=(t/j)*100; totT += (p>=90?100:p>=70?75:p>=50?50:0); } }); if(document.getElementById(`prt_tar_${i}`)) document.getElementById(`prt_tar_${i}`).innerText = (totT/2).toFixed(1);
+                
+                let uApp = window.userApprovals[i]?.status || 'PENDING'; let mApp = window.moApprovals[i]?.status || 'PENDING';
+                if(document.getElementById(`prt_user_${i}`)) document.getElementById(`prt_user_${i}`).innerHTML = uApp==='OK'?'<span style="color:green">OK</span>':uApp==='NOK'?'<span style="color:red">NOK</span>':'PENDING';
+                if(document.getElementById(`prt_mo_${i}`)) document.getElementById(`prt_mo_${i}`).innerHTML = (mApp==='ACCEPT'||mApp==='OK')?'<span style="color:green">ACCEPT</span>':(mApp==='REJECT'||mApp==='NOK')?'<span style="color:red">REJECT</span>':'PENDING';
+            }
+            setTimeout(()=>{window.print(); setTimeout(()=>c.innerHTML='', 500);}, 200);
+        }
+
+        window.onload = function() { window.initSig(); if(window.lucide) window.lucide.createIcons(); }
+    </script>
+</body>
+</html>
