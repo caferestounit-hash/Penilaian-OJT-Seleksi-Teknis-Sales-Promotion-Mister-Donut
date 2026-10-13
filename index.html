@@ -37,6 +37,9 @@
         ::-webkit-scrollbar-track { background: #fff1f2; }
         ::-webkit-scrollbar-thumb { background: #fb7185; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #e11d48; }
+        
+        /* Edit pulse animation for ETD */
+        .editable-cell:hover { background-color: #fffbeb; cursor: text; }
     </style>
 </head>
 <body class="min-h-screen bg-spg-50 font-sans text-gray-800 selection:bg-spg-200">
@@ -330,7 +333,7 @@
 
         <div id="tab-content-checklist" class="form-tab-content p-4 sm:p-6 block">
             <div class="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-2 gap-2">
-                <h2 class="text-lg font-black text-spg-900 uppercase">1. Checklist OJT</h2>
+                <h2 class="text-lg font-black text-spg-900 uppercase flex items-center gap-2">1. Checklist OJT <span id="hint-etd-1" class="text-[10px] text-spg-600 bg-spg-100 px-2 py-1 rounded hidden border border-spg-200"><i data-lucide="edit-3" class="w-3 h-3 inline"></i> Klik deskripsi untuk mengedit</span></h2>
                 <span class="text-[10px] sm:text-xs font-bold bg-orange-100 text-orange-800 px-2 py-1 rounded">Beri centang (v) jika dilakukan</span>
             </div>
             <div class="overflow-x-auto border border-gray-300 rounded-xl mb-6 shadow-sm print-border-none">
@@ -347,7 +350,7 @@
 
         <div id="tab-content-nonteknis" class="form-tab-content p-4 sm:p-6 hidden">
             <div class="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-2 gap-2">
-                <h2 class="text-lg font-black text-spg-900 uppercase">2. Penilaian Non Teknis</h2>
+                <h2 class="text-lg font-black text-spg-900 uppercase flex items-center gap-2">2. Penilaian Non Teknis <span id="hint-etd-2" class="text-[10px] text-spg-600 bg-spg-100 px-2 py-1 rounded hidden border border-spg-200"><i data-lucide="edit-3" class="w-3 h-3 inline"></i> Klik deskripsi untuk mengedit</span></h2>
                 <span class="text-[10px] sm:text-xs font-bold bg-gray-100 text-gray-600 px-2 py-1 rounded border border-gray-200">Sangat Kurang: 1-5.9 | Kurang: 6-6.9 | Cukup: 7-7.9 | Baik: 8-8.9 | Sangat Baik: 9-10</span>
             </div>
             <div class="overflow-x-auto border border-gray-300 rounded-xl mb-6 shadow-sm print-border-none">
@@ -368,7 +371,7 @@
 
         <div id="tab-content-teknis" class="form-tab-content p-4 sm:p-6 hidden">
             <div class="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-2 gap-2">
-                <h2 class="text-lg font-black text-spg-900 uppercase">3. Penilaian Teknis</h2>
+                <h2 class="text-lg font-black text-spg-900 uppercase flex items-center gap-2">3. Penilaian Teknis <span id="hint-etd-3" class="text-[10px] text-spg-600 bg-spg-100 px-2 py-1 rounded hidden border border-spg-200"><i data-lucide="edit-3" class="w-3 h-3 inline"></i> Klik deskripsi untuk mengedit</span></h2>
                 <span class="text-[10px] sm:text-xs font-bold bg-gray-100 text-gray-600 px-2 py-1 rounded border border-gray-200">Sangat Kurang: 1-5.9 | Kurang: 6-6.9 | Cukup: 7-7.9 | Baik: 8-8.9 | Sangat Baik: 9-10</span>
             </div>
             <div class="overflow-x-auto border border-gray-300 rounded-xl mb-6 shadow-sm print-border-none">
@@ -446,7 +449,7 @@
 
     <div id="print-container" class="hidden"></div>
     <div id="notificationModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden transition-opacity no-print">
-        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl transform scale-100 transition-transform"><div id="modalIconContainer" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5"></div><h3 id="modalTitle" class="text-lg sm:text-xl font-black text-gray-800 mb-2"></h3><p id="modalMessage" class="text-gray-600 mb-6 sm:mb-8 leading-relaxed text-xs sm:text-sm"></p><button onclick="window.closeModal()" class="w-full font-bold py-3 px-4 rounded-xl text-white transition-colors shadow-md bg-spg-900 hover:bg-black cursor-pointer text-sm sm:text-base">Tutup / Mengerti</button></div>
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl transform scale-100 transition-transform"><div id="modalIconContainer" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5"></div><h3 id="modalTitle" class="text-lg sm:text-xl font-black text-gray-800 mb-2"></h3><div id="modalMessage" class="text-gray-600 mb-6 sm:mb-8 leading-relaxed text-xs sm:text-sm"></div><button onclick="window.closeModal()" class="w-full font-bold py-3 px-4 rounded-xl text-white transition-colors shadow-md bg-spg-900 hover:bg-black cursor-pointer text-sm sm:text-base">Tutup / Mengerti</button></div>
     </div>
     <div id="exitModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden no-print">
         <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl"><div class="w-16 h-16 sm:w-20 sm:h-20 bg-spg-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5"><i data-lucide="alert-triangle" class="w-8 h-8 sm:w-10 sm:h-10 text-spg-700"></i></div><h3 class="text-lg sm:text-xl font-black text-gray-800 mb-2">Kembali ke Dashboard?</h3><p class="text-gray-600 mb-6 sm:mb-8 text-xs sm:text-sm">Pastikan Anda sudah menekan tombol "Simpan Draft" jika ada perubahan yang belum disimpan. Yakin ingin keluar?</p><div class="flex gap-2 sm:gap-3"><button onclick="window.closeExitModal()" class="flex-1 bg-gray-100 text-gray-800 font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-gray-200 transition-colors text-xs sm:text-sm">Batal</button><button onclick="window.forceExitToDashboard()" class="flex-1 bg-spg-800 text-white font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-spg-900 transition-colors text-xs sm:text-sm">Ya, Keluar</button></div></div>
@@ -467,11 +470,12 @@
         import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const SPREADSHEET_ID = '1aysyFE8lEileUqbu1PGznMSQCQloUq1O2vfzQWUUBAo';
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbxVYn-T4TVwMU9Krdq4bxsoe6aS9W4R5Vu9_zDRAXPMQg4czx3FUMhBBqpNi1A3WbsRPQ/exec';
+        const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzsYwheA8k5nNhqAnKLEe70pU1BVikNql_UFL7JQKHWWk5ZjTSrOPGv3BZAagI_O3yu/exec';
         
         let db, auth; const appId = 'spg-misdo-app-v2'; let currentUser = null; let isMasterLoaded = false;
         window.userRole = null; window.etdUnsubscribe = null; window.currentDraftId = null; window.viewMode = 'DRAFT';
         window.allMasterParticipants = []; window.availableBatches = []; window.allSubmittedForms = []; window.moParticipantRecords = [];
+        window.customHeaders = { checklist: {}, nonteknis: {}, teknis: {} }; // For ETD edits
         
         /* DATA DEFINITIONS SPG */
         const checklistCategories = [
@@ -487,12 +491,11 @@
         const teknisItems = checklistCategories.reduce((acc, curr) => acc.concat(curr.items.map(name => ({cat: curr.cat, name}))), []);
 
         window.globalStore = { flagship: '', batch: '', date: '', participantCount: 1, mentorName: '', selectedParticipants: [null], signatureDataUrl: null, finalComments: '' };
-        
-        // PERBAIKAN STRUKTUR DATA AGAR TIDAK BERSARANG
         window.data_checklist = {}; window.data_non_teknis = {}; window.data_teknis = {}; window.data_sisa = {}; window.data_target = {}; window.userApprovals = {}; window.moApprovals = {};
 
         window.showModal = function(type, title, message) {
-            const modal = document.getElementById('notificationModal'); const icon = document.getElementById('modalIconContainer'); document.getElementById('modalTitle').innerText = title; document.getElementById('modalMessage').innerText = message;
+            const modal = document.getElementById('notificationModal'); const icon = document.getElementById('modalIconContainer'); document.getElementById('modalTitle').innerText = title; 
+            document.getElementById('modalMessage').innerHTML = message; // Allowed HTML for missing fields list
             if (type === 'success') { icon.className = 'w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5 text-green-600'; icon.innerHTML = `<i data-lucide="check-circle" class="w-8 h-8 sm:w-10 sm:h-10"></i>`; }
             else if (type === 'loading') { icon.className = 'w-16 h-16 sm:w-20 sm:h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5 text-blue-600'; icon.innerHTML = `<i data-lucide="loader-2" class="w-8 h-8 sm:w-10 sm:h-10 animate-spin"></i>`; }
             else { icon.className = 'w-16 h-16 sm:w-20 sm:h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5 text-red-600'; icon.innerHTML = `<i data-lucide="alert-circle" class="w-8 h-8 sm:w-10 sm:h-10"></i>`; }
@@ -510,7 +513,23 @@
                 const app = initializeApp(config); auth = getAuth(app); db = getFirestore(app);
                 signInAnonymously(auth).then(() => {
                     onAuthStateChanged(auth, async (user) => {
-                        if (user) { currentUser = user; document.getElementById('auth-status-badge').innerHTML = `<i data-lucide="wifi" class="w-3 h-3 text-green-600"></i> Online`; if(!isMasterLoaded) { await window.fetchMasterData(); isMasterLoaded = true; } if(window.lucide) window.lucide.createIcons(); if(!window.userRole) window.showView('login'); else window.showView('dashboard'); }
+                        if (user) { 
+                            currentUser = user; 
+                            document.getElementById('auth-status-badge').innerHTML = `<i data-lucide="wifi" class="w-3 h-3 text-green-600"></i> Online`; 
+                            
+                            if(!isMasterLoaded) { 
+                                // Load Custom Headers created by ETD
+                                try {
+                                    const setSnap = await getDoc(doc(db, 'artifacts', appId, 'settings', 'masterData'));
+                                    if(setSnap.exists()) window.customHeaders = setSnap.data().customHeaders || { checklist: {}, nonteknis: {}, teknis: {} };
+                                } catch(e) { console.warn("Could not load custom headers", e); }
+                                
+                                await window.fetchMasterData(); 
+                                isMasterLoaded = true; 
+                            } 
+                            if(window.lucide) window.lucide.createIcons(); 
+                            if(!window.userRole) window.showView('login'); else window.showView('dashboard'); 
+                        }
                     });
                 }).catch(()=> document.getElementById('auth-status-badge').innerHTML = `<i data-lucide="wifi-off" class="w-3 h-3 text-red-500"></i> Offline`);
             } catch(e) { window.showView('login'); }
@@ -533,6 +552,11 @@
             document.getElementById('card-hasil-mentor').style.display = (window.userRole === 'MO' || window.userRole === 'ETD') ? 'block' : 'none';
             document.getElementById('card-trash').style.display = window.userRole === 'ETD' ? 'block' : 'none';
             
+            ['hint-etd-1','hint-etd-2','hint-etd-3'].forEach(id => {
+                if(window.userRole === 'ETD') document.getElementById(id).classList.remove('hidden');
+                else document.getElementById(id).classList.add('hidden');
+            });
+
             const cardHist = document.getElementById('card-history');
             if(window.userRole === 'ETD') {
                 cardHist.style.display = 'block'; document.getElementById('history-card-title').innerText = "Antrean Approve ETD"; document.getElementById('history-card-desc').innerText = "Approve form dari mentor sebelum rekapan MO."; document.getElementById('history-view-title').innerText = "Antrean Approve ETD";
@@ -564,7 +588,9 @@
         window.fetchMasterData = async function() {
             const btn = document.getElementById('btnSyncMaster'); if(btn) btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i> Sync...`;
             try {
-                const res = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1751933326`); const text = await res.text(); const json = JSON.parse(text.substring(47, text.length - 2));
+                const res = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=0`); 
+                const text = await res.text(); 
+                const json = JSON.parse(text.substring(47, text.length - 2));
                 window.allMasterParticipants = json.table.rows.map((r, i) => { 
                     const c = r.c||[]; 
                     return { 
@@ -609,7 +635,6 @@
         }
         window.selectParticipant = function(i, id) { window.globalStore.selectedParticipants[i] = id ? {...window.allMasterParticipants.find(p=>p.idPelamar===id)} : null; window.reRenderAll(); }
 
-        // PERBAIKAN: Mengubah inisialisasi agar menjadi Objek dengan properti angka (bukan array dalam array)
         window.initArrays = function(count) {
             window.globalStore.selectedParticipants.length = count;
             window.data_checklist = {}; window.data_non_teknis = {}; window.data_teknis = {}; window.data_sisa = {}; window.data_target = {}; window.userApprovals = {}; window.moApprovals = {};
@@ -624,6 +649,15 @@
             }
         }
 
+        window.updateCustomItem = async function(type, id, text) {
+            if(!window.customHeaders) window.customHeaders = { checklist: {}, nonteknis: {}, teknis: {} };
+            if(!window.customHeaders[type]) window.customHeaders[type] = {};
+            window.customHeaders[type][id] = text.trim();
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'settings', 'masterData'), { customHeaders: window.customHeaders }, {merge: true});
+            } catch(e) { console.error("Gagal menyimpan custom header", e); }
+        }
+
         window.reRenderAll = function() { window.renderChecklist(); window.renderNonTeknis(); window.renderTeknis(); window.renderSisa(); window.renderTarget(); }
         
         window.renderChecklist = function() {
@@ -631,7 +665,12 @@
             let tb = ''; checklistCategories.forEach((c, cIdx) => {
                 tb += `<tr class="bg-gray-100 font-bold"><td colspan="${window.globalStore.participantCount+1}" class="p-3 border-y border-gray-200 text-gray-700">${c.cat}</td></tr>`;
                 c.items.forEach((item, iIdx) => {
-                    const id = `c_${cIdx}_${iIdx}`; tb += `<tr class="border-b border-gray-200 hover:bg-gray-50"><td class="p-3 text-sm">${item}</td>`;
+                    const id = `c_${cIdx}_${iIdx}`; 
+                    let displayItem = (window.customHeaders && window.customHeaders.checklist && window.customHeaders.checklist[id]) ? window.customHeaders.checklist[id] : item;
+                    let isEditable = (window.userRole === 'ETD');
+                    let editAttr = isEditable ? `contenteditable="true" onblur="window.updateCustomItem('checklist', '${id}', this.innerText)" class="p-3 text-sm border-b border-dashed border-spg-300 editable-cell focus:outline-none focus:ring-2 focus:ring-spg-500" title="Klik untuk mengedit (Auto-save)"` : `class="p-3 text-sm"`;
+                    
+                    tb += `<tr class="border-b border-gray-200 hover:bg-gray-50"><td ${editAttr}>${displayItem}</td>`;
                     for(let p=0; p<window.globalStore.participantCount; p++) {
                         let chk = window.data_checklist[p]?.checks[id] ? 'checked' : ''; let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
                         tb += `<td class="p-3 text-center border-l border-gray-200 bg-white"><input type="checkbox" onchange="window.data_checklist[${p}].checks['${id}'] = this.checked" class="w-5 h-5 accent-spg-600 cursor-pointer" ${chk} ${dis}></td>`;
@@ -643,7 +682,11 @@
         window.renderNonTeknis = function() {
             let th = `<tr><th class="p-3 border-r border-spg-200 w-1/2">Target Belajar (Non Teknis)</th>`; for(let i=0;i<window.globalStore.participantCount;i++) th += `<th class="p-3 w-32 text-center border-r border-spg-200"><div class="text-[10px] text-gray-500 mb-1">Peserta ${i+1}</div>${window.globalStore.selectedParticipants[i]?.namaPeserta || `-`}</th>`; th += `</tr>`; document.getElementById('thead_nonteknis').innerHTML = th;
             let tb = ''; nonTeknisItems.forEach((item, idx) => {
-                tb += `<tr class="border-b border-gray-200 hover:bg-gray-50"><td class="p-3 text-sm">${item}</td>`;
+                let displayItem = (window.customHeaders && window.customHeaders.nonteknis && window.customHeaders.nonteknis[idx]) ? window.customHeaders.nonteknis[idx] : item;
+                let isEditable = (window.userRole === 'ETD');
+                let editAttr = isEditable ? `contenteditable="true" onblur="window.updateCustomItem('nonteknis', '${idx}', this.innerText)" class="p-3 text-sm border-b border-dashed border-spg-300 editable-cell focus:outline-none focus:ring-2 focus:ring-spg-500" title="Klik untuk mengedit (Auto-save)"` : `class="p-3 text-sm"`;
+
+                tb += `<tr class="border-b border-gray-200 hover:bg-gray-50"><td ${editAttr}>${displayItem}</td>`;
                 for(let p=0; p<window.globalStore.participantCount; p++) {
                     let val = window.data_non_teknis[p]?.scores?.[idx] || ''; let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
                     tb += `<td class="p-3 text-center border-l border-gray-200 bg-white"><select onchange="window.updateScore('data_non_teknis', ${p}, ${idx}, this.value)" class="w-full p-2 border border-gray-300 rounded-lg text-center font-bold outline-none focus:border-spg-500" ${dis}><option value="">-</option>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}" ${val==n?'selected':''}>${n}</option>`).join('')}</select></td>`;
@@ -660,7 +703,12 @@
             let tb = ''; let currentCat = '';
             teknisItems.forEach((item, idx) => {
                 if(item.cat !== currentCat) { tb += `<tr class="bg-gray-100 font-bold"><td colspan="${window.globalStore.participantCount+1}" class="p-3 border-y border-gray-200 text-gray-700">${item.cat}</td></tr>`; currentCat = item.cat; }
-                tb += `<tr class="border-b border-gray-200 hover:bg-gray-50"><td class="p-3 text-sm">${item.name}</td>`;
+                
+                let displayItem = (window.customHeaders && window.customHeaders.teknis && window.customHeaders.teknis[idx]) ? window.customHeaders.teknis[idx] : item.name;
+                let isEditable = (window.userRole === 'ETD');
+                let editAttr = isEditable ? `contenteditable="true" onblur="window.updateCustomItem('teknis', '${idx}', this.innerText)" class="p-3 text-sm border-b border-dashed border-spg-300 editable-cell focus:outline-none focus:ring-2 focus:ring-spg-500" title="Klik untuk mengedit (Auto-save)"` : `class="p-3 text-sm"`;
+
+                tb += `<tr class="border-b border-gray-200 hover:bg-gray-50"><td ${editAttr}>${displayItem}</td>`;
                 for(let p=0; p<window.globalStore.participantCount; p++) {
                     let val = window.data_teknis[p]?.scores?.[idx] || ''; let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
                     tb += `<td class="p-3 text-center border-l border-gray-200 bg-white"><select onchange="window.updateScore('data_teknis', ${p}, ${idx}, this.value)" class="w-full p-2 border border-gray-300 rounded-lg text-center font-bold outline-none focus:border-spg-500" ${dis}><option value="">-</option>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}" ${val==n?'selected':''}>${n}</option>`).join('')}</select></td>`;
@@ -749,9 +797,9 @@
 
         window.goToStep = function(step) {
             if(step > 1 && window.viewMode === 'DRAFT') {
-                if(!window.globalStore.date || !window.globalStore.batch || !window.globalStore.flagship) return window.showModal('error', 'Belum Lengkap', 'Isi Info Utama.');
-                for(let i=0; i<window.globalStore.participantCount; i++) if(!window.globalStore.selectedParticipants[i]) return window.showModal('error', 'Belum Lengkap', 'Pilih semua peserta terlebih dahulu.');
-                if(!window.globalStore.mentorName || !window.globalStore.signatureDataUrl) return window.showModal('error', 'Belum Lengkap', 'Isi nama dan TTD mentor.');
+                if(!window.globalStore.date || !window.globalStore.batch || !window.globalStore.flagship) return window.showModal('error', 'Belum Lengkap', 'Isi Info Utama (Tgl, Batch, Lokasi) terlebih dahulu.');
+                for(let i=0; i<window.globalStore.participantCount; i++) if(!window.globalStore.selectedParticipants[i]) return window.showModal('error', 'Belum Lengkap', 'Pilih semua peserta SPG terlebih dahulu.');
+                if(!window.globalStore.mentorName || !window.globalStore.signatureDataUrl) return window.showModal('error', 'Belum Lengkap', 'Isi nama dan tanda tangan mentor pada Info Utama.');
             }
             document.querySelectorAll('.form-tab-content').forEach(e => e.classList.add('hidden'));
             document.querySelectorAll('.step-indicator').forEach(e => { e.className = "step-indicator px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg font-bold text-[10px] sm:text-xs flex items-center gap-1 bg-spg-700/80 text-white opacity-70 border border-transparent transition-all"; e.querySelector('span').className = "bg-white/20 rounded-full w-4 h-4 flex items-center justify-center text-[10px]"; });
@@ -773,27 +821,89 @@
         }
 
         window.handleSubmitAll = async function() {
+            let missing = [];
+            
+            if(!window.globalStore.date || !window.globalStore.batch || !window.globalStore.flagship) missing.push("Informasi Utama (Tgl, Batch, Lokasi)");
+            for(let i=0; i<window.globalStore.participantCount; i++) if(!window.globalStore.selectedParticipants[i]) missing.push(`Pilih Peserta SPG ke-${i+1}`);
+            if(!window.globalStore.mentorName || !window.globalStore.signatureDataUrl) missing.push("Nama atau Tanda Tangan Mentor");
+
             for(let p=0; p<window.globalStore.participantCount; p++) {
-                for(let i=0; i<nonTeknisItems.length; i++) if(!window.data_non_teknis[p]?.scores?.[i]) return window.showModal('error', 'Belum Lengkap', `Form Non Teknis: Nilai poin ke-${i+1} Peserta ${p+1} belum diisi.`);
-                if(!window.data_non_teknis[p]?.comment || !window.data_non_teknis[p]?.comment.trim()) return window.showModal('error', 'Belum Lengkap', `Form Non Teknis: Komentar Peserta ${p+1} belum diisi.`);
-                for(let i=0; i<teknisItems.length; i++) if(!window.data_teknis[p]?.scores?.[i]) return window.showModal('error', 'Belum Lengkap', `Form Teknis: Nilai poin ke-${i+1} Peserta ${p+1} belum diisi.`);
-                if(!window.data_teknis[p]?.comment || !window.data_teknis[p]?.comment.trim()) return window.showModal('error', 'Belum Lengkap', `Form Teknis: Komentar Peserta ${p+1} belum diisi.`);
+                let pName = window.globalStore.selectedParticipants[p]?.namaPeserta || `Peserta ${p+1}`;
+                let ntMissing = false;
+                for(let i=0; i<nonTeknisItems.length; i++) if(!window.data_non_teknis[p]?.scores?.[i]) ntMissing = true;
+                if(ntMissing) missing.push(`Form Non Teknis (${pName}) - Lengkapi semua nilai`);
+                if(!window.data_non_teknis[p]?.comment || !window.data_non_teknis[p]?.comment.trim()) missing.push(`Komentar Evaluasi Non Teknis (${pName})`);
+
+                let tMissing = false;
+                for(let i=0; i<teknisItems.length; i++) if(!window.data_teknis[p]?.scores?.[i]) tMissing = true;
+                if(tMissing) missing.push(`Form Teknis (${pName}) - Lengkapi semua nilai`);
+                if(!window.data_teknis[p]?.comment || !window.data_teknis[p]?.comment.trim()) missing.push(`Komentar Evaluasi Teknis (${pName})`);
+
                 for(let d=0; d<2; d++) {
                     let s = window.data_sisa[p]?.[d];
-                    if(!s || !s.date || s.datang==='' || s.terjual==='' || s.sisa==='') return window.showModal('error', 'Belum Lengkap', `Form Pengurangan Barang Sisa: Hari ke-${d+1} Peserta ${p+1} belum lengkap.`);
+                    if(!s || !s.date || s.datang==='' || s.terjual==='' || s.sisa==='') missing.push(`Form Pengurangan Brg Sisa Hari ke-${d+1} (${pName})`);
                     let t = window.data_target[p]?.[d];
-                    if(!t || !t.date || t.jumlah==='' || t.terjual==='') return window.showModal('error', 'Belum Lengkap', `Form Target Achievement: Hari ke-${d+1} Peserta ${p+1} belum lengkap.`);
+                    if(!t || !t.date || t.jumlah==='' || t.terjual==='') missing.push(`Form Target Achievement Hari ke-${d+1} (${pName})`);
                 }
             }
-            if(!window.globalStore.finalComments) return window.showModal('error', 'Belum Lengkap', 'Isi komentar akhir pendamping terlebih dahulu.');
+            if(!window.globalStore.finalComments || !window.globalStore.finalComments.trim()) missing.push("Komentar Akhir Pendamping");
+
+            if(missing.length > 0) {
+                let msg = `<div class="text-left max-h-[40vh] overflow-y-auto mt-2 bg-red-50 p-4 rounded-xl border border-red-100"><p class="font-black mb-3 text-red-700 text-sm border-b border-red-200 pb-2">Bagian yang belum diisi:</p><ul class="list-disc pl-5 text-gray-700 space-y-1.5 text-xs font-medium">`;
+                missing.forEach(m => msg += `<li>${m}</li>`);
+                msg += `</ul></div>`;
+                return window.showModal('error', 'Form Belum Lengkap', msg);
+            }
 
             const btn = document.getElementById('btnSubmitAll'); btn.disabled = true; btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Mengirim...`;
+            
             try {
-                const p = { createdAt: Date.now(), mentorUid: currentUser.uid, batch: window.globalStore.batch, globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target, userApprovals: window.userApprovals, moApprovals: window.moApprovals, isApprovedByETD: false, isDeleted: false, hasUnreadUpdate: true };
-                await setDoc(doc(db, 'artifacts', appId, 'forms', window.currentDraftId), p);
+                // 1. SIAPKAN DATA UNTUK SPREADSHEET
+                let payloadGAS = {
+                    action: "SUBMIT_FORM",
+                    formId: window.currentDraftId,
+                    timestamp: new Date().toLocaleString('id-ID'),
+                    mentor: window.globalStore.mentorName,
+                    batch: window.globalStore.batch,
+                    lokasi: window.globalStore.flagship,
+                    komentar: window.globalStore.finalComments,
+                    participants: []
+                };
+
+                // Hitung nilai akhir untuk tiap peserta sebelum dikirim ke GAS
+                for(let p=0; p<window.globalStore.participantCount; p++) {
+                    let nt=0; for(let k in window.data_non_teknis[p]?.scores) nt+=Number(window.data_non_teknis[p].scores[k]); let ntAvg = (nt/10).toFixed(1);
+                    let tk=0; for(let k in window.data_teknis[p]?.scores) tk+=Number(window.data_teknis[p].scores[k]); let tAvg = (tk/20).toFixed(1);
+                    let totS=0; (window.data_sisa[p]||[]).forEach(d=>{ let s=Number(d.sisa),dt=Number(d.datang); if(dt>0){let pct=(s/dt)*100; totS+=(pct<=10?100:pct<=30?75:pct<=50?50:0);} }); let sAvg = (totS/20).toFixed(2);
+                    let totT=0; (window.data_target[p]||[]).forEach(d=>{ let j=Number(d.jumlah),t=Number(d.terjual); if(j>0){let pct=(t/j)*100; totT+=(pct>=90?100:pct>=70?75:pct>=50?50:0);} }); let tarAvg = (totT/2).toFixed(1);
+                    let totalAkhir = ((Number(ntAvg)+Number(tAvg)+Number(sAvg)+Number(tarAvg))/4).toFixed(1);
+
+                    payloadGAS.participants.push({
+                        idPelamar: window.globalStore.selectedParticipants[p].idPelamar,
+                        namaPeserta: window.globalStore.selectedParticipants[p].namaPeserta,
+                        ntAvg: ntAvg, tAvg: tAvg, sAvg: sAvg, tarAvg: tarAvg, totalAkhir: totalAkhir
+                    });
+                }
+
+                // 2. SIMPAN KE FIREBASE (Sistem Utama)
+                const pData = { createdAt: Date.now(), mentorUid: currentUser.uid, batch: window.globalStore.batch, globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target, userApprovals: window.userApprovals, moApprovals: window.moApprovals, isApprovedByETD: false, isDeleted: false, hasUnreadUpdate: true };
+                await setDoc(doc(db, 'artifacts', appId, 'forms', window.currentDraftId), pData);
                 try{ await deleteDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId)); }catch(e){}
+
+                // 3. KIRIM KE GOOGLE SHEETS VIA WEBHOOK Tanpa Blocking
+                fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payloadGAS)
+                }).catch(err => console.log("Info: Kirim GAS berjalan di background"));
+
                 window.showModal('success', 'Terkirim', 'Form berhasil disubmit.'); setTimeout(()=>window.showView('dashboard'), 2000);
-            } catch(e) { console.error(e); window.showModal('error', 'Gagal', 'Kesalahan saat mengirim.'); } finally { btn.disabled = false; btn.innerHTML = `<i data-lucide="send" class="w-5 h-5"></i> Kirim & Selesai`; }
+            } catch(e) { 
+                console.error(e); window.showModal('error', 'Gagal', 'Kesalahan saat mengirim.'); 
+            } finally { 
+                btn.disabled = false; btn.innerHTML = `<i data-lucide="send" class="w-5 h-5"></i> Kirim & Selesai`; 
+            }
         }
 
         window.loadList = async function(col) {
@@ -879,7 +989,8 @@
         }
 
         window.toggleFormReadonly = function(ro) {
-            const c = document.getElementById('view-form'); c.querySelectorAll('input, select, textarea').forEach(e => { e.disabled = ro; if(ro) e.classList.add('bg-transparent', 'border-transparent', 'shadow-none'); else e.classList.remove('bg-transparent', 'border-transparent', 'shadow-none'); });
+            const c = document.getElementById('view-form'); 
+            c.querySelectorAll('input, select, textarea').forEach(e => { e.disabled = ro; if(ro) e.classList.add('bg-transparent', 'border-transparent', 'shadow-none'); else e.classList.remove('bg-transparent', 'border-transparent', 'shadow-none'); });
             c.querySelectorAll('.readonly-hide').forEach(e => e.style.display = ro ? 'none' : '');
             document.getElementById('btn-print-form').classList.toggle('hidden', !ro);
             document.getElementById('btn-etd-approve').classList.toggle('hidden', !(ro && window.userRole === 'ETD' && !window.isApprovedByETD));
@@ -957,7 +1068,29 @@
                     let d = s.data(); let up = {hasUnreadUpdate: true};
                     if(role==='USER') { if(!d.userApprovals) d.userApprovals={}; d.userApprovals[pIdx]={status:st, reason}; up.userApprovals = d.userApprovals; }
                     if(role==='MO') { if(!d.moApprovals) d.moApprovals={}; d.moApprovals[pIdx]={status:st, reason:''}; up.moApprovals = d.moApprovals; }
-                    await updateDoc(ref, up); window.showModal('success', 'Berhasil', 'Tersimpan.'); window.loadMOView('rekapan');
+                    
+                    // 1. Simpan ke Firebase
+                    await updateDoc(ref, up); 
+
+                    // 2. Kirim update ke Google Sheets
+                    let idPelamarTarget = d.globalStore.selectedParticipants[pIdx].idPelamar;
+                    let payloadGAS = {
+                        action: "UPDATE_APPROVAL",
+                        formId: fId,
+                        idPelamar: idPelamarTarget,
+                        role: role,
+                        status: st,
+                        reason: reason
+                    };
+                    
+                    fetch(WEBHOOK_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payloadGAS)
+                    }).catch(err => console.log("Info: Update GAS berjalan di background"));
+
+                    window.showModal('success', 'Berhasil', 'Tersimpan.'); window.loadMOView('rekapan');
                 }
             } catch(e) {console.error(e);} finally { window.closeUserModal(); window.closeMOModal(); }
         }
@@ -1041,4 +1174,3 @@
     </script>
 </body>
 </html>
-```eof
