@@ -822,9 +822,9 @@
             window.initArrays(1); document.getElementById('global_participantCount').value = 1; window.applyStateToDOM(); document.getElementById('display-draft-id').innerText = window.currentDraftId; window.showView('form'); window.goToStep(1);
         }
 
-        /* -------------------------------------------------------------
-           FUNGSI SIMPAN DRAFT DIPERBAIKI (SUPER CLEANER)
-        ------------------------------------------------------------- */
+        // ======================================================================
+        // PERBAIKAN: FUNGSI SIMPAN DRAFT DISAMAKAN PERSIS 1:1 DENGAN SUBMIT FINAL
+        // ======================================================================
         window.handleSaveDraft = async function() {
             if(!currentUser) {
                 window.showModal('error', 'Sesi Habis', 'Sesi Anda telah berakhir, silakan muat ulang halaman.');
@@ -838,23 +838,27 @@
             window.showModal('loading', 'Menyimpan...', 'Menyimpan progress Anda ke draft...');
             
             try { 
-                // Fungsi pembungkus untuk membersihkan semua atribut 'undefined' (Akar masalah Firebase error)
-                const cleanData = (data) => JSON.parse(JSON.stringify(data || {}));
-                
-                const draftPayload = { 
+                // Format data dibuat 100% sama dengan pData di handleSubmitAll untuk lolos filter Firebase
+                const draftPayload = JSON.parse(JSON.stringify({ 
+                    createdAt: Date.now(), 
                     updatedAt: Date.now(),
-                    mentorUid: currentUser.uid,
-                    batch: window.globalStore.batch || '',
-                    globalStore: cleanData(window.globalStore), 
-                    data_checklist: cleanData(window.data_checklist), 
-                    data_non_teknis: cleanData(window.data_non_teknis), 
-                    data_teknis: cleanData(window.data_teknis), 
-                    data_sisa: cleanData(window.data_sisa), 
-                    data_target: cleanData(window.data_target)
-                };
+                    mentorUid: currentUser.uid, 
+                    batch: window.globalStore.batch || '', 
+                    globalStore: window.globalStore, 
+                    data_checklist: window.data_checklist, 
+                    data_non_teknis: window.data_non_teknis, 
+                    data_teknis: window.data_teknis, 
+                    data_sisa: window.data_sisa, 
+                    data_target: window.data_target,
+                    userApprovals: window.userApprovals || {}, 
+                    moApprovals: window.moApprovals || {},
+                    isApprovedByETD: false, 
+                    isDeleted: false, 
+                    hasUnreadUpdate: false
+                }));
                 
                 await setDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId), draftPayload); 
-                window.showModal('success', 'Tersimpan', 'Draft berhasil disimpan dengan aman.'); 
+                window.showModal('success', 'Tersimpan', 'Draft berhasil disimpan.'); 
             } catch(e) { 
                 console.error("Draft Save Error: ", e); 
                 window.showModal('error', 'Gagal', 'Terjadi kesalahan saat menyimpan draft: ' + e.message); 
@@ -899,7 +903,6 @@
             const btn = document.getElementById('btnSubmitAll'); btn.disabled = true; btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Mengirim...`;
             
             try {
-                // 1. SIAPKAN DATA UNTUK SPREADSHEET
                 let payloadGAS = {
                     action: "SUBMIT_FORM",
                     formId: window.currentDraftId,
@@ -925,13 +928,11 @@
                     });
                 }
 
-                // 2. SIMPAN KE FIREBASE (Sistem Utama)
                 const pData = JSON.parse(JSON.stringify({ createdAt: Date.now(), mentorUid: currentUser.uid, batch: window.globalStore.batch, globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target, userApprovals: window.userApprovals, moApprovals: window.moApprovals, isApprovedByETD: false, isDeleted: false, hasUnreadUpdate: true }));
                 
                 await setDoc(doc(db, 'artifacts', appId, 'forms', window.currentDraftId), pData);
                 try{ await deleteDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId)); }catch(e){}
 
-                // 3. KIRIM KE GOOGLE SHEETS VIA WEBHOOK
                 fetch(WEBHOOK_URL, {
                     method: 'POST',
                     mode: 'no-cors',
