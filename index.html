@@ -164,7 +164,8 @@
             <button onclick="window.showView('dashboard')" class="p-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i></button>
             <div><h2 class="text-xl sm:text-2xl font-black text-gray-800 uppercase">Daftar Draft Tersimpan</h2></div>
         </div>
-        <div id="draft-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        <!-- PERBAIKAN: Mengganti id draft-list-container menjadi drafts-list-container -->
+        <div id="drafts-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </div>
 
     <div id="view-history" class="max-w-5xl mx-auto p-4 sm:p-6 mt-4 hidden no-print">
@@ -822,9 +823,6 @@
             window.initArrays(1); document.getElementById('global_participantCount').value = 1; window.applyStateToDOM(); document.getElementById('display-draft-id').innerText = window.currentDraftId; window.showView('form'); window.goToStep(1);
         }
 
-        // ======================================================================
-        // PERBAIKAN: FUNGSI SIMPAN DRAFT DISAMAKAN PERSIS 1:1 DENGAN SUBMIT FINAL
-        // ======================================================================
         window.handleSaveDraft = async function() {
             if(!currentUser) {
                 window.showModal('error', 'Sesi Habis', 'Sesi Anda telah berakhir, silakan muat ulang halaman.');
@@ -838,7 +836,6 @@
             window.showModal('loading', 'Menyimpan...', 'Menyimpan progress Anda ke draft...');
             
             try { 
-                // Format data dibuat 100% sama dengan pData di handleSubmitAll untuk lolos filter Firebase
                 const draftPayload = JSON.parse(JSON.stringify({ 
                     createdAt: Date.now(), 
                     updatedAt: Date.now(),
