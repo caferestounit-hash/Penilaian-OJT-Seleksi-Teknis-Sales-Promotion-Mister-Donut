@@ -639,7 +639,6 @@
         }
 
         window.initArrays = function(count) {
-            // FIX: Safe adjustment of array to prevent 'undefined' values that cause Firebase rejection
             const currentLen = window.globalStore.selectedParticipants.length;
             if(count > currentLen) {
                 for(let i = currentLen; i < count; i++) window.globalStore.selectedParticipants.push(null);
@@ -647,7 +646,6 @@
                 window.globalStore.selectedParticipants.length = count;
             }
             
-            // FIX: Non-destructive array initialization to prevent losing data when adding participants
             for(let i=0; i<count; i++) {
                 if(!window.data_checklist[i]) window.data_checklist[i] = { checks: {} };
                 if(!window.data_non_teknis[i]) window.data_non_teknis[i] = { scores: {}, comment: '' };
@@ -820,27 +818,47 @@
         window.createNewAssessment = function() {
             window.currentDraftId = 'SPG-' + Math.random().toString(36).substring(2, 9).toUpperCase(); window.viewMode = 'DRAFT'; 
             window.globalStore = { flagship:'', batch:'', date:new Date().toISOString().split('T')[0], participantCount:1, mentorName:'', selectedParticipants:[null], signatureDataUrl:null, finalComments:'' };
-            // Kosongkan secara paksa saat memulai form baru
             window.data_checklist = {}; window.data_non_teknis = {}; window.data_teknis = {}; window.data_sisa = {}; window.data_target = {}; window.userApprovals = {}; window.moApprovals = {};
             window.initArrays(1); document.getElementById('global_participantCount').value = 1; window.applyStateToDOM(); document.getElementById('display-draft-id').innerText = window.currentDraftId; window.showView('form'); window.goToStep(1);
         }
 
+        /* -------------------------------------------------------------
+           FUNGSI SIMPAN DRAFT DIPERBAIKI (SUPER CLEANER)
+        ------------------------------------------------------------- */
         window.handleSaveDraft = async function() {
-            if(!currentUser) return; window.showModal('loading', 'Menyimpan...', '');
+            if(!currentUser) {
+                window.showModal('error', 'Sesi Habis', 'Sesi Anda telah berakhir, silakan muat ulang halaman.');
+                return;
+            }
+            if(!window.currentDraftId) {
+                window.showModal('error', 'Error', 'ID Draft tidak valid.');
+                return;
+            }
+            
+            window.showModal('loading', 'Menyimpan...', 'Menyimpan progress Anda ke draft...');
+            
             try { 
-                // FIX: Gunakan JSON.parse(JSON.stringify) sebagai tameng penghapus nilai "undefined" di seluruh layer objek (solusi error Firebase)
-                const draftPayload = JSON.parse(JSON.stringify({ 
-                    updatedAt: Date.now(), 
-                    globalStore: window.globalStore, 
-                    data_checklist: window.data_checklist, 
-                    data_non_teknis: window.data_non_teknis, 
-                    data_teknis: window.data_teknis, 
-                    data_sisa: window.data_sisa, 
-                    data_target: window.data_target 
-                }));
+                // Fungsi pembungkus untuk membersihkan semua atribut 'undefined' (Akar masalah Firebase error)
+                const cleanData = (data) => JSON.parse(JSON.stringify(data || {}));
+                
+                const draftPayload = { 
+                    updatedAt: Date.now(),
+                    mentorUid: currentUser.uid,
+                    batch: window.globalStore.batch || '',
+                    globalStore: cleanData(window.globalStore), 
+                    data_checklist: cleanData(window.data_checklist), 
+                    data_non_teknis: cleanData(window.data_non_teknis), 
+                    data_teknis: cleanData(window.data_teknis), 
+                    data_sisa: cleanData(window.data_sisa), 
+                    data_target: cleanData(window.data_target)
+                };
+                
                 await setDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId), draftPayload); 
-                window.showModal('success', 'Tersimpan', 'Draft berhasil disimpan.'); 
-            } catch(e) { console.error(e); window.showModal('error', 'Gagal', 'Terjadi kesalahan saat menyimpan draft.'); }
+                window.showModal('success', 'Tersimpan', 'Draft berhasil disimpan dengan aman.'); 
+            } catch(e) { 
+                console.error("Draft Save Error: ", e); 
+                window.showModal('error', 'Gagal', 'Terjadi kesalahan saat menyimpan draft: ' + e.message); 
+            }
         }
 
         window.handleSubmitAll = async function() {
@@ -907,7 +925,7 @@
                     });
                 }
 
-                // FIX: Penggunaan JSON.parse(JSON.stringify()) untuk tameng keamanan saat submit form juga
+                // 2. SIMPAN KE FIREBASE (Sistem Utama)
                 const pData = JSON.parse(JSON.stringify({ createdAt: Date.now(), mentorUid: currentUser.uid, batch: window.globalStore.batch, globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target, userApprovals: window.userApprovals, moApprovals: window.moApprovals, isApprovedByETD: false, isDeleted: false, hasUnreadUpdate: true }));
                 
                 await setDoc(doc(db, 'artifacts', appId, 'forms', window.currentDraftId), pData);
