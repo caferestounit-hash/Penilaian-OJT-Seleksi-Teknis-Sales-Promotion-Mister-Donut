@@ -470,12 +470,12 @@
         import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const SPREADSHEET_ID = '1aysyFE8lEileUqbu1PGznMSQCQloUq1O2vfzQWUUBAo';
-        const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzsYwheA8k5nNhqAnKLEe70pU1BVikNql_UFL7JQKHWWk5ZjTSrOPGv3BZAagI_O3yu/exec';
+        const WEBHOOK_URL = 'MASUKKAN_URL_WEB_APP_ANDA_DISINI'; // <-- URL DARI GOOGLE APPS SCRIPT TARUH DI SINI
         
         let db, auth; const appId = 'spg-misdo-app-v2'; let currentUser = null; let isMasterLoaded = false;
         window.userRole = null; window.etdUnsubscribe = null; window.currentDraftId = null; window.viewMode = 'DRAFT';
         window.allMasterParticipants = []; window.availableBatches = []; window.allSubmittedForms = []; window.moParticipantRecords = [];
-        window.customHeaders = { checklist: {}, nonteknis: {}, teknis: {} }; // For ETD edits
+        window.customHeaders = { checklist: {}, nonteknis: {}, teknis: {} };
         
         /* DATA DEFINITIONS SPG */
         const checklistCategories = [
@@ -495,7 +495,7 @@
 
         window.showModal = function(type, title, message) {
             const modal = document.getElementById('notificationModal'); const icon = document.getElementById('modalIconContainer'); document.getElementById('modalTitle').innerText = title; 
-            document.getElementById('modalMessage').innerHTML = message; // Allowed HTML for missing fields list
+            document.getElementById('modalMessage').innerHTML = message; 
             if (type === 'success') { icon.className = 'w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5 text-green-600'; icon.innerHTML = `<i data-lucide="check-circle" class="w-8 h-8 sm:w-10 sm:h-10"></i>`; }
             else if (type === 'loading') { icon.className = 'w-16 h-16 sm:w-20 sm:h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5 text-blue-600'; icon.innerHTML = `<i data-lucide="loader-2" class="w-8 h-8 sm:w-10 sm:h-10 animate-spin"></i>`; }
             else { icon.className = 'w-16 h-16 sm:w-20 sm:h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5 text-red-600'; icon.innerHTML = `<i data-lucide="alert-circle" class="w-8 h-8 sm:w-10 sm:h-10"></i>`; }
@@ -518,7 +518,6 @@
                             document.getElementById('auth-status-badge').innerHTML = `<i data-lucide="wifi" class="w-3 h-3 text-green-600"></i> Online`; 
                             
                             if(!isMasterLoaded) { 
-                                // Load Custom Headers created by ETD
                                 try {
                                     const setSnap = await getDoc(doc(db, 'artifacts', appId, 'settings', 'masterData'));
                                     if(setSnap.exists()) window.customHeaders = setSnap.data().customHeaders || { checklist: {}, nonteknis: {}, teknis: {} };
@@ -633,19 +632,30 @@
                 h += `<div class="p-3 border border-spg-200 rounded-lg bg-spg-50/50"><div class="text-xs font-bold mb-2 text-spg-900 uppercase">Peserta ${i+1}</div><select onchange="window.selectParticipant(${i}, this.value)" class="w-full p-2.5 border border-spg-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-spg-500 outline-none"><option value="">-- Pilih --</option>${opts.map(p => `<option value="${p.idPelamar}" ${sel?.idPelamar===p.idPelamar?'selected':''}>${p.namaPeserta} (${p.idPelamar})</option>`).join('')}</select></div>`;
             } container.innerHTML = h;
         }
-        window.selectParticipant = function(i, id) { window.globalStore.selectedParticipants[i] = id ? {...window.allMasterParticipants.find(p=>p.idPelamar===id)} : null; window.reRenderAll(); }
+        window.selectParticipant = function(i, id) { 
+            const found = window.allMasterParticipants.find(p=>p.idPelamar===id);
+            window.globalStore.selectedParticipants[i] = found ? {...found} : null; 
+            window.reRenderAll(); 
+        }
 
         window.initArrays = function(count) {
-            window.globalStore.selectedParticipants.length = count;
-            window.data_checklist = {}; window.data_non_teknis = {}; window.data_teknis = {}; window.data_sisa = {}; window.data_target = {}; window.userApprovals = {}; window.moApprovals = {};
+            // FIX: Safe adjustment of array to prevent 'undefined' values that cause Firebase rejection
+            const currentLen = window.globalStore.selectedParticipants.length;
+            if(count > currentLen) {
+                for(let i = currentLen; i < count; i++) window.globalStore.selectedParticipants.push(null);
+            } else {
+                window.globalStore.selectedParticipants.length = count;
+            }
+            
+            // FIX: Non-destructive array initialization to prevent losing data when adding participants
             for(let i=0; i<count; i++) {
-                window.data_checklist[i] = { checks: {} };
-                window.data_non_teknis[i] = { scores: {}, comment: '' };
-                window.data_teknis[i] = { scores: {}, comment: '' };
-                window.data_sisa[i] = [ {date:'', datang:'', terjual:'', sisa:''}, {date:'', datang:'', terjual:'', sisa:''} ];
-                window.data_target[i] = [ {date:'', jumlah:'', terjual:''}, {date:'', jumlah:'', terjual:''} ];
-                window.userApprovals[i] = {status: 'PENDING', reason: ''};
-                window.moApprovals[i] = {status: 'PENDING', reason: ''};
+                if(!window.data_checklist[i]) window.data_checklist[i] = { checks: {} };
+                if(!window.data_non_teknis[i]) window.data_non_teknis[i] = { scores: {}, comment: '' };
+                if(!window.data_teknis[i]) window.data_teknis[i] = { scores: {}, comment: '' };
+                if(!window.data_sisa[i]) window.data_sisa[i] = [ {date:'', datang:'', terjual:'', sisa:''}, {date:'', datang:'', terjual:'', sisa:''} ];
+                if(!window.data_target[i]) window.data_target[i] = [ {date:'', jumlah:'', terjual:''}, {date:'', jumlah:'', terjual:''} ];
+                if(!window.userApprovals[i]) window.userApprovals[i] = {status: 'PENDING', reason: ''};
+                if(!window.moApprovals[i]) window.moApprovals[i] = {status: 'PENDING', reason: ''};
             }
         }
 
@@ -808,14 +818,27 @@
         }
 
         window.createNewAssessment = function() {
-            window.currentDraftId = 'SPG-' + Math.random().toString(36).substring(2, 9).toUpperCase(); window.viewMode = 'DRAFT'; window.globalStore = { flagship:'', batch:'', date:new Date().toISOString().split('T')[0], participantCount:1, mentorName:'', selectedParticipants:[null], signatureDataUrl:null, finalComments:'' };
+            window.currentDraftId = 'SPG-' + Math.random().toString(36).substring(2, 9).toUpperCase(); window.viewMode = 'DRAFT'; 
+            window.globalStore = { flagship:'', batch:'', date:new Date().toISOString().split('T')[0], participantCount:1, mentorName:'', selectedParticipants:[null], signatureDataUrl:null, finalComments:'' };
+            // Kosongkan secara paksa saat memulai form baru
+            window.data_checklist = {}; window.data_non_teknis = {}; window.data_teknis = {}; window.data_sisa = {}; window.data_target = {}; window.userApprovals = {}; window.moApprovals = {};
             window.initArrays(1); document.getElementById('global_participantCount').value = 1; window.applyStateToDOM(); document.getElementById('display-draft-id').innerText = window.currentDraftId; window.showView('form'); window.goToStep(1);
         }
 
         window.handleSaveDraft = async function() {
             if(!currentUser) return; window.showModal('loading', 'Menyimpan...', '');
             try { 
-                await setDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId), { updatedAt: Date.now(), globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target }); 
+                // FIX: Gunakan JSON.parse(JSON.stringify) sebagai tameng penghapus nilai "undefined" di seluruh layer objek (solusi error Firebase)
+                const draftPayload = JSON.parse(JSON.stringify({ 
+                    updatedAt: Date.now(), 
+                    globalStore: window.globalStore, 
+                    data_checklist: window.data_checklist, 
+                    data_non_teknis: window.data_non_teknis, 
+                    data_teknis: window.data_teknis, 
+                    data_sisa: window.data_sisa, 
+                    data_target: window.data_target 
+                }));
+                await setDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId), draftPayload); 
                 window.showModal('success', 'Tersimpan', 'Draft berhasil disimpan.'); 
             } catch(e) { console.error(e); window.showModal('error', 'Gagal', 'Terjadi kesalahan saat menyimpan draft.'); }
         }
@@ -870,7 +893,6 @@
                     participants: []
                 };
 
-                // Hitung nilai akhir untuk tiap peserta sebelum dikirim ke GAS
                 for(let p=0; p<window.globalStore.participantCount; p++) {
                     let nt=0; for(let k in window.data_non_teknis[p]?.scores) nt+=Number(window.data_non_teknis[p].scores[k]); let ntAvg = (nt/10).toFixed(1);
                     let tk=0; for(let k in window.data_teknis[p]?.scores) tk+=Number(window.data_teknis[p].scores[k]); let tAvg = (tk/20).toFixed(1);
@@ -885,12 +907,13 @@
                     });
                 }
 
-                // 2. SIMPAN KE FIREBASE (Sistem Utama)
-                const pData = { createdAt: Date.now(), mentorUid: currentUser.uid, batch: window.globalStore.batch, globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target, userApprovals: window.userApprovals, moApprovals: window.moApprovals, isApprovedByETD: false, isDeleted: false, hasUnreadUpdate: true };
+                // FIX: Penggunaan JSON.parse(JSON.stringify()) untuk tameng keamanan saat submit form juga
+                const pData = JSON.parse(JSON.stringify({ createdAt: Date.now(), mentorUid: currentUser.uid, batch: window.globalStore.batch, globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target, userApprovals: window.userApprovals, moApprovals: window.moApprovals, isApprovedByETD: false, isDeleted: false, hasUnreadUpdate: true }));
+                
                 await setDoc(doc(db, 'artifacts', appId, 'forms', window.currentDraftId), pData);
                 try{ await deleteDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId)); }catch(e){}
 
-                // 3. KIRIM KE GOOGLE SHEETS VIA WEBHOOK Tanpa Blocking
+                // 3. KIRIM KE GOOGLE SHEETS VIA WEBHOOK
                 fetch(WEBHOOK_URL, {
                     method: 'POST',
                     mode: 'no-cors',
