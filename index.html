@@ -164,7 +164,6 @@
             <button onclick="window.showView('dashboard')" class="p-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i></button>
             <div><h2 class="text-xl sm:text-2xl font-black text-gray-800 uppercase">Daftar Draft Tersimpan</h2></div>
         </div>
-        <!-- PERBAIKAN: Mengganti id draft-list-container menjadi drafts-list-container -->
         <div id="drafts-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </div>
 
@@ -216,9 +215,8 @@
                         <th class="p-3 border-r border-spg-700 text-center">Nilai Teknis</th>
                         <th class="p-3 border-r border-spg-700 text-center">Nilai Sisa Brg</th>
                         <th class="p-3 border-r border-spg-700 text-center">Nilai Target</th>
-                        <th class="p-3 border-r border-spg-700 text-center">Total Nilai</th>
-                        <th class="p-3 border-r border-spg-700">Keterangan Mentor</th>
-                        <th class="p-3 border-r border-spg-700 text-center">Validasi User</th>
+                        <th class="p-3 border-r border-spg-700 text-center">Total Akhir OJT</th>
+                        <th class="p-3 border-r border-spg-700">Keputusan User (Mentor)</th>
                         <th class="p-3 text-center">Validasi MO</th>
                     </tr>
                 </thead>
@@ -433,12 +431,12 @@
                 </table>
             </div>
             
-            <div class="mb-6 bg-amber-50 border border-amber-200 p-4 rounded-xl shadow-sm print-border-none">
-                <label class="block text-sm font-bold text-amber-900 mb-2 uppercase tracking-wide">Komentar Akhir Pendamping <span class="text-red-500 readonly-hide">*</span></label>
-                <textarea id="global_comments" oninput="window.globalStore.finalComments = this.value" class="form-control w-full min-h-[100px] p-3 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm bg-white" placeholder="Kesimpulan / catatan untuk peserta SPG..."></textarea>
+            <div class="mt-8 pt-6 border-t border-gray-200 print-border-none">
+                <h3 class="text-sm font-black text-spg-900 uppercase mb-4 tracking-wide"><i data-lucide="clipboard-check" class="w-4 h-4 inline mr-1 text-spg-600"></i> Kesimpulan & Rekomendasi OJT</h3>
+                <div id="rekomendasi_container" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
             </div>
 
-            <div class="flex flex-col sm:flex-row justify-between gap-3 pt-6 border-t border-gray-200 bg-gray-50 p-4 rounded-b-xl -mx-4 -mb-4 sm:-mx-6 sm:-mb-6 no-print readonly-hide">
+            <div class="flex flex-col sm:flex-row justify-between gap-3 pt-6 border-t border-gray-200 bg-gray-50 p-4 rounded-b-xl -mx-4 -mb-4 sm:-mx-6 sm:-mb-6 no-print readonly-hide mt-6">
                 <button onclick="window.goToStep(4)" class="w-full sm:w-auto px-5 py-3 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold rounded-lg text-sm flex justify-center items-center gap-2 shadow-sm transition-colors"><i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali</button>
                 <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                     <button onclick="window.handleSaveDraft()" class="w-full sm:w-auto px-6 py-3 bg-blue-100 hover:bg-blue-200 border border-blue-200 text-blue-800 font-bold rounded-lg text-sm flex justify-center items-center gap-2 transition-colors"><i data-lucide="save" class="w-4 h-4"></i> Simpan Draft</button>
@@ -455,9 +453,6 @@
     <div id="exitModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden no-print">
         <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl"><div class="w-16 h-16 sm:w-20 sm:h-20 bg-spg-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-5"><i data-lucide="alert-triangle" class="w-8 h-8 sm:w-10 sm:h-10 text-spg-700"></i></div><h3 class="text-lg sm:text-xl font-black text-gray-800 mb-2">Kembali ke Dashboard?</h3><p class="text-gray-600 mb-6 sm:mb-8 text-xs sm:text-sm">Pastikan Anda sudah menekan tombol "Simpan Draft" jika ada perubahan yang belum disimpan. Yakin ingin keluar?</p><div class="flex gap-2 sm:gap-3"><button onclick="window.closeExitModal()" class="flex-1 bg-gray-100 text-gray-800 font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-gray-200 transition-colors text-xs sm:text-sm">Batal</button><button onclick="window.forceExitToDashboard()" class="flex-1 bg-spg-800 text-white font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-spg-900 transition-colors text-xs sm:text-sm">Ya, Keluar</button></div></div>
     </div>
-    <div id="userActionModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden no-print">
-        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl relative"><h3 id="userActionTitle" class="text-lg sm:text-xl font-black text-gray-800 mb-2 text-center">Set Keputusan User</h3><p id="userActionDesc" class="text-gray-600 mb-4 text-xs sm:text-sm text-center">Tindakan ini bersifat final. Silakan berikan alasan.</p><div class="mb-4 sm:mb-6"><label class="block text-[10px] sm:text-xs font-bold text-gray-700 mb-2 uppercase">Alasan Keputusan <span class="text-red-500">*</span></label><textarea id="userActionReason" class="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-spg-500 resize-none h-20 sm:h-24 text-sm" placeholder="Sebutkan alasannya secara detail..."></textarea></div><div class="flex gap-2 sm:gap-3"><button onclick="window.closeUserModal()" class="flex-1 bg-gray-100 text-gray-800 font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-gray-200 transition-colors text-xs sm:text-sm">Batal</button><button id="userActionConfirmBtn" class="flex-1 text-white font-bold py-3 px-2 sm:px-4 rounded-xl transition-colors text-xs sm:text-sm">Konfirmasi Final</button></div></div>
-    </div>
     <div id="moActionModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden no-print">
         <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl relative"><h3 id="moActionTitle" class="text-lg sm:text-xl font-black text-gray-800 mb-2 text-center">Validasi MO</h3><p id="moActionDesc" class="text-gray-600 mb-6 text-xs sm:text-sm text-center">Apakah Anda yakin akan mengesahkan hasil ini secara final?</p><div class="flex gap-2 sm:gap-3"><button onclick="window.closeMOModal()" class="flex-1 bg-gray-100 text-gray-800 font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-gray-200 transition-colors text-xs sm:text-sm">Batal</button><button id="moActionConfirmBtn" class="flex-1 text-white font-bold py-3 px-2 sm:px-4 rounded-xl transition-colors text-xs sm:text-sm">Konfirmasi Final</button></div></div>
     </div>
@@ -471,7 +466,7 @@
         import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const SPREADSHEET_ID = '1aysyFE8lEileUqbu1PGznMSQCQloUq1O2vfzQWUUBAo';
-        const WEBHOOK_URL = 'MASUKKAN_URL_WEB_APP_ANDA_DISINI'; // <-- URL DARI GOOGLE APPS SCRIPT TARUH DI SINI
+        const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzsYwheA8k5nNhqAnKLEe70pU1BVikNql_UFL7JQKHWWk5ZjTSrOPGv3BZAagI_O3yu/exec'; 
         
         let db, auth; const appId = 'spg-misdo-app-v2'; let currentUser = null; let isMasterLoaded = false;
         window.userRole = null; window.etdUnsubscribe = null; window.currentDraftId = null; window.viewMode = 'DRAFT';
@@ -492,7 +487,7 @@
         const teknisItems = checklistCategories.reduce((acc, curr) => acc.concat(curr.items.map(name => ({cat: curr.cat, name}))), []);
 
         window.globalStore = { flagship: '', batch: '', date: '', participantCount: 1, mentorName: '', selectedParticipants: [null], signatureDataUrl: null, finalComments: '' };
-        window.data_checklist = {}; window.data_non_teknis = {}; window.data_teknis = {}; window.data_sisa = {}; window.data_target = {}; window.userApprovals = {}; window.moApprovals = {};
+        window.data_checklist = {}; window.data_non_teknis = {}; window.data_teknis = {}; window.data_sisa = {}; window.data_target = {}; window.data_rekomendasi = {}; window.moApprovals = {};
 
         window.showModal = function(type, title, message) {
             const modal = document.getElementById('notificationModal'); const icon = document.getElementById('modalIconContainer'); document.getElementById('modalTitle').innerText = title; 
@@ -517,13 +512,11 @@
                         if (user) { 
                             currentUser = user; 
                             document.getElementById('auth-status-badge').innerHTML = `<i data-lucide="wifi" class="w-3 h-3 text-green-600"></i> Online`; 
-                            
                             if(!isMasterLoaded) { 
                                 try {
                                     const setSnap = await getDoc(doc(db, 'artifacts', appId, 'settings', 'masterData'));
                                     if(setSnap.exists()) window.customHeaders = setSnap.data().customHeaders || { checklist: {}, nonteknis: {}, teknis: {} };
                                 } catch(e) { console.warn("Could not load custom headers", e); }
-                                
                                 await window.fetchMasterData(); 
                                 isMasterLoaded = true; 
                             } 
@@ -588,7 +581,8 @@
         window.fetchMasterData = async function() {
             const btn = document.getElementById('btnSyncMaster'); if(btn) btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i> Sync...`;
             try {
-                const res = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=0`); 
+                // Menarik dari sheet khusus "NAME"
+                const res = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=NAME`); 
                 const text = await res.text(); 
                 const json = JSON.parse(text.substring(47, text.length - 2));
                 window.allMasterParticipants = json.table.rows.map((r, i) => { 
@@ -603,7 +597,6 @@
                 }).filter(p => p.namaPeserta);
                 
                 window.availableBatches = Array.from(new Set(window.allMasterParticipants.map(p => p.batch).filter(Boolean))); 
-                
                 window.populateBatchSelect();
                 
                 if(btn) btn.innerHTML = `<i data-lucide="check" class="w-3 h-3 text-green-600"></i> Sync OK`;
@@ -646,14 +639,14 @@
             } else {
                 window.globalStore.selectedParticipants.length = count;
             }
-            
+            if(!window.data_rekomendasi) window.data_rekomendasi = {};
             for(let i=0; i<count; i++) {
                 if(!window.data_checklist[i]) window.data_checklist[i] = { checks: {} };
                 if(!window.data_non_teknis[i]) window.data_non_teknis[i] = { scores: {}, comment: '' };
                 if(!window.data_teknis[i]) window.data_teknis[i] = { scores: {}, comment: '' };
                 if(!window.data_sisa[i]) window.data_sisa[i] = [ {date:'', datang:'', terjual:'', sisa:''}, {date:'', datang:'', terjual:'', sisa:''} ];
                 if(!window.data_target[i]) window.data_target[i] = [ {date:'', jumlah:'', terjual:''}, {date:'', jumlah:'', terjual:''} ];
-                if(!window.userApprovals[i]) window.userApprovals[i] = {status: 'PENDING', reason: ''};
+                if(!window.data_rekomendasi[i]) window.data_rekomendasi[i] = { status: '', alasan: '' };
                 if(!window.moApprovals[i]) window.moApprovals[i] = {status: 'PENDING', reason: ''};
             }
         }
@@ -726,7 +719,7 @@
             tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/20)</td>`;
             for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" id="total_teknis_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_teknis').innerHTML = tb;
             
-            let fb = ''; for(let p=0; p<window.globalStore.participantCount; p++) { let dis = window.viewMode === 'READONLY' ? 'disabled' : ''; fb += `<div class="bg-gray-50 p-4 border border-gray-200 rounded-xl shadow-sm"><label class="text-xs font-bold uppercase text-spg-900 flex items-center justify-between mb-2"><span>Komentar - Peserta ${p+1}</span><span class="text-gray-500 truncate max-w-[150px] font-medium">${window.globalStore.selectedParticipants[p]?.namaPeserta || ''}</span></label><textarea oninput="window.data_teknis[${p}].comment = this.value" class="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-spg-500 text-sm bg-white min-h-[100px]" placeholder="Evaluasi teknis untuk peserta ini..." ${dis}>${window.data_teknis[p]?.comment||''}</textarea></div>`; } document.getElementById('feedback_teknis').innerHTML = fb; window.calcTeknis();
+            let fb = ''; for(let p=0; p<window.globalStore.participantCount; p++) { let dis = window.viewMode === 'READONLY' ? 'disabled' : ''; fb += `<div class="bg-gray-50 p-4 border border-gray-200 rounded-xl shadow-sm"><label class="text-xs font-bold uppercase text-spg-900 flex items-center justify-between mb-2"><span>Komentar - Peserta ${p+1}</span><span class="text-gray-500 truncate max-w-[150px] font-medium">${window.globalStore.selectedParticipants[p]?.namaPeserta || ''}</span></label><textarea oninput="window.data_teknis[${p}].comment = this.value" class="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-spg-500 text-sm bg-white min-h-[100px]" placeholder="Evaluasi teknis untuk peserta ini..." ${dis}>${window.data_teknis[p]?.comment||''}</textarea></div>`; } document.getElementById('feedback_teknis').innerHTML = fb; window.calcTeknis(); window.renderRekomendasi();
         }
 
         window.renderSisa = function() {
@@ -740,7 +733,7 @@
                 } tb += `</tr>`;
             }
             tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/20)</td>`;
-            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="5" id="total_sisa_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_sisa').innerHTML = tb; window.calcSisa();
+            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="5" id="total_sisa_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_sisa').innerHTML = tb; window.calcSisa(); window.renderRekomendasi();
         }
 
         window.renderTarget = function() {
@@ -754,7 +747,47 @@
                 } tb += `</tr>`;
             }
             tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/20)</td>`;
-            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="4" id="total_target_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_target').innerHTML = tb; window.calcTarget();
+            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="4" id="total_target_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_target').innerHTML = tb; window.calcTarget(); window.renderRekomendasi();
+        }
+
+        window.renderRekomendasi = function() {
+            let h = '';
+            for(let p=0; p<window.globalStore.participantCount; p++) {
+                let pName = window.globalStore.selectedParticipants[p]?.namaPeserta || `Peserta ${p+1}`;
+                if(!window.data_rekomendasi[p]) window.data_rekomendasi[p] = {status:'', alasan:''};
+                let d = window.data_rekomendasi[p];
+                let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
+
+                let tk=0; for(let k in window.data_teknis[p]?.scores) tk+=Number(window.data_teknis[p].scores[k]); let tAvg = tk/20;
+                let totS=0; (window.data_sisa[p]||[]).forEach(x=>{ let s=Number(x.sisa),dt=Number(x.datang); if(dt>0){let pct=(s/dt)*100; totS+=(pct<=10?100:pct<=30?75:pct<=50?50:0);} }); let sAvg = totS/20;
+                let totT=0; (window.data_target[p]||[]).forEach(x=>{ let j=Number(x.jumlah),t=Number(x.terjual); if(j>0){let pct=(t/j)*100; totT+=(pct>=90?100:pct>=70?75:pct>=50?50:0);} }); let tarAvg = totT/2;
+                
+                let totalAkhir = ((tAvg + sAvg + tarAvg)/3).toFixed(1);
+
+                h += `
+                <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl shadow-sm print-border-none relative">
+                    <div class="flex justify-between items-center mb-3 border-b border-blue-200 pb-2">
+                        <span class="font-black text-sm uppercase text-blue-900">${pName}</span>
+                        <div class="text-right">
+                            <span class="text-[10px] text-blue-700 font-bold uppercase block mb-1">Total Nilai Akhir OJT</span>
+                            <span class="font-black text-lg text-blue-900 bg-white px-2 py-1 rounded shadow-sm">${isNaN(totalAkhir)?'0.0':totalAkhir}</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-xs font-bold text-blue-800 mb-1 uppercase tracking-wide">Status Keputusan User <span class="text-red-500 readonly-hide">*</span></label>
+                        <select onchange="window.data_rekomendasi[${p}].status = this.value" class="w-full p-2 border border-blue-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-blue-500 outline-none font-bold" ${dis}>
+                            <option value="">-- Pilih Keputusan --</option>
+                            <option value="LULUS" ${d.status==='LULUS'?'selected':''}>LULUS</option>
+                            <option value="TIDAK LULUS" ${d.status==='TIDAK LULUS'?'selected':''}>TIDAK LULUS</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-blue-800 mb-1 uppercase tracking-wide">Alasan <span class="text-red-500 readonly-hide">*</span></label>
+                        <textarea oninput="window.data_rekomendasi[${p}].alasan = this.value" class="w-full p-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-xs bg-white min-h-[60px]" placeholder="Sebutkan alasan kelulusan..." ${dis}>${d.alasan||''}</textarea>
+                    </div>
+                </div>`;
+            }
+            document.getElementById('rekomendasi_container').innerHTML = h;
         }
 
         window.updateScore = function(obj, p, i, v) { window[obj][p].scores[i] = v; if(obj==='data_non_teknis') window.calcNonTeknis(); else window.calcTeknis(); }
@@ -769,6 +802,7 @@
                 let t = 0; for(let k in window.data_teknis[p]?.scores) { let v = Number(window.data_teknis[p].scores[k]); if(!isNaN(v)) t+=v; }
                 const el = document.getElementById(`total_teknis_${p}`); if(el) el.innerText = (t/20).toFixed(2);
             }
+            window.renderRekomendasi();
         }
         window.updateCalc = function(type, p, day, field, val) { window[`data_${type}`][p][day][field] = val; if(type==='sisa') window.calcSisa(); else window.calcTarget(); }
         window.calcSisa = function() {
@@ -786,6 +820,7 @@
                 }
                 const tel = document.getElementById(`total_sisa_${p}`); if(tel) tel.innerText = (tot/20).toFixed(2);
             }
+            window.renderRekomendasi();
         }
         window.calcTarget = function() {
             for(let p=0; p<window.globalStore.participantCount; p++) {
@@ -802,6 +837,7 @@
                 }
                 const tel = document.getElementById(`total_target_${p}`); if(tel) tel.innerText = (tot/20).toFixed(1);
             }
+            window.renderRekomendasi();
         }
 
         window.goToStep = function(step) {
@@ -818,48 +854,25 @@
 
         window.createNewAssessment = function() {
             window.currentDraftId = 'SPG-' + Math.random().toString(36).substring(2, 9).toUpperCase(); window.viewMode = 'DRAFT'; 
-            window.globalStore = { flagship:'', batch:'', date:new Date().toISOString().split('T')[0], participantCount:1, mentorName:'', selectedParticipants:[null], signatureDataUrl:null, finalComments:'' };
-            window.data_checklist = {}; window.data_non_teknis = {}; window.data_teknis = {}; window.data_sisa = {}; window.data_target = {}; window.userApprovals = {}; window.moApprovals = {};
+            window.globalStore = { flagship:'', batch:'', date:new Date().toISOString().split('T')[0], participantCount:1, mentorName:'', selectedParticipants:[null], signatureDataUrl:null };
+            window.data_checklist = {}; window.data_non_teknis = {}; window.data_teknis = {}; window.data_sisa = {}; window.data_target = {}; window.data_rekomendasi = {}; window.moApprovals = {};
             window.initArrays(1); document.getElementById('global_participantCount').value = 1; window.applyStateToDOM(); document.getElementById('display-draft-id').innerText = window.currentDraftId; window.showView('form'); window.goToStep(1);
         }
 
         window.handleSaveDraft = async function() {
-            if(!currentUser) {
-                window.showModal('error', 'Sesi Habis', 'Sesi Anda telah berakhir, silakan muat ulang halaman.');
-                return;
-            }
-            if(!window.currentDraftId) {
-                window.showModal('error', 'Error', 'ID Draft tidak valid.');
-                return;
-            }
-            
+            if(!currentUser) { window.showModal('error', 'Sesi Habis', 'Sesi Anda telah berakhir, silakan muat ulang halaman.'); return; }
+            if(!window.currentDraftId) { window.showModal('error', 'Error', 'ID Draft tidak valid.'); return; }
             window.showModal('loading', 'Menyimpan...', 'Menyimpan progress Anda ke draft...');
-            
             try { 
-                const draftPayload = JSON.parse(JSON.stringify({ 
-                    createdAt: Date.now(), 
-                    updatedAt: Date.now(),
-                    mentorUid: currentUser.uid, 
-                    batch: window.globalStore.batch || '', 
-                    globalStore: window.globalStore, 
-                    data_checklist: window.data_checklist, 
-                    data_non_teknis: window.data_non_teknis, 
-                    data_teknis: window.data_teknis, 
-                    data_sisa: window.data_sisa, 
-                    data_target: window.data_target,
-                    userApprovals: window.userApprovals || {}, 
-                    moApprovals: window.moApprovals || {},
-                    isApprovedByETD: false, 
-                    isDeleted: false, 
-                    hasUnreadUpdate: false
-                }));
-                
+                const cleanData = (data) => JSON.parse(JSON.stringify(data || {}));
+                const draftPayload = { 
+                    createdAt: Date.now(), updatedAt: Date.now(), mentorUid: currentUser.uid, batch: window.globalStore.batch || '', 
+                    globalStore: cleanData(window.globalStore), data_checklist: cleanData(window.data_checklist), data_non_teknis: cleanData(window.data_non_teknis), 
+                    data_teknis: cleanData(window.data_teknis), data_sisa: cleanData(window.data_sisa), data_target: cleanData(window.data_target), data_rekomendasi: cleanData(window.data_rekomendasi), moApprovals: cleanData(window.moApprovals), isApprovedByETD: false, isDeleted: false, hasUnreadUpdate: false
+                };
                 await setDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId), draftPayload); 
                 window.showModal('success', 'Tersimpan', 'Draft berhasil disimpan.'); 
-            } catch(e) { 
-                console.error("Draft Save Error: ", e); 
-                window.showModal('error', 'Gagal', 'Terjadi kesalahan saat menyimpan draft: ' + e.message); 
-            }
+            } catch(e) { console.error("Draft Save Error: ", e); window.showModal('error', 'Gagal', 'Terjadi kesalahan saat menyimpan draft: ' + e.message); }
         }
 
         window.handleSubmitAll = async function() {
@@ -871,71 +884,56 @@
 
             for(let p=0; p<window.globalStore.participantCount; p++) {
                 let pName = window.globalStore.selectedParticipants[p]?.namaPeserta || `Peserta ${p+1}`;
-                let ntMissing = false;
-                for(let i=0; i<nonTeknisItems.length; i++) if(!window.data_non_teknis[p]?.scores?.[i]) ntMissing = true;
+                
+                let ntMissing = false; for(let i=0; i<nonTeknisItems.length; i++) if(!window.data_non_teknis[p]?.scores?.[i]) ntMissing = true;
                 if(ntMissing) missing.push(`Form Non Teknis (${pName}) - Lengkapi semua nilai`);
                 if(!window.data_non_teknis[p]?.comment || !window.data_non_teknis[p]?.comment.trim()) missing.push(`Komentar Evaluasi Non Teknis (${pName})`);
 
-                let tMissing = false;
-                for(let i=0; i<teknisItems.length; i++) if(!window.data_teknis[p]?.scores?.[i]) tMissing = true;
+                let tMissing = false; for(let i=0; i<teknisItems.length; i++) if(!window.data_teknis[p]?.scores?.[i]) tMissing = true;
                 if(tMissing) missing.push(`Form Teknis (${pName}) - Lengkapi semua nilai`);
                 if(!window.data_teknis[p]?.comment || !window.data_teknis[p]?.comment.trim()) missing.push(`Komentar Evaluasi Teknis (${pName})`);
 
                 for(let d=0; d<2; d++) {
-                    let s = window.data_sisa[p]?.[d];
-                    if(!s || !s.date || s.datang==='' || s.terjual==='' || s.sisa==='') missing.push(`Form Pengurangan Brg Sisa Hari ke-${d+1} (${pName})`);
-                    let t = window.data_target[p]?.[d];
-                    if(!t || !t.date || t.jumlah==='' || t.terjual==='') missing.push(`Form Target Achievement Hari ke-${d+1} (${pName})`);
+                    let s = window.data_sisa[p]?.[d]; if(!s || !s.date || s.datang==='' || s.terjual==='' || s.sisa==='') missing.push(`Form Pengurangan Brg Sisa Hari ke-${d+1} (${pName})`);
+                    let t = window.data_target[p]?.[d]; if(!t || !t.date || t.jumlah==='' || t.terjual==='') missing.push(`Form Target Achievement Hari ke-${d+1} (${pName})`);
                 }
+                
+                let rek = window.data_rekomendasi[p];
+                if(!rek || !rek.status) missing.push(`Status Keputusan Lulus/Tidak (${pName})`);
+                if(!rek || !rek.alasan || !rek.alasan.trim()) missing.push(`Alasan Keputusan (${pName})`);
             }
-            if(!window.globalStore.finalComments || !window.globalStore.finalComments.trim()) missing.push("Komentar Akhir Pendamping");
 
             if(missing.length > 0) {
                 let msg = `<div class="text-left max-h-[40vh] overflow-y-auto mt-2 bg-red-50 p-4 rounded-xl border border-red-100"><p class="font-black mb-3 text-red-700 text-sm border-b border-red-200 pb-2">Bagian yang belum diisi:</p><ul class="list-disc pl-5 text-gray-700 space-y-1.5 text-xs font-medium">`;
-                missing.forEach(m => msg += `<li>${m}</li>`);
-                msg += `</ul></div>`;
+                missing.forEach(m => msg += `<li>${m}</li>`); msg += `</ul></div>`;
                 return window.showModal('error', 'Form Belum Lengkap', msg);
             }
 
             const btn = document.getElementById('btnSubmitAll'); btn.disabled = true; btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Mengirim...`;
             
             try {
-                let payloadGAS = {
-                    action: "SUBMIT_FORM",
-                    formId: window.currentDraftId,
-                    timestamp: new Date().toLocaleString('id-ID'),
-                    mentor: window.globalStore.mentorName,
-                    batch: window.globalStore.batch,
-                    lokasi: window.globalStore.flagship,
-                    komentar: window.globalStore.finalComments,
-                    participants: []
-                };
+                let payloadGAS = { action: "SUBMIT_FORM", formId: window.currentDraftId, timestamp: new Date().toLocaleString('id-ID'), mentor: window.globalStore.mentorName, batch: window.globalStore.batch, lokasi: window.globalStore.flagship, participants: [] };
 
                 for(let p=0; p<window.globalStore.participantCount; p++) {
                     let nt=0; for(let k in window.data_non_teknis[p]?.scores) nt+=Number(window.data_non_teknis[p].scores[k]); let ntAvg = (nt/10).toFixed(1);
                     let tk=0; for(let k in window.data_teknis[p]?.scores) tk+=Number(window.data_teknis[p].scores[k]); let tAvg = (tk/20).toFixed(1);
                     let totS=0; (window.data_sisa[p]||[]).forEach(d=>{ let s=Number(d.sisa),dt=Number(d.datang); if(dt>0){let pct=(s/dt)*100; totS+=(pct<=10?100:pct<=30?75:pct<=50?50:0);} }); let sAvg = (totS/20).toFixed(2);
                     let totT=0; (window.data_target[p]||[]).forEach(d=>{ let j=Number(d.jumlah),t=Number(d.terjual); if(j>0){let pct=(t/j)*100; totT+=(pct>=90?100:pct>=70?75:pct>=50?50:0);} }); let tarAvg = (totT/2).toFixed(1);
-                    let totalAkhir = ((Number(ntAvg)+Number(tAvg)+Number(sAvg)+Number(tarAvg))/4).toFixed(1);
+                    
+                    let totalAkhir = ((Number(tAvg) + Number(sAvg) + Number(tarAvg)) / 3).toFixed(1);
+                    let rekStatus = window.data_rekomendasi[p].status;
+                    let rekAlasan = window.data_rekomendasi[p].alasan;
 
-                    payloadGAS.participants.push({
-                        idPelamar: window.globalStore.selectedParticipants[p].idPelamar,
-                        namaPeserta: window.globalStore.selectedParticipants[p].namaPeserta,
-                        ntAvg: ntAvg, tAvg: tAvg, sAvg: sAvg, tarAvg: tarAvg, totalAkhir: totalAkhir
-                    });
+                    payloadGAS.participants.push({ idPelamar: window.globalStore.selectedParticipants[p].idPelamar, namaPeserta: window.globalStore.selectedParticipants[p].namaPeserta, ntAvg: ntAvg, tAvg: tAvg, sAvg: sAvg, tarAvg: tarAvg, totalAkhir: totalAkhir, rekStatus: rekStatus, rekAlasan: rekAlasan });
                 }
 
-                const pData = JSON.parse(JSON.stringify({ createdAt: Date.now(), mentorUid: currentUser.uid, batch: window.globalStore.batch, globalStore: window.globalStore, data_checklist: window.data_checklist, data_non_teknis: window.data_non_teknis, data_teknis: window.data_teknis, data_sisa: window.data_sisa, data_target: window.data_target, userApprovals: window.userApprovals, moApprovals: window.moApprovals, isApprovedByETD: false, isDeleted: false, hasUnreadUpdate: true }));
+                const cleanData = (data) => JSON.parse(JSON.stringify(data || {}));
+                const pData = { createdAt: Date.now(), mentorUid: currentUser.uid, batch: window.globalStore.batch, globalStore: cleanData(window.globalStore), data_checklist: cleanData(window.data_checklist), data_non_teknis: cleanData(window.data_non_teknis), data_teknis: cleanData(window.data_teknis), data_sisa: cleanData(window.data_sisa), data_target: cleanData(window.data_target), data_rekomendasi: cleanData(window.data_rekomendasi), moApprovals: cleanData(window.moApprovals), isApprovedByETD: false, isDeleted: false, hasUnreadUpdate: true };
                 
                 await setDoc(doc(db, 'artifacts', appId, 'forms', window.currentDraftId), pData);
                 try{ await deleteDoc(doc(db, 'artifacts', appId, 'drafts', window.currentDraftId)); }catch(e){}
 
-                fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payloadGAS)
-                }).catch(err => console.log("Info: Kirim GAS berjalan di background"));
+                fetch(WEBHOOK_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payloadGAS) }).catch(err => console.log("Info: Kirim GAS berjalan di background"));
 
                 window.showModal('success', 'Terkirim', 'Form berhasil disubmit.'); setTimeout(()=>window.showView('dashboard'), 2000);
             } catch(e) { 
@@ -991,7 +989,7 @@
                 const snap = await getDoc(doc(db, 'artifacts', appId, targetCollection, id));
                 if(snap.exists()) {
                     const d = snap.data(); window.currentDraftId = id; window.viewMode = col==='drafts'?'DRAFT':'READONLY';
-                    window.globalStore = d.globalStore; window.data_checklist = d.data_checklist||{}; window.data_non_teknis = d.data_non_teknis||{}; window.data_teknis = d.data_teknis||{}; window.data_sisa = d.data_sisa||{}; window.data_target = d.data_target||{}; window.userApprovals = d.userApprovals||{}; window.moApprovals = d.moApprovals||{}; window.isApprovedByETD = d.isApprovedByETD;
+                    window.globalStore = d.globalStore; window.data_checklist = d.data_checklist||{}; window.data_non_teknis = d.data_non_teknis||{}; window.data_teknis = d.data_teknis||{}; window.data_sisa = d.data_sisa||{}; window.data_target = d.data_target||{}; window.data_rekomendasi = d.data_rekomendasi||{}; window.moApprovals = d.moApprovals||{}; window.isApprovedByETD = d.isApprovedByETD;
                     window.applyStateToDOM(); document.getElementById('display-draft-id').innerText = id; window.closeModal(); window.showView('form'); window.goToStep(1);
                 }
             } catch(e) { console.error(e); window.showModal('error', 'Gagal', 'Tidak dapat membuka dokumen.'); }
@@ -1003,7 +1001,6 @@
             document.getElementById('global_date').value = window.globalStore.date || ''; 
             document.getElementById('global_participantCount').value = window.globalStore.participantCount || 1; 
             document.getElementById('global_mentor').value = window.globalStore.mentorName || ''; 
-            document.getElementById('global_comments').value = window.globalStore.finalComments || '';
             
             if(window.globalStore.signatureDataUrl) { 
                 const i = new Image(); i.onload=()=>{const c=document.getElementById('signatureCanvas_global'); const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); ctx.drawImage(i,0,0);}; i.src=window.globalStore.signatureDataUrl; 
@@ -1016,13 +1013,12 @@
         window.renderMOStampsInForm = function() {
             const c = document.getElementById('mo-stamps-container'); if(window.viewMode !== 'READONLY'){ c.classList.add('hidden'); return; }
             c.classList.remove('hidden'); let h = `<div class="mb-4 text-xs font-bold p-2 bg-gray-50 border rounded uppercase flex items-center justify-center gap-2"><i data-lucide="info" class="w-4 h-4"></i> ${window.isApprovedByETD ? '<span class="text-green-700">Telah Disetujui ETD (Rekap Aktif)</span>' : '<span class="text-amber-700">Menunggu Persetujuan ETD</span>'}</div>`;
-            if((window.moApprovals && Object.keys(window.moApprovals).length > 0) || (window.userApprovals && Object.keys(window.userApprovals).length > 0)) {
-                h += `<h4 class="text-sm font-bold mb-3 uppercase text-gray-800">Status Validasi User & MO</h4><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;
+            if(window.moApprovals && Object.keys(window.moApprovals).length > 0) {
+                h += `<h4 class="text-sm font-bold mb-3 uppercase text-gray-800">Status Validasi Final (MO)</h4><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;
                 for(let i=0; i<(window.globalStore?.participantCount||1); i++) {
-                    let uA = window.userApprovals?.[i]||{status:'PENDING'}; let mA = window.moApprovals?.[i]||{status:'PENDING'};
-                    let uSt = uA.status==='OK'?'<span class="text-green-600">OK</span>':uA.status==='NOK'?'<span class="text-red-600">NOK</span>':'<span class="text-gray-400">PENDING</span>';
+                    let mA = window.moApprovals?.[i]||{status:'PENDING'};
                     let mSt = (mA.status==='ACCEPT'||mA.status==='OK')?'<span class="text-green-600">ACCEPT</span>':(mA.status==='REJECT'||mA.status==='NOK')?'<span class="text-red-600">REJECT</span>':'<span class="text-gray-400">PENDING</span>';
-                    h += `<div class="p-3 bg-white border border-gray-200 rounded-lg text-center shadow-sm"><div class="font-bold text-xs uppercase mb-2 border-b pb-1 text-spg-900">${window.globalStore?.selectedParticipants?.[i]?.namaPeserta || `Peserta ${i+1}`}</div><div class="text-sm font-black mb-1">USER: ${uSt}</div><div class="text-[10px] text-gray-500 italic mb-2 min-h-[15px]">${uA.reason||'-'}</div><div class="text-sm font-black border-t pt-2">MO: ${mSt}</div></div>`;
+                    h += `<div class="p-3 bg-white border border-gray-200 rounded-lg text-center shadow-sm"><div class="font-bold text-xs uppercase mb-2 border-b pb-1 text-spg-900">${window.globalStore?.selectedParticipants?.[i]?.namaPeserta || `Peserta ${i+1}`}</div><div class="text-sm font-black pt-2">MO: ${mSt}</div></div>`;
                 } h += `</div>`;
             } c.innerHTML = h; if(window.lucide) window.lucide.createIcons();
         }
@@ -1068,19 +1064,19 @@
                 let totS=0; (r.form.data_sisa?.[r.pIndex]||[]).forEach(d => { let s=Number(d.sisa), dt=Number(d.datang); if(dt>0) { let p=(s/dt)*100; totS += (p<=10?100:p<=30?75:p<=50?50:0); } }); let sAvg = (totS/20).toFixed(2);
                 let totT=0; (r.form.data_target?.[r.pIndex]||[]).forEach(d => { let j=Number(d.jumlah), t=Number(d.terjual); if(j>0) { let p=(t/j)*100; totT += (p>=90?100:p>=70?75:p>=50?50:0); } }); let tarAvg = (totT/2).toFixed(1);
                 
-                let ua = r.form.userApprovals?.[r.pIndex]||{status:'PENDING', reason:''}; let ma = r.form.moApprovals?.[r.pIndex]||{status:'PENDING', reason:''};
+                let totalAkhir = ((Number(tAvg) + Number(sAvg) + Number(tarAvg)) / 3).toFixed(1);
                 
-                let actionUser = `<div class="flex flex-col gap-1">`;
-                if(ua.status !== 'PENDING') { actionUser += `<span class="px-2 py-1 text-[10px] font-bold rounded ${ua.status==='OK'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${ua.status}</span><span class="text-[9px] italic bg-white p-1 rounded border leading-tight">${ua.reason}</span>`; if(window.userRole==='ETD') actionUser += `<button onclick="window.undoAction('${r.fId}', ${r.pIndex}, 'USER')" class="text-[9px] text-blue-600 underline">Undo</button>`; }
-                else { if(window.userRole==='USER') actionUser += `<div class="flex gap-1"><button onclick="window.promptUserAction('${r.fId}', ${r.pIndex}, 'OK')" class="flex-1 bg-green-600 text-white rounded text-[10px] py-1 font-bold">OK</button><button onclick="window.promptUserAction('${r.fId}', ${r.pIndex}, 'NOK')" class="flex-1 bg-red-600 text-white rounded text-[10px] py-1 font-bold">NOK</button></div>`; else actionUser += `<span class="text-[10px] text-gray-400">Wait User</span>`; } actionUser += `</div>`;
+                let rek = r.form.data_rekomendasi?.[r.pIndex] || {status: '-', alasan: '-'};
+                let rekStatusHtml = `<span class="font-bold ${rek.status==='LULUS'?'text-green-600':rek.status==='TIDAK LULUS'?'text-red-600':'text-gray-500'}">${rek.status}</span><br><span class="text-[9px] text-gray-500 italic truncate max-w-[150px] inline-block" title="${rek.alasan}">${rek.alasan}</span>`;
 
+                let ma = r.form.moApprovals?.[r.pIndex]||{status:'PENDING', reason:''};
                 let actionMO = `<div class="flex flex-col gap-1">`;
                 if(ma.status !== 'PENDING') { actionMO += `<span class="px-2 py-1 text-[10px] font-bold rounded ${ma.status==='ACCEPT'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${ma.status}</span>`; if(window.userRole==='ETD') actionMO += `<button onclick="window.undoAction('${r.fId}', ${r.pIndex}, 'MO')" class="text-[9px] text-blue-600 underline">Undo</button>`; }
-                else { if(window.userRole==='MO') { if(ua.status!=='PENDING') actionMO += `<div class="flex gap-1"><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'ACCEPT')" class="flex-1 bg-green-600 text-white rounded text-[10px] py-1 font-bold">ACCEPT</button><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'REJECT')" class="flex-1 bg-red-600 text-white rounded text-[10px] py-1 font-bold">REJECT</button></div>`; else actionMO += `<span class="text-[10px] text-gray-400">Wait User Selesai</span>`; } else actionMO += `<span class="text-[10px] text-gray-400">Wait MO</span>`; } actionMO += `</div>`;
+                else { if(window.userRole==='MO') { actionMO += `<div class="flex gap-1"><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'ACCEPT')" class="flex-1 bg-green-600 text-white rounded text-[10px] py-1 font-bold">ACCEPT</button><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'REJECT')" class="flex-1 bg-red-600 text-white rounded text-[10px] py-1 font-bold">REJECT</button></div>`; } else actionMO += `<span class="text-[10px] text-gray-400">Wait MO</span>`; } actionMO += `</div>`;
 
-                h += `<tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors"><td class="p-3 text-center">${idx+1}</td><td class="p-3 font-bold text-gray-800">${r.p.namaPeserta}</td><td class="p-3 text-xs text-gray-500">${r.p.idPelamar}</td><td class="p-3 text-xs text-gray-600">${r.form.globalStore?.flagship||'-'}</td><td class="p-3 text-center font-bold text-blue-600">${ntAvg}</td><td class="p-3 text-center font-bold text-purple-600">${tAvg}</td><td class="p-3 text-center font-bold text-orange-600">${sAvg}</td><td class="p-3 text-center font-bold text-green-600">${tarAvg}</td><td class="p-3 text-center font-black text-spg-600 text-lg bg-spg-50/50">${((Number(ntAvg)+Number(tAvg)+Number(sAvg)+Number(tarAvg))/4).toFixed(1)}</td><td class="p-3 text-[10px] truncate max-w-[150px]" title="${r.form.globalStore?.finalComments||''}">${r.form.globalStore?.finalComments||'-'}</td><td class="p-2 align-middle">${actionUser}</td><td class="p-2 align-middle">${actionMO}</td></tr>`;
+                h += `<tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors"><td class="p-3 text-center">${idx+1}</td><td class="p-3 font-bold text-gray-800">${r.p.namaPeserta}</td><td class="p-3 text-xs text-gray-500">${r.p.idPelamar}</td><td class="p-3 text-xs text-gray-600">${r.form.globalStore?.flagship||'-'}</td><td class="p-3 text-center font-bold text-blue-600">${ntAvg}</td><td class="p-3 text-center font-bold text-purple-600">${tAvg}</td><td class="p-3 text-center font-bold text-orange-600">${sAvg}</td><td class="p-3 text-center font-bold text-green-600">${tarAvg}</td><td class="p-3 text-center font-black text-spg-600 text-lg bg-spg-50/50">${totalAkhir}</td><td class="p-3 text-[10px]">${rekStatusHtml}</td><td class="p-2 align-middle">${actionMO}</td></tr>`;
             });
-            if(!h) h = `<tr><td colspan="12" class="p-6 text-center text-gray-500">Kosong.</td></tr>`; tb.innerHTML = h;
+            if(!h) h = `<tr><td colspan="11" class="p-6 text-center text-gray-500">Kosong.</td></tr>`; tb.innerHTML = h;
         }
 
         window.renderMOCardsData = function() {
@@ -1093,45 +1089,26 @@
             if(!cHtml) cHtml = `<div class="col-span-full p-8 text-center text-gray-500 border border-dashed border-gray-300 rounded-xl">Kosong.</div>`; cardContainer.innerHTML = cHtml; if(window.lucide) window.lucide.createIcons();
         }
 
-        window.promptUserAction = function(fId, pIdx, st) { window.activeAction = { fId, pIdx, st, role: 'USER' }; const m = document.getElementById('userActionModal'); document.getElementById('userActionTitle').innerText = st==='OK'?'Setujui (OK)':'Tolak (NOK)'; const b = document.getElementById('userActionConfirmBtn'); document.getElementById('userActionReason').value=''; b.className = `flex-1 text-white font-bold py-3 px-4 rounded-xl ${st==='NOK'?'bg-red-600 hover:bg-red-700':'bg-green-600 hover:bg-green-700'}`; b.onclick = window.executeAction; m.classList.remove('hidden'); }
-        window.closeUserModal = function() { document.getElementById('userActionModal').classList.add('hidden'); }
         window.promptMOAction = function(fId, pIdx, st) { window.activeAction = { fId, pIdx, st, role: 'MO' }; const m = document.getElementById('moActionModal'); document.getElementById('moActionTitle').innerText = st==='ACCEPT'?'Terima (ACCEPT)':'Tolak (REJECT)'; const b = document.getElementById('moActionConfirmBtn'); b.className = `flex-1 text-white font-bold py-3 px-4 rounded-xl ${st==='REJECT'?'bg-red-600 hover:bg-red-700':'bg-green-600 hover:bg-green-700'}`; b.onclick = window.executeAction; m.classList.remove('hidden'); }
         window.closeMOModal = function() { document.getElementById('moActionModal').classList.add('hidden'); }
 
         window.executeAction = async function() {
             if(!window.activeAction) return; const { fId, pIdx, st, role } = window.activeAction; let reason = '';
-            if(role==='USER') { reason=document.getElementById('userActionReason').value; if(!reason.trim()) return window.showModal('error', 'Wajib Diisi', 'Isi alasan.'); document.getElementById('userActionConfirmBtn').innerText="Proses..."; } else document.getElementById('moActionConfirmBtn').innerText="Proses...";
+            document.getElementById('moActionConfirmBtn').innerText="Proses...";
             try {
                 const ref = doc(db, 'artifacts', appId, 'forms', fId); const s = await getDoc(ref);
                 if(s.exists()) {
                     let d = s.data(); let up = {hasUnreadUpdate: true};
-                    if(role==='USER') { if(!d.userApprovals) d.userApprovals={}; d.userApprovals[pIdx]={status:st, reason}; up.userApprovals = d.userApprovals; }
-                    if(role==='MO') { if(!d.moApprovals) d.moApprovals={}; d.moApprovals[pIdx]={status:st, reason:''}; up.moApprovals = d.moApprovals; }
-                    
-                    // 1. Simpan ke Firebase
+                    if(!d.moApprovals) d.moApprovals={}; d.moApprovals[pIdx]={status:st, reason:''}; up.moApprovals = d.moApprovals;
                     await updateDoc(ref, up); 
 
-                    // 2. Kirim update ke Google Sheets
                     let idPelamarTarget = d.globalStore.selectedParticipants[pIdx].idPelamar;
-                    let payloadGAS = {
-                        action: "UPDATE_APPROVAL",
-                        formId: fId,
-                        idPelamar: idPelamarTarget,
-                        role: role,
-                        status: st,
-                        reason: reason
-                    };
-                    
-                    fetch(WEBHOOK_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payloadGAS)
-                    }).catch(err => console.log("Info: Update GAS berjalan di background"));
+                    let payloadGAS = { action: "UPDATE_APPROVAL", formId: fId, idPelamar: idPelamarTarget, role: role, status: st, reason: reason };
+                    fetch(WEBHOOK_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payloadGAS) }).catch(err => console.log("Info: Update GAS berjalan di background"));
 
                     window.showModal('success', 'Berhasil', 'Tersimpan.'); window.loadMOView('rekapan');
                 }
-            } catch(e) {console.error(e);} finally { window.closeUserModal(); window.closeMOModal(); }
+            } catch(e) {console.error(e);} finally { window.closeMOModal(); }
         }
 
         window.undoAction = async function(fId, pIdx, role) {
@@ -1140,8 +1117,7 @@
                 const ref = doc(db, 'artifacts', appId, 'forms', fId); const s = await getDoc(ref);
                 if(s.exists()) {
                     let d = s.data(); let up = {};
-                    if(role==='USER'){ d.userApprovals[pIdx]={status:'PENDING',reason:''}; up.userApprovals=d.userApprovals; }
-                    if(role==='MO'){ d.moApprovals[pIdx]={status:'PENDING',reason:''}; up.moApprovals=d.moApprovals; }
+                    d.moApprovals[pIdx]={status:'PENDING',reason:''}; up.moApprovals=d.moApprovals;
                     await updateDoc(ref, up); window.closeModal(); window.loadMOView('rekapan');
                 }
             } catch(e){console.error(e);}
@@ -1164,6 +1140,10 @@
             const c = document.getElementById('print-container'); let h = '';
             for(let i=0; i<(window.globalStore?.participantCount||1); i++) {
                 const p = window.globalStore?.selectedParticipants?.[i]; if(!p) continue;
+                
+                let rek = window.data_rekomendasi?.[i] || {status:'-', alasan:'-'};
+                let rekColor = rek.status==='LULUS' ? 'green' : rek.status==='TIDAK LULUS' ? 'red' : '#333';
+
                 h += `<div class="${i>0?'page-break':''}" style="font-family:sans-serif; padding:20px; font-size:12px;">
                     <div style="text-align:center; border-bottom:3px solid #e11d48; padding-bottom:10px; margin-bottom:15px;">
                         <h2 style="margin:0; font-size:18px; color:#881337;">HASIL PENILAIAN OJT SPG MISTER DONUT</h2>
@@ -1178,14 +1158,18 @@
                         <tr><td>Rata-rata Teknis (Max 10)</td><td id="prt_t_${i}"></td></tr>
                         <tr><td>Pencapaian Barang Sisa (Max 10)</td><td id="prt_s_${i}"></td></tr>
                         <tr><td>Target Penjualan Achievement (Max 100)</td><td id="prt_tar_${i}"></td></tr>
+                        <tr style="background:#f0f9ff; font-weight:bold;"><td>TOTAL NILAI AKHIR OJT (3 Aspek Utama)</td><td id="prt_tot_${i}"></td></tr>
                     </table>
-                    <div style="margin-top:20px; border:1px dashed #ccc; padding:10px;"><b>Catatan Akhir Pendamping:</b><br/>${window.globalStore?.finalComments||'-'}</div>
+                    <div style="margin-top:20px; border:1px dashed #ccc; padding:10px;">
+                        <b>Kesimpulan & Rekomendasi Mentor (Keputusan User):</b><br/>
+                        Status: <span style="font-weight:bold; color:${rekColor}">${rek.status}</span><br/>
+                        Alasan: ${rek.alasan}
+                    </div>
                     
                     <div style="margin-top:20px; text-align:center; display:flex; justify-content: space-around;">
                         <div>
                             <p style="font-size:10px; color:#666; margin-bottom:2px;">Keputusan Validasi Sistem</p>
                             <div style="padding:10px; border:1px solid #ccc; background:#f9f9f9;">
-                                <b>USER:</b> <span id="prt_user_${i}"></span><br/>
                                 <b>MO:</b> <span id="prt_mo_${i}"></span>
                             </div>
                         </div>
@@ -1202,8 +1186,11 @@
                 let totS=0; (window.data_sisa?.[i]||[]).forEach(d => { let s=Number(d.sisa), dt=Number(d.datang); if(dt>0) { let p=(s/dt)*100; totS += (p<=10?100:p<=30?75:p<=50?50:0); } }); if(document.getElementById(`prt_s_${i}`)) document.getElementById(`prt_s_${i}`).innerText = (totS/20).toFixed(2);
                 let totT=0; (window.data_target?.[i]||[]).forEach(d => { let j=Number(d.jumlah), t=Number(d.terjual); if(j>0) { let p=(t/j)*100; totT += (p>=90?100:p>=70?75:p>=50?50:0); } }); if(document.getElementById(`prt_tar_${i}`)) document.getElementById(`prt_tar_${i}`).innerText = (totT/2).toFixed(1);
                 
-                let uApp = window.userApprovals?.[i]?.status || 'PENDING'; let mApp = window.moApprovals?.[i]?.status || 'PENDING';
-                if(document.getElementById(`prt_user_${i}`)) document.getElementById(`prt_user_${i}`).innerHTML = uApp==='OK'?'<span style="color:green">OK</span>':uApp==='NOK'?'<span style="color:red">NOK</span>':'PENDING';
+                let tAvg = (tt/20); let sAvg = (totS/20); let tarAvg = (totT/2);
+                let totAkhir = ((tAvg + sAvg + tarAvg)/3).toFixed(1);
+                if(document.getElementById(`prt_tot_${i}`)) document.getElementById(`prt_tot_${i}`).innerText = totAkhir;
+
+                let mApp = window.moApprovals?.[i]?.status || 'PENDING';
                 if(document.getElementById(`prt_mo_${i}`)) document.getElementById(`prt_mo_${i}`).innerHTML = (mApp==='ACCEPT'||mApp==='OK')?'<span style="color:green">ACCEPT</span>':(mApp==='REJECT'||mApp==='NOK')?'<span style="color:red">REJECT</span>':'PENDING';
             }
             setTimeout(()=>{window.print(); setTimeout(()=>c.innerHTML='', 500);}, 200);
@@ -1213,3 +1200,4 @@
     </script>
 </body>
 </html>
+```eof
