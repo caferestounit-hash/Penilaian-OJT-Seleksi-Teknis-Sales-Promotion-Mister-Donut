@@ -486,7 +486,7 @@
 
         const teknisItems = checklistCategories.reduce((acc, curr) => acc.concat(curr.items.map(name => ({cat: curr.cat, name}))), []);
 
-        window.globalStore = { flagship: '', batch: '', date: '', participantCount: 1, mentorName: '', selectedParticipants: [null], signatureDataUrl: null, finalComments: '' };
+        window.globalStore = { flagship: '', batch: '', date: '', participantCount: 1, mentorName: '', selectedParticipants: [null], signatureDataUrl: null };
         window.data_checklist = {}; window.data_non_teknis = {}; window.data_teknis = {}; window.data_sisa = {}; window.data_target = {}; window.data_rekomendasi = {}; window.moApprovals = {};
 
         window.showModal = function(type, title, message) {
@@ -581,7 +581,6 @@
         window.fetchMasterData = async function() {
             const btn = document.getElementById('btnSyncMaster'); if(btn) btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i> Sync...`;
             try {
-                // Menarik dari sheet khusus "NAME"
                 const res = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=NAME`); 
                 const text = await res.text(); 
                 const json = JSON.parse(text.substring(47, text.length - 2));
@@ -719,7 +718,7 @@
             tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/20)</td>`;
             for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" id="total_teknis_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_teknis').innerHTML = tb;
             
-            let fb = ''; for(let p=0; p<window.globalStore.participantCount; p++) { let dis = window.viewMode === 'READONLY' ? 'disabled' : ''; fb += `<div class="bg-gray-50 p-4 border border-gray-200 rounded-xl shadow-sm"><label class="text-xs font-bold uppercase text-spg-900 flex items-center justify-between mb-2"><span>Komentar - Peserta ${p+1}</span><span class="text-gray-500 truncate max-w-[150px] font-medium">${window.globalStore.selectedParticipants[p]?.namaPeserta || ''}</span></label><textarea oninput="window.data_teknis[${p}].comment = this.value" class="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-spg-500 text-sm bg-white min-h-[100px]" placeholder="Evaluasi teknis untuk peserta ini..." ${dis}>${window.data_teknis[p]?.comment||''}</textarea></div>`; } document.getElementById('feedback_teknis').innerHTML = fb; window.calcTeknis(); window.renderRekomendasi();
+            let fb = ''; for(let p=0; p<window.globalStore.participantCount; p++) { let dis = window.viewMode === 'READONLY' ? 'disabled' : ''; fb += `<div class="bg-gray-50 p-4 border border-gray-200 rounded-xl shadow-sm"><label class="text-xs font-bold uppercase text-spg-900 flex items-center justify-between mb-2"><span>Komentar - Peserta ${p+1}</span><span class="text-gray-500 truncate max-w-[150px] font-medium">${window.globalStore.selectedParticipants[p]?.namaPeserta || ''}</span></label><textarea oninput="window.data_teknis[${p}].comment = this.value" class="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-spg-500 text-sm bg-white min-h-[100px]" placeholder="Evaluasi teknis untuk peserta ini..." ${dis}>${window.data_teknis[p]?.comment||''}</textarea></div>`; } document.getElementById('feedback_teknis').innerHTML = fb; window.calcTeknis();
         }
 
         window.renderSisa = function() {
@@ -733,7 +732,7 @@
                 } tb += `</tr>`;
             }
             tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/20)</td>`;
-            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="5" id="total_sisa_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_sisa').innerHTML = tb; window.calcSisa(); window.renderRekomendasi();
+            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="5" id="total_sisa_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_sisa').innerHTML = tb; window.calcSisa();
         }
 
         window.renderTarget = function() {
@@ -747,7 +746,7 @@
                 } tb += `</tr>`;
             }
             tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/20)</td>`;
-            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="4" id="total_target_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_target').innerHTML = tb; window.calcTarget(); window.renderRekomendasi();
+            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="4" id="total_target_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_target').innerHTML = tb; window.calcTarget(); 
         }
 
         window.renderRekomendasi = function() {
@@ -758,19 +757,27 @@
                 let d = window.data_rekomendasi[p];
                 let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
 
+                // Hitung Rata-rata 3 Aspek untuk Total Akhir OJT
                 let tk=0; for(let k in window.data_teknis[p]?.scores) tk+=Number(window.data_teknis[p].scores[k]); let tAvg = tk/20;
                 let totS=0; (window.data_sisa[p]||[]).forEach(x=>{ let s=Number(x.sisa),dt=Number(x.datang); if(dt>0){let pct=(s/dt)*100; totS+=(pct<=10?100:pct<=30?75:pct<=50?50:0);} }); let sAvg = totS/20;
-                let totT=0; (window.data_target[p]||[]).forEach(x=>{ let j=Number(x.jumlah),t=Number(x.terjual); if(j>0){let pct=(t/j)*100; totT+=(pct>=90?100:pct>=70?75:pct>=50?50:0);} }); let tarAvg = totT/2;
+                let totT=0; (window.data_target[p]||[]).forEach(x=>{ let j=Number(x.jumlah),t=Number(x.terjual); if(j>0){let pct=(t/j)*100; totT+=(pct>=90?100:pct>=70?75:pct>=50?50:0);} }); let tarAvg = totT/20;
                 
                 let totalAkhir = ((tAvg + sAvg + tarAvg)/3).toFixed(1);
+                let statusSistem = Number(totalAkhir) > 6 ? 'LULUS' : 'TIDAK LULUS';
 
                 h += `
                 <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl shadow-sm print-border-none relative">
-                    <div class="flex justify-between items-center mb-3 border-b border-blue-200 pb-2">
+                    <div class="flex justify-between items-center mb-4 border-b border-blue-200 pb-3">
                         <span class="font-black text-sm uppercase text-blue-900">${pName}</span>
-                        <div class="text-right">
-                            <span class="text-[10px] text-blue-700 font-bold uppercase block mb-1">Total Nilai Akhir OJT</span>
-                            <span class="font-black text-lg text-blue-900 bg-white px-2 py-1 rounded shadow-sm">${isNaN(totalAkhir)?'0.0':totalAkhir}</span>
+                        <div class="flex gap-4">
+                            <div class="text-right">
+                                <span class="text-[10px] text-blue-700 font-bold uppercase block mb-1">Total Nilai OJT</span>
+                                <span class="font-black text-lg text-blue-900 bg-white px-2 py-1 rounded shadow-sm">${isNaN(totalAkhir)?'0.0':totalAkhir}</span>
+                            </div>
+                            <div class="text-right border-l border-blue-200 pl-4">
+                                <span class="text-[10px] text-blue-700 font-bold uppercase block mb-1">Status Sistem</span>
+                                <span class="font-black text-sm ${statusSistem === 'LULUS' ? 'text-green-600' : 'text-red-600'} bg-white px-2 py-1.5 rounded shadow-sm">${statusSistem}</span>
+                            </div>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -899,7 +906,7 @@
                 }
                 
                 let rek = window.data_rekomendasi[p];
-                if(!rek || !rek.status) missing.push(`Status Keputusan Lulus/Tidak (${pName})`);
+                if(!rek || !rek.status) missing.push(`Status Keputusan User (${pName})`);
                 if(!rek || !rek.alasan || !rek.alasan.trim()) missing.push(`Alasan Keputusan (${pName})`);
             }
 
@@ -918,7 +925,7 @@
                     let nt=0; for(let k in window.data_non_teknis[p]?.scores) nt+=Number(window.data_non_teknis[p].scores[k]); let ntAvg = (nt/10).toFixed(1);
                     let tk=0; for(let k in window.data_teknis[p]?.scores) tk+=Number(window.data_teknis[p].scores[k]); let tAvg = (tk/20).toFixed(1);
                     let totS=0; (window.data_sisa[p]||[]).forEach(d=>{ let s=Number(d.sisa),dt=Number(d.datang); if(dt>0){let pct=(s/dt)*100; totS+=(pct<=10?100:pct<=30?75:pct<=50?50:0);} }); let sAvg = (totS/20).toFixed(2);
-                    let totT=0; (window.data_target[p]||[]).forEach(d=>{ let j=Number(d.jumlah),t=Number(d.terjual); if(j>0){let pct=(t/j)*100; totT+=(pct>=90?100:pct>=70?75:pct>=50?50:0);} }); let tarAvg = (totT/2).toFixed(1);
+                    let totT=0; (window.data_target[p]||[]).forEach(d=>{ let j=Number(d.jumlah),t=Number(d.terjual); if(j>0){let pct=(t/j)*100; totT+=(pct>=90?100:pct>=70?75:pct>=50?50:0);} }); let tarAvg = (totT/20).toFixed(1);
                     
                     let totalAkhir = ((Number(tAvg) + Number(sAvg) + Number(tarAvg)) / 3).toFixed(1);
                     let rekStatus = window.data_rekomendasi[p].status;
@@ -1062,9 +1069,11 @@
                 let tn=0; for(let k in r.form.data_non_teknis?.[r.pIndex]?.scores) { let v=Number(r.form.data_non_teknis[r.pIndex].scores[k]); if(!isNaN(v)) tn+=v; } let ntAvg = (tn/10).toFixed(1);
                 let tt=0; for(let k in r.form.data_teknis?.[r.pIndex]?.scores) { let v=Number(r.form.data_teknis[r.pIndex].scores[k]); if(!isNaN(v)) tt+=v; } let tAvg = (tt/20).toFixed(1);
                 let totS=0; (r.form.data_sisa?.[r.pIndex]||[]).forEach(d => { let s=Number(d.sisa), dt=Number(d.datang); if(dt>0) { let p=(s/dt)*100; totS += (p<=10?100:p<=30?75:p<=50?50:0); } }); let sAvg = (totS/20).toFixed(2);
-                let totT=0; (r.form.data_target?.[r.pIndex]||[]).forEach(d => { let j=Number(d.jumlah), t=Number(d.terjual); if(j>0) { let p=(t/j)*100; totT += (p>=90?100:p>=70?75:p>=50?50:0); } }); let tarAvg = (totT/2).toFixed(1);
+                let totT=0; (r.form.data_target?.[r.pIndex]||[]).forEach(d => { let j=Number(d.jumlah), t=Number(d.terjual); if(j>0) { let p=(t/j)*100; totT += (p>=90?100:p>=70?75:p>=50?50:0); } }); let tarAvg = (totT/20).toFixed(1);
                 
                 let totalAkhir = ((Number(tAvg) + Number(sAvg) + Number(tarAvg)) / 3).toFixed(1);
+                let sysStatus = Number(totalAkhir) > 6 ? 'LULUS' : 'TIDAK LULUS';
+                let sysColor = Number(totalAkhir) > 6 ? 'text-green-600' : 'text-red-600';
                 
                 let rek = r.form.data_rekomendasi?.[r.pIndex] || {status: '-', alasan: '-'};
                 let rekStatusHtml = `<span class="font-bold ${rek.status==='LULUS'?'text-green-600':rek.status==='TIDAK LULUS'?'text-red-600':'text-gray-500'}">${rek.status}</span><br><span class="text-[9px] text-gray-500 italic truncate max-w-[150px] inline-block" title="${rek.alasan}">${rek.alasan}</span>`;
@@ -1074,7 +1083,7 @@
                 if(ma.status !== 'PENDING') { actionMO += `<span class="px-2 py-1 text-[10px] font-bold rounded ${ma.status==='ACCEPT'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${ma.status}</span>`; if(window.userRole==='ETD') actionMO += `<button onclick="window.undoAction('${r.fId}', ${r.pIndex}, 'MO')" class="text-[9px] text-blue-600 underline">Undo</button>`; }
                 else { if(window.userRole==='MO') { actionMO += `<div class="flex gap-1"><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'ACCEPT')" class="flex-1 bg-green-600 text-white rounded text-[10px] py-1 font-bold">ACCEPT</button><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'REJECT')" class="flex-1 bg-red-600 text-white rounded text-[10px] py-1 font-bold">REJECT</button></div>`; } else actionMO += `<span class="text-[10px] text-gray-400">Wait MO</span>`; } actionMO += `</div>`;
 
-                h += `<tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors"><td class="p-3 text-center">${idx+1}</td><td class="p-3 font-bold text-gray-800">${r.p.namaPeserta}</td><td class="p-3 text-xs text-gray-500">${r.p.idPelamar}</td><td class="p-3 text-xs text-gray-600">${r.form.globalStore?.flagship||'-'}</td><td class="p-3 text-center font-bold text-blue-600">${ntAvg}</td><td class="p-3 text-center font-bold text-purple-600">${tAvg}</td><td class="p-3 text-center font-bold text-orange-600">${sAvg}</td><td class="p-3 text-center font-bold text-green-600">${tarAvg}</td><td class="p-3 text-center font-black text-spg-600 text-lg bg-spg-50/50">${totalAkhir}</td><td class="p-3 text-[10px]">${rekStatusHtml}</td><td class="p-2 align-middle">${actionMO}</td></tr>`;
+                h += `<tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors"><td class="p-3 text-center">${idx+1}</td><td class="p-3 font-bold text-gray-800">${r.p.namaPeserta}</td><td class="p-3 text-xs text-gray-500">${r.p.idPelamar}</td><td class="p-3 text-xs text-gray-600">${r.form.globalStore?.flagship||'-'}</td><td class="p-3 text-center font-bold text-blue-600">${ntAvg}</td><td class="p-3 text-center font-bold text-purple-600">${tAvg}</td><td class="p-3 text-center font-bold text-orange-600">${sAvg}</td><td class="p-3 text-center font-bold text-green-600">${tarAvg}</td><td class="p-3 text-center bg-spg-50/50"><div class="font-black text-spg-600 text-lg leading-none">${totalAkhir}</div><div class="text-[9px] font-bold mt-1 ${sysColor}">${sysStatus}</div></td><td class="p-3 text-[10px]">${rekStatusHtml}</td><td class="p-2 align-middle">${actionMO}</td></tr>`;
             });
             if(!h) h = `<tr><td colspan="11" class="p-6 text-center text-gray-500">Kosong.</td></tr>`; tb.innerHTML = h;
         }
@@ -1157,8 +1166,9 @@
                         <tr><td>Rata-rata Non Teknis (Max 10)</td><td id="prt_nt_${i}"></td></tr>
                         <tr><td>Rata-rata Teknis (Max 10)</td><td id="prt_t_${i}"></td></tr>
                         <tr><td>Pencapaian Barang Sisa (Max 10)</td><td id="prt_s_${i}"></td></tr>
-                        <tr><td>Target Penjualan Achievement (Max 100)</td><td id="prt_tar_${i}"></td></tr>
+                        <tr><td>Target Penjualan Achievement (Max 10)</td><td id="prt_tar_${i}"></td></tr>
                         <tr style="background:#f0f9ff; font-weight:bold;"><td>TOTAL NILAI AKHIR OJT (3 Aspek Utama)</td><td id="prt_tot_${i}"></td></tr>
+                        <tr style="background:#f9fafb; font-weight:bold;"><td>STATUS KELULUSAN SISTEM (> 6.0)</td><td id="prt_sys_${i}"></td></tr>
                     </table>
                     <div style="margin-top:20px; border:1px dashed #ccc; padding:10px;">
                         <b>Kesimpulan & Rekomendasi Mentor (Keputusan User):</b><br/>
@@ -1184,11 +1194,15 @@
                 let tn=0; for(let k in window.data_non_teknis?.[i]?.scores) tn+=Number(window.data_non_teknis[i].scores[k]||0); if(document.getElementById(`prt_nt_${i}`)) document.getElementById(`prt_nt_${i}`).innerText = (tn/10).toFixed(1);
                 let tt=0; for(let k in window.data_teknis?.[i]?.scores) tt+=Number(window.data_teknis[i].scores[k]||0); if(document.getElementById(`prt_t_${i}`)) document.getElementById(`prt_t_${i}`).innerText = (tt/20).toFixed(1);
                 let totS=0; (window.data_sisa?.[i]||[]).forEach(d => { let s=Number(d.sisa), dt=Number(d.datang); if(dt>0) { let p=(s/dt)*100; totS += (p<=10?100:p<=30?75:p<=50?50:0); } }); if(document.getElementById(`prt_s_${i}`)) document.getElementById(`prt_s_${i}`).innerText = (totS/20).toFixed(2);
-                let totT=0; (window.data_target?.[i]||[]).forEach(d => { let j=Number(d.jumlah), t=Number(d.terjual); if(j>0) { let p=(t/j)*100; totT += (p>=90?100:p>=70?75:p>=50?50:0); } }); if(document.getElementById(`prt_tar_${i}`)) document.getElementById(`prt_tar_${i}`).innerText = (totT/2).toFixed(1);
+                let totT=0; (window.data_target?.[i]||[]).forEach(d => { let j=Number(d.jumlah), t=Number(d.terjual); if(j>0) { let p=(t/j)*100; totT += (p>=90?100:p>=70?75:p>=50?50:0); } }); if(document.getElementById(`prt_tar_${i}`)) document.getElementById(`prt_tar_${i}`).innerText = (totT/20).toFixed(1);
                 
-                let tAvg = (tt/20); let sAvg = (totS/20); let tarAvg = (totT/2);
+                let tAvg = (tt/20); let sAvg = (totS/20); let tarAvg = (totT/20);
                 let totAkhir = ((tAvg + sAvg + tarAvg)/3).toFixed(1);
                 if(document.getElementById(`prt_tot_${i}`)) document.getElementById(`prt_tot_${i}`).innerText = totAkhir;
+
+                let sysStatus = Number(totAkhir) > 6 ? 'LULUS' : 'TIDAK LULUS';
+                let sysColor = Number(totAkhir) > 6 ? 'green' : 'red';
+                if(document.getElementById(`prt_sys_${i}`)) document.getElementById(`prt_sys_${i}`).innerHTML = `<span style="color:${sysColor}">${sysStatus}</span>`;
 
                 let mApp = window.moApprovals?.[i]?.status || 'PENDING';
                 if(document.getElementById(`prt_mo_${i}`)) document.getElementById(`prt_mo_${i}`).innerHTML = (mApp==='ACCEPT'||mApp==='OK')?'<span style="color:green">ACCEPT</span>':(mApp==='REJECT'||mApp==='NOK')?'<span style="color:red">REJECT</span>':'PENDING';
@@ -1200,4 +1214,3 @@
     </script>
 </body>
 </html>
-```eof
