@@ -30,6 +30,12 @@
             body > div:not(#print-container):not(#notificationModal) { display: none !important; }
             #print-container { display: block !important; width: 100%; margin: 0; padding: 0; }
             .page-break { page-break-before: always; }
+            
+            /* Styles khusus untuk print Rekapan Table */
+            .print-table-wrapper { font-family: sans-serif; padding: 20px; }
+            .print-table { width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 15px; }
+            .print-table th, .print-table td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+            .print-table th { background-color: #881337; color: white; text-align: center; }
         }
         .bg-pattern { background-image: radial-gradient(#e11d48 1px, transparent 1px); background-size: 20px 20px; }
         /* Custom scrollbar */
@@ -198,6 +204,7 @@
                     <i data-lucide="filter" class="w-4 h-4 text-gray-400 mx-2"></i>
                     <select id="mo-batch-filter-rekap" onchange="window.renderMOTableData()" class="bg-transparent outline-none font-bold text-gray-700 w-full"><option value="">Semua Batch</option></select>
                 </div>
+                <!-- PERBAIKAN CETAK PDF REKAP -->
                 <button onclick="window.printRekapanTable()" class="bg-spg-800 hover:bg-spg-900 text-white p-2 px-4 rounded-lg flex items-center justify-center gap-2 shadow-sm font-bold w-full sm:w-auto">
                     <i data-lucide="printer" class="w-4 h-4"></i> Cetak PDF
                 </button>
@@ -211,6 +218,8 @@
                         <th class="p-3 border-r border-spg-700 min-w-[150px]">Nama Peserta</th>
                         <th class="p-3 border-r border-spg-700">ID Pelamar</th>
                         <th class="p-3 border-r border-spg-700 min-w-[120px]">Lokasi OJT</th>
+                        <!-- PENAMBAHAN LOKASI PENEMPATAN -->
+                        <th class="p-3 border-r border-spg-700 min-w-[120px]">Penempatan</th>
                         <th class="p-3 border-r border-spg-700 text-center">Nilai Non Teknis</th>
                         <th class="p-3 border-r border-spg-700 text-center">Nilai Teknis</th>
                         <th class="p-3 border-r border-spg-700 text-center">Nilai Sisa Brg</th>
@@ -486,7 +495,7 @@
 
         const teknisItems = checklistCategories.reduce((acc, curr) => acc.concat(curr.items.map(name => ({cat: curr.cat, name}))), []);
 
-        window.globalStore = { flagship: '', batch: '', date: '', participantCount: 1, mentorName: '', selectedParticipants: [null], signatureDataUrl: null };
+        window.globalStore = { flagship: '', batch: '', date: '', participantCount: 1, mentorName: '', selectedParticipants: [null], signatureDataUrl: null, finalComments: '' };
         window.data_checklist = {}; window.data_non_teknis = {}; window.data_teknis = {}; window.data_sisa = {}; window.data_target = {}; window.data_rekomendasi = {}; window.moApprovals = {};
 
         window.showModal = function(type, title, message) {
@@ -502,6 +511,23 @@
         window.closeExitModal = function() { document.getElementById('exitModal').classList.add('hidden'); };
         window.forceExitToDashboard = function() { window.closeExitModal(); window.showView('dashboard'); };
         window.togglePasswordVisibility = function() { const i = document.getElementById('input-keypass'); const icon = document.getElementById('eye-icon'); if(i.type === 'password'){ i.type = 'text'; icon.setAttribute('data-lucide', 'eye-off'); }else{ i.type = 'password'; icon.setAttribute('data-lucide', 'eye'); } if(window.lucide) window.lucide.createIcons(); };
+
+        // PERBAIKAN 1: Notifikasi ETD 
+        window.showETDNotifications = function() {
+            let data = window.etdNotifData || {pa: 0, pu: 0};
+            let h = `<div class="p-4 bg-blue-50 border border-blue-200 rounded-xl shadow-sm text-sm text-left">
+                        <p class="font-bold text-blue-900 mb-2">Status Antrean Form:</p>
+                        <ul class="list-disc pl-5 text-gray-700 space-y-1.5 text-xs font-medium">
+                            <li><b class="text-amber-600">${data.pa}</b> Form Menunggu Approval ETD.</li>
+                            <li><b class="text-blue-600">${data.pu}</b> Form memiliki Update Baru.</li>
+                        </ul>
+                     </div>`;
+            if (data.pa === 0 && data.pu === 0) {
+                h = `<div class="p-4 text-center text-gray-500 italic border border-dashed border-gray-300 rounded-xl">Belum ada antrean form baru.</div>`;
+            }
+            document.getElementById('etdNotifContent').innerHTML = h;
+            document.getElementById('etdNotifModal').classList.remove('hidden');
+        };
 
         function initFirebase() {
             try {
@@ -694,7 +720,7 @@
                 } tb += `</tr>`;
             });
             tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/10)</td>`;
-            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" id="total_nonteknis_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_nonteknis').innerHTML = tb;
+            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" id="total_nonteknis_${p}">0.00</td>`; } tb += `</tr>`; document.getElementById('tbody_nonteknis').innerHTML = tb;
             
             let fb = ''; for(let p=0; p<window.globalStore.participantCount; p++) { let dis = window.viewMode === 'READONLY' ? 'disabled' : ''; fb += `<div class="bg-gray-50 p-4 border border-gray-200 rounded-xl shadow-sm"><label class="text-xs font-bold uppercase text-spg-900 flex items-center justify-between mb-2"><span>Komentar - Peserta ${p+1}</span><span class="text-gray-500 truncate max-w-[150px] font-medium">${window.globalStore.selectedParticipants[p]?.namaPeserta || ''}</span></label><textarea oninput="window.data_non_teknis[${p}].comment = this.value" class="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-spg-500 text-sm bg-white min-h-[100px]" placeholder="Evaluasi non teknis untuk peserta ini..." ${dis}>${window.data_non_teknis[p]?.comment||''}</textarea></div>`; } document.getElementById('feedback_nonteknis').innerHTML = fb; window.calcNonTeknis();
         }
@@ -716,7 +742,7 @@
                 } tb += `</tr>`;
             });
             tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/20)</td>`;
-            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" id="total_teknis_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_teknis').innerHTML = tb;
+            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" id="total_teknis_${p}">0.00</td>`; } tb += `</tr>`; document.getElementById('tbody_teknis').innerHTML = tb;
             
             let fb = ''; for(let p=0; p<window.globalStore.participantCount; p++) { let dis = window.viewMode === 'READONLY' ? 'disabled' : ''; fb += `<div class="bg-gray-50 p-4 border border-gray-200 rounded-xl shadow-sm"><label class="text-xs font-bold uppercase text-spg-900 flex items-center justify-between mb-2"><span>Komentar - Peserta ${p+1}</span><span class="text-gray-500 truncate max-w-[150px] font-medium">${window.globalStore.selectedParticipants[p]?.namaPeserta || ''}</span></label><textarea oninput="window.data_teknis[${p}].comment = this.value" class="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-spg-500 text-sm bg-white min-h-[100px]" placeholder="Evaluasi teknis untuk peserta ini..." ${dis}>${window.data_teknis[p]?.comment||''}</textarea></div>`; } document.getElementById('feedback_teknis').innerHTML = fb; window.calcTeknis();
         }
@@ -732,7 +758,7 @@
                 } tb += `</tr>`;
             }
             tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/20)</td>`;
-            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="5" id="total_sisa_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_sisa').innerHTML = tb; window.calcSisa();
+            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="5" id="total_sisa_${p}">0.00</td>`; } tb += `</tr>`; document.getElementById('tbody_sisa').innerHTML = tb; window.calcSisa();
         }
 
         window.renderTarget = function() {
@@ -746,7 +772,7 @@
                 } tb += `</tr>`;
             }
             tb += `<tr class="bg-spg-100 font-bold border-t-2 border-spg-200"><td class="p-4 text-right uppercase">NILAI AKHIR (Total/20)</td>`;
-            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="4" id="total_target_${p}">0</td>`; } tb += `</tr>`; document.getElementById('tbody_target').innerHTML = tb; window.calcTarget(); 
+            for(let p=0; p<window.globalStore.participantCount; p++) { tb += `<td class="p-4 text-center text-xl text-spg-800 border-l border-spg-200" colspan="4" id="total_target_${p}">0.00</td>`; } tb += `</tr>`; document.getElementById('tbody_target').innerHTML = tb; window.calcTarget(); 
         }
 
         window.renderRekomendasi = function() {
@@ -757,12 +783,13 @@
                 let d = window.data_rekomendasi[p];
                 let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
 
-                // Hitung Rata-rata 3 Aspek untuk Total Akhir OJT
+                // Hitung Rata-rata 3 Aspek (Teknis, Sisa, Target)
                 let tk=0; for(let k in window.data_teknis[p]?.scores) tk+=Number(window.data_teknis[p].scores[k]); let tAvg = tk/20;
                 let totS=0; (window.data_sisa[p]||[]).forEach(x=>{ let s=Number(x.sisa),dt=Number(x.datang); if(dt>0){let pct=(s/dt)*100; totS+=(pct<=10?100:pct<=30?75:pct<=50?50:0);} }); let sAvg = totS/20;
+                // PERBAIKAN DESIMAL & RATA-RATA TARGET: Karena format disamakan, totT/20 menghasilkan range max 10
                 let totT=0; (window.data_target[p]||[]).forEach(x=>{ let j=Number(x.jumlah),t=Number(x.terjual); if(j>0){let pct=(t/j)*100; totT+=(pct>=90?100:pct>=70?75:pct>=50?50:0);} }); let tarAvg = totT/20;
                 
-                let totalAkhir = ((tAvg + sAvg + tarAvg)/3).toFixed(1);
+                let totalAkhir = ((tAvg + sAvg + tarAvg)/3).toFixed(2);
                 let statusSistem = Number(totalAkhir) > 6 ? 'LULUS' : 'TIDAK LULUS';
 
                 h += `
@@ -772,7 +799,7 @@
                         <div class="flex gap-4">
                             <div class="text-right">
                                 <span class="text-[10px] text-blue-700 font-bold uppercase block mb-1">Total Nilai OJT</span>
-                                <span class="font-black text-lg text-blue-900 bg-white px-2 py-1 rounded shadow-sm">${isNaN(totalAkhir)?'0.0':totalAkhir}</span>
+                                <span class="font-black text-lg text-blue-900 bg-white px-2 py-1 rounded shadow-sm">${isNaN(totalAkhir)?'0.00':totalAkhir}</span>
                             </div>
                             <div class="text-right border-l border-blue-200 pl-4">
                                 <span class="text-[10px] text-blue-700 font-bold uppercase block mb-1">Status Sistem</span>
@@ -842,7 +869,7 @@
                     const pel = document.getElementById(`pct_target_${p}_${d}`); if(pel) pel.innerText = pctStr;
                     tot += val;
                 }
-                const tel = document.getElementById(`total_target_${p}`); if(tel) tel.innerText = (tot/20).toFixed(1);
+                const tel = document.getElementById(`total_target_${p}`); if(tel) tel.innerText = (tot/20).toFixed(2);
             }
             window.renderRekomendasi();
         }
@@ -922,12 +949,12 @@
                 let payloadGAS = { action: "SUBMIT_FORM", formId: window.currentDraftId, timestamp: new Date().toLocaleString('id-ID'), mentor: window.globalStore.mentorName, batch: window.globalStore.batch, lokasi: window.globalStore.flagship, participants: [] };
 
                 for(let p=0; p<window.globalStore.participantCount; p++) {
-                    let nt=0; for(let k in window.data_non_teknis[p]?.scores) nt+=Number(window.data_non_teknis[p].scores[k]); let ntAvg = (nt/10).toFixed(1);
-                    let tk=0; for(let k in window.data_teknis[p]?.scores) tk+=Number(window.data_teknis[p].scores[k]); let tAvg = (tk/20).toFixed(1);
+                    let nt=0; for(let k in window.data_non_teknis[p]?.scores) nt+=Number(window.data_non_teknis[p].scores[k]); let ntAvg = (nt/10).toFixed(2);
+                    let tk=0; for(let k in window.data_teknis[p]?.scores) tk+=Number(window.data_teknis[p].scores[k]); let tAvg = (tk/20).toFixed(2);
                     let totS=0; (window.data_sisa[p]||[]).forEach(d=>{ let s=Number(d.sisa),dt=Number(d.datang); if(dt>0){let pct=(s/dt)*100; totS+=(pct<=10?100:pct<=30?75:pct<=50?50:0);} }); let sAvg = (totS/20).toFixed(2);
-                    let totT=0; (window.data_target[p]||[]).forEach(d=>{ let j=Number(d.jumlah),t=Number(d.terjual); if(j>0){let pct=(t/j)*100; totT+=(pct>=90?100:pct>=70?75:pct>=50?50:0);} }); let tarAvg = (totT/20).toFixed(1);
+                    let totT=0; (window.data_target[p]||[]).forEach(d=>{ let j=Number(d.jumlah),t=Number(d.terjual); if(j>0){let pct=(t/j)*100; totT+=(pct>=90?100:pct>=70?75:pct>=50?50:0);} }); let tarAvg = (totT/20).toFixed(2);
                     
-                    let totalAkhir = ((Number(tAvg) + Number(sAvg) + Number(tarAvg)) / 3).toFixed(1);
+                    let totalAkhir = ((Number(tAvg) + Number(sAvg) + Number(tarAvg)) / 3).toFixed(2);
                     let rekStatus = window.data_rekomendasi[p].status;
                     let rekAlasan = window.data_rekomendasi[p].alasan;
 
@@ -1066,12 +1093,12 @@
             const filtered = window.moParticipantRecords.filter(r => (yF ? r.yr === yF : true) && (bF ? r.form.globalStore?.batch === bF : true));
             const tb = document.getElementById('mo-rekapan-tbody'); let h = '';
             filtered.forEach((r, idx) => {
-                let tn=0; for(let k in r.form.data_non_teknis?.[r.pIndex]?.scores) { let v=Number(r.form.data_non_teknis[r.pIndex].scores[k]); if(!isNaN(v)) tn+=v; } let ntAvg = (tn/10).toFixed(1);
-                let tt=0; for(let k in r.form.data_teknis?.[r.pIndex]?.scores) { let v=Number(r.form.data_teknis[r.pIndex].scores[k]); if(!isNaN(v)) tt+=v; } let tAvg = (tt/20).toFixed(1);
+                let tn=0; for(let k in r.form.data_non_teknis?.[r.pIndex]?.scores) { let v=Number(r.form.data_non_teknis[r.pIndex].scores[k]); if(!isNaN(v)) tn+=v; } let ntAvg = (tn/10).toFixed(2);
+                let tt=0; for(let k in r.form.data_teknis?.[r.pIndex]?.scores) { let v=Number(r.form.data_teknis[r.pIndex].scores[k]); if(!isNaN(v)) tt+=v; } let tAvg = (tt/20).toFixed(2);
                 let totS=0; (r.form.data_sisa?.[r.pIndex]||[]).forEach(d => { let s=Number(d.sisa), dt=Number(d.datang); if(dt>0) { let p=(s/dt)*100; totS += (p<=10?100:p<=30?75:p<=50?50:0); } }); let sAvg = (totS/20).toFixed(2);
-                let totT=0; (r.form.data_target?.[r.pIndex]||[]).forEach(d => { let j=Number(d.jumlah), t=Number(d.terjual); if(j>0) { let p=(t/j)*100; totT += (p>=90?100:p>=70?75:p>=50?50:0); } }); let tarAvg = (totT/20).toFixed(1);
+                let totT=0; (r.form.data_target?.[r.pIndex]||[]).forEach(d => { let j=Number(d.jumlah), t=Number(d.terjual); if(j>0) { let p=(t/j)*100; totT += (p>=90?100:p>=70?75:p>=50?50:0); } }); let tarAvg = (totT/20).toFixed(2);
                 
-                let totalAkhir = ((Number(tAvg) + Number(sAvg) + Number(tarAvg)) / 3).toFixed(1);
+                let totalAkhir = ((Number(tAvg) + Number(sAvg) + Number(tarAvg)) / 3).toFixed(2);
                 let sysStatus = Number(totalAkhir) > 6 ? 'LULUS' : 'TIDAK LULUS';
                 let sysColor = Number(totalAkhir) > 6 ? 'text-green-600' : 'text-red-600';
                 
@@ -1083,9 +1110,10 @@
                 if(ma.status !== 'PENDING') { actionMO += `<span class="px-2 py-1 text-[10px] font-bold rounded ${ma.status==='ACCEPT'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${ma.status}</span>`; if(window.userRole==='ETD') actionMO += `<button onclick="window.undoAction('${r.fId}', ${r.pIndex}, 'MO')" class="text-[9px] text-blue-600 underline">Undo</button>`; }
                 else { if(window.userRole==='MO') { actionMO += `<div class="flex gap-1"><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'ACCEPT')" class="flex-1 bg-green-600 text-white rounded text-[10px] py-1 font-bold">ACCEPT</button><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'REJECT')" class="flex-1 bg-red-600 text-white rounded text-[10px] py-1 font-bold">REJECT</button></div>`; } else actionMO += `<span class="text-[10px] text-gray-400">Wait MO</span>`; } actionMO += `</div>`;
 
-                h += `<tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors"><td class="p-3 text-center">${idx+1}</td><td class="p-3 font-bold text-gray-800">${r.p.namaPeserta}</td><td class="p-3 text-xs text-gray-500">${r.p.idPelamar}</td><td class="p-3 text-xs text-gray-600">${r.form.globalStore?.flagship||'-'}</td><td class="p-3 text-center font-bold text-blue-600">${ntAvg}</td><td class="p-3 text-center font-bold text-purple-600">${tAvg}</td><td class="p-3 text-center font-bold text-orange-600">${sAvg}</td><td class="p-3 text-center font-bold text-green-600">${tarAvg}</td><td class="p-3 text-center bg-spg-50/50"><div class="font-black text-spg-600 text-lg leading-none">${totalAkhir}</div><div class="text-[9px] font-bold mt-1 ${sysColor}">${sysStatus}</div></td><td class="p-3 text-[10px]">${rekStatusHtml}</td><td class="p-2 align-middle">${actionMO}</td></tr>`;
+                // PERBAIKAN 2: Memasukkan Lokasi Penempatan (Master) pada kolom yang disiapkan di HTML
+                h += `<tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors"><td class="p-3 text-center">${idx+1}</td><td class="p-3 font-bold text-gray-800">${r.p.namaPeserta}</td><td class="p-3 text-xs text-gray-500">${r.p.idPelamar}</td><td class="p-3 text-xs text-gray-600">${r.form.globalStore?.flagship||'-'}</td><td class="p-3 text-xs text-gray-600">${r.p.penempatan||'-'}</td><td class="p-3 text-center font-bold text-blue-600">${ntAvg}</td><td class="p-3 text-center font-bold text-purple-600">${tAvg}</td><td class="p-3 text-center font-bold text-orange-600">${sAvg}</td><td class="p-3 text-center font-bold text-green-600">${tarAvg}</td><td class="p-3 text-center bg-spg-50/50"><div class="font-black text-spg-600 text-lg leading-none">${totalAkhir}</div><div class="text-[9px] font-bold mt-1 ${sysColor}">${sysStatus}</div></td><td class="p-3 text-[10px]">${rekStatusHtml}</td><td class="p-2 align-middle">${actionMO}</td></tr>`;
             });
-            if(!h) h = `<tr><td colspan="11" class="p-6 text-center text-gray-500">Kosong.</td></tr>`; tb.innerHTML = h;
+            if(!h) h = `<tr><td colspan="12" class="p-6 text-center text-gray-500">Kosong.</td></tr>`; tb.innerHTML = h;
         }
 
         window.renderMOCardsData = function() {
@@ -1144,7 +1172,19 @@
         }
         window.clearGlobalSignature = function() { if(sig.ctx){ sig.ctx.clearRect(0,0,sig.cv.width,sig.cv.height); window.globalStore.signatureDataUrl=null; } }
         
-        window.printRekapanTable = function() { window.print(); }
+        // PERBAIKAN 2: Cetak PDF Rekapitulasi MO dipindah sementara ke Print Container agar terbaca media print
+        window.printRekapanTable = function() { 
+            const printContainer = document.getElementById('print-container');
+            const tableHtml = document.querySelector('#view-rekapan .overflow-x-auto').outerHTML;
+            printContainer.innerHTML = `<div class="print-table-wrapper">
+                <h2 style="text-align:center; font-size:18px; color:#881337; margin-bottom:5px;">REKAPITULASI PENILAIAN OJT SPG MISTER DONUT</h2>
+                <p style="text-align:center; font-size:10px; color:#666; margin-bottom:20px;">Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
+                <div class="print-table">${tableHtml}</div>
+            </div>`;
+            window.print(); 
+            setTimeout(() => printContainer.innerHTML = '', 500);
+        }
+
         window.generateAndPrintPDF = function() {
             const c = document.getElementById('print-container'); let h = '';
             for(let i=0; i<(window.globalStore?.participantCount||1); i++) {
@@ -1168,7 +1208,7 @@
                         <tr><td>Pencapaian Barang Sisa (Max 10)</td><td id="prt_s_${i}"></td></tr>
                         <tr><td>Target Penjualan Achievement (Max 10)</td><td id="prt_tar_${i}"></td></tr>
                         <tr style="background:#f0f9ff; font-weight:bold;"><td>TOTAL NILAI AKHIR OJT (3 Aspek Utama)</td><td id="prt_tot_${i}"></td></tr>
-                        <tr style="background:#f9fafb; font-weight:bold;"><td>STATUS KELULUSAN SISTEM (> 6.0)</td><td id="prt_sys_${i}"></td></tr>
+                        <tr style="background:#f9fafb; font-weight:bold;"><td>STATUS KELULUSAN SISTEM (> 6.00)</td><td id="prt_sys_${i}"></td></tr>
                     </table>
                     <div style="margin-top:20px; border:1px dashed #ccc; padding:10px;">
                         <b>Kesimpulan & Rekomendasi Mentor (Keputusan User):</b><br/>
@@ -1191,13 +1231,13 @@
             }
             c.innerHTML = h;
             for(let i=0; i<(window.globalStore?.participantCount||1); i++) {
-                let tn=0; for(let k in window.data_non_teknis?.[i]?.scores) tn+=Number(window.data_non_teknis[i].scores[k]||0); if(document.getElementById(`prt_nt_${i}`)) document.getElementById(`prt_nt_${i}`).innerText = (tn/10).toFixed(1);
-                let tt=0; for(let k in window.data_teknis?.[i]?.scores) tt+=Number(window.data_teknis[i].scores[k]||0); if(document.getElementById(`prt_t_${i}`)) document.getElementById(`prt_t_${i}`).innerText = (tt/20).toFixed(1);
+                let tn=0; for(let k in window.data_non_teknis?.[i]?.scores) tn+=Number(window.data_non_teknis[i].scores[k]||0); if(document.getElementById(`prt_nt_${i}`)) document.getElementById(`prt_nt_${i}`).innerText = (tn/10).toFixed(2);
+                let tt=0; for(let k in window.data_teknis?.[i]?.scores) tt+=Number(window.data_teknis[i].scores[k]||0); if(document.getElementById(`prt_t_${i}`)) document.getElementById(`prt_t_${i}`).innerText = (tt/20).toFixed(2);
                 let totS=0; (window.data_sisa?.[i]||[]).forEach(d => { let s=Number(d.sisa), dt=Number(d.datang); if(dt>0) { let p=(s/dt)*100; totS += (p<=10?100:p<=30?75:p<=50?50:0); } }); if(document.getElementById(`prt_s_${i}`)) document.getElementById(`prt_s_${i}`).innerText = (totS/20).toFixed(2);
-                let totT=0; (window.data_target?.[i]||[]).forEach(d => { let j=Number(d.jumlah), t=Number(d.terjual); if(j>0) { let p=(t/j)*100; totT += (p>=90?100:p>=70?75:p>=50?50:0); } }); if(document.getElementById(`prt_tar_${i}`)) document.getElementById(`prt_tar_${i}`).innerText = (totT/20).toFixed(1);
+                let totT=0; (window.data_target?.[i]||[]).forEach(d => { let j=Number(d.jumlah), t=Number(d.terjual); if(j>0) { let p=(t/j)*100; totT += (p>=90?100:p>=70?75:p>=50?50:0); } }); if(document.getElementById(`prt_tar_${i}`)) document.getElementById(`prt_tar_${i}`).innerText = (totT/20).toFixed(2);
                 
                 let tAvg = (tt/20); let sAvg = (totS/20); let tarAvg = (totT/20);
-                let totAkhir = ((tAvg + sAvg + tarAvg)/3).toFixed(1);
+                let totAkhir = ((tAvg + sAvg + tarAvg)/3).toFixed(2);
                 if(document.getElementById(`prt_tot_${i}`)) document.getElementById(`prt_tot_${i}`).innerText = totAkhir;
 
                 let sysStatus = Number(totAkhir) > 6 ? 'LULUS' : 'TIDAK LULUS';
