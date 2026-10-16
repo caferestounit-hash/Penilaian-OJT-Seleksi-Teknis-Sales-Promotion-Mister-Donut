@@ -30,12 +30,6 @@
             body > div:not(#print-container):not(#notificationModal) { display: none !important; }
             #print-container { display: block !important; width: 100%; margin: 0; padding: 0; }
             .page-break { page-break-before: always; }
-            
-            /* Styles khusus untuk print Rekapan Table */
-            .print-table-wrapper { font-family: sans-serif; padding: 20px; }
-            .print-table { width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 15px; }
-            .print-table th, .print-table td { border: 1px solid #ccc; padding: 6px; text-align: left; }
-            .print-table th { background-color: #881337; color: white; text-align: center; }
         }
         .bg-pattern { background-image: radial-gradient(#e11d48 1px, transparent 1px); background-size: 20px 20px; }
         /* Custom scrollbar */
@@ -57,7 +51,6 @@
                 <span class="font-black text-spg-900 text-sm sm:text-lg md:text-xl tracking-wide uppercase truncate">Seleksi Teknis SPG <span class="text-orange-500">Mister Donut</span></span>
             </div>
             <div class="flex items-center gap-2 sm:gap-3 shrink-0">
-                <!-- PERBAIKAN 1: Klik untuk Notifikasi Umum (Bisa untuk ETD & MO) -->
                 <div id="etd-notification-bell" class="relative hidden cursor-pointer" onclick="window.showNotifications()">
                     <i data-lucide="bell" class="w-5 h-5 sm:w-6 sm:h-6 text-spg-800 hover:text-spg-600 transition-colors"></i>
                     <div id="etd-notification-dot" class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full hidden border-2 border-white"></div>
@@ -212,7 +205,7 @@
             </div>
         </div>
         <div class="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-200 pb-4">
-            <table class="w-full text-sm text-left min-w-max border-collapse">
+            <table class="w-full text-sm text-left min-w-max border-collapse" id="main-rekapan-table">
                 <thead class="bg-spg-800 text-white uppercase text-[10px] font-black tracking-wider">
                     <tr>
                         <th class="p-3 border-r border-spg-700 text-center">No</th>
@@ -589,7 +582,6 @@
 
             const cardHist = document.getElementById('card-history');
             
-            // Logika Notifikasi Berdasarkan Role
             if(window.userRole === 'ETD') {
                 cardHist.style.display = 'block'; document.getElementById('history-card-title').innerText = "Antrean Approve ETD"; document.getElementById('history-card-desc').innerText = "Approve form dari mentor sebelum rekapan MO."; document.getElementById('history-view-title').innerText = "Antrean Approve ETD";
                 document.getElementById('etd-notification-bell').classList.remove('hidden');
@@ -822,6 +814,7 @@
                 let d = window.data_rekomendasi[p];
                 let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
 
+                // Hitung Rata-rata 3 Aspek (Teknis, Sisa, Target)
                 let tk=0; for(let k in window.data_teknis[p]?.scores) tk+=Number(window.data_teknis[p].scores[k]); let tAvg = tk/20;
                 let totS=0; (window.data_sisa[p]||[]).forEach(x=>{ let s=Number(x.sisa),dt=Number(x.datang); if(dt>0){let pct=(s/dt)*100; totS+=(pct<=10?100:pct<=30?75:pct<=50?50:0);} }); let sAvg = totS/20;
                 let totT=0; (window.data_target[p]||[]).forEach(x=>{ let j=Number(x.jumlah),t=Number(x.terjual); if(j>0){let pct=(t/j)*100; totT+=(pct>=90?100:pct>=70?75:pct>=50?50:0);} }); let tarAvg = totT/20;
@@ -1125,6 +1118,7 @@
             } catch(e) {console.error(e);}
         }
 
+        // PERBAIKAN 2: Render Tabel Rekapan dengan Latar Belakang Warna Status MO
         window.renderMOTableData = function() {
             const yF = document.getElementById('mo-year-filter-rekap').value; const bF = document.getElementById('mo-batch-filter-rekap').value;
             const filtered = window.moParticipantRecords.filter(r => (yF ? r.yr === yF : true) && (bF ? r.form.globalStore?.batch === bF : true));
@@ -1144,11 +1138,25 @@
 
                 let ma = r.form.moApprovals?.[r.pIndex]||{status:'PENDING', reason:''};
                 let actionMO = `<div class="flex flex-col gap-1">`;
-                if(ma.status !== 'PENDING') { actionMO += `<span class="px-2 py-1 text-[10px] font-bold rounded ${ma.status==='ACCEPT'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${ma.status}</span>`; if(window.userRole==='ETD') actionMO += `<button onclick="window.undoAction('${r.fId}', ${r.pIndex}, 'MO')" class="text-[9px] text-blue-600 underline">Undo</button>`; }
-                else { if(window.userRole==='MO') { actionMO += `<div class="flex gap-1"><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'ACCEPT')" class="flex-1 bg-green-600 text-white rounded text-[10px] py-1 font-bold">ACCEPT</button><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'REJECT')" class="flex-1 bg-red-600 text-white rounded text-[10px] py-1 font-bold">REJECT</button></div>`; } else actionMO += `<span class="text-[10px] text-gray-400">Wait MO</span>`; } actionMO += `</div>`;
+                
+                // Menyiapkan Background baris berdasarkan Status MO
+                let rowBgClass = 'bg-white hover:bg-gray-50';
 
-                // Penempatan ada di r.p.penempatan
-                h += `<tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors"><td class="p-3 text-center">${idx+1}</td><td class="p-3 font-bold text-gray-800">${r.p.namaPeserta}</td><td class="p-3 text-xs text-gray-500">${r.p.idPelamar}</td><td class="p-3 text-xs text-gray-600">${r.form.globalStore?.flagship||'-'}</td><td class="p-3 text-xs text-gray-600">${r.p.penempatan||'-'}</td><td class="p-3 text-center font-bold text-blue-600">${ntAvg}</td><td class="p-3 text-center font-bold text-purple-600">${tAvg}</td><td class="p-3 text-center font-bold text-orange-600">${sAvg}</td><td class="p-3 text-center font-bold text-green-600">${tarAvg}</td><td class="p-3 text-center bg-spg-50/50"><div class="font-black text-spg-600 text-lg leading-none">${totalAkhir}</div><div class="text-[9px] font-bold mt-1 ${sysColor}">${sysStatus}</div></td><td class="p-3 text-[10px]">${rekStatusHtml}</td><td class="p-2 align-middle">${actionMO}</td></tr>`;
+                if(ma.status !== 'PENDING') { 
+                    actionMO += `<span class="px-2 py-1 text-[10px] font-bold rounded ${ma.status==='ACCEPT'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${ma.status}</span>`; 
+                    if(window.userRole==='ETD') actionMO += `<button onclick="window.undoAction('${r.fId}', ${r.pIndex}, 'MO')" class="text-[9px] text-blue-600 underline mt-1">Undo</button>`; 
+                    
+                    if (ma.status === 'ACCEPT') rowBgClass = 'bg-green-50 hover:bg-green-100 border-l-4 border-l-green-500';
+                    else if (ma.status === 'REJECT') rowBgClass = 'bg-red-50 hover:bg-red-100 border-l-4 border-l-red-500';
+                }
+                else { 
+                    if(window.userRole==='MO') { 
+                        actionMO += `<div class="flex gap-1"><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'ACCEPT')" class="flex-1 bg-green-600 hover:bg-green-700 text-white rounded text-[10px] py-1 font-bold transition-colors">ACCEPT</button><button onclick="window.promptMOAction('${r.fId}', ${r.pIndex}, 'REJECT')" class="flex-1 bg-red-600 hover:bg-red-700 text-white rounded text-[10px] py-1 font-bold transition-colors">REJECT</button></div>`; 
+                    } else actionMO += `<span class="text-[10px] text-gray-400">Wait MO</span>`; 
+                } 
+                actionMO += `</div>`;
+
+                h += `<tr class="border-b border-gray-100 transition-colors ${rowBgClass}"><td class="p-3 text-center">${idx+1}</td><td class="p-3 font-bold text-gray-800">${r.p.namaPeserta}</td><td class="p-3 text-xs text-gray-500">${r.p.idPelamar}</td><td class="p-3 text-xs text-gray-600">${r.form.globalStore?.flagship||'-'}</td><td class="p-3 text-xs text-gray-600">${r.p.penempatan||'-'}</td><td class="p-3 text-center font-bold text-blue-600">${ntAvg}</td><td class="p-3 text-center font-bold text-purple-600">${tAvg}</td><td class="p-3 text-center font-bold text-orange-600">${sAvg}</td><td class="p-3 text-center font-bold text-green-600">${tarAvg}</td><td class="p-3 text-center bg-white/50"><div class="font-black text-spg-600 text-lg leading-none">${totalAkhir}</div><div class="text-[9px] font-bold mt-1 ${sysColor}">${sysStatus}</div></td><td class="p-3 text-[10px] bg-white/50">${rekStatusHtml}</td><td class="p-2 align-middle bg-white/50">${actionMO}</td></tr>`;
             });
             if(!h) h = `<tr><td colspan="12" class="p-6 text-center text-gray-500">Kosong.</td></tr>`; tb.innerHTML = h;
         }
@@ -1163,12 +1171,20 @@
             if(!cHtml) cHtml = `<div class="col-span-full p-8 text-center text-gray-500 border border-dashed border-gray-300 rounded-xl">Kosong.</div>`; cardContainer.innerHTML = cHtml; if(window.lucide) window.lucide.createIcons();
         }
 
-        window.promptMOAction = function(fId, pIdx, st) { window.activeAction = { fId, pIdx, st, role: 'MO' }; const m = document.getElementById('moActionModal'); document.getElementById('moActionTitle').innerText = st==='ACCEPT'?'Terima (ACCEPT)':'Tolak (REJECT)'; const b = document.getElementById('moActionConfirmBtn'); b.className = `flex-1 text-white font-bold py-3 px-4 rounded-xl ${st==='REJECT'?'bg-red-600 hover:bg-red-700':'bg-green-600 hover:bg-green-700'}`; b.onclick = window.executeAction; m.classList.remove('hidden'); }
+        window.promptMOAction = function(fId, pIdx, st) { 
+            window.activeAction = { fId, pIdx, st, role: 'MO' }; 
+            // Konfirmasi Langsung MO tanpa Alasan
+            if(!confirm(`Konfirmasi Keputusan Final: ${st}?`)) return;
+            window.executeAction();
+        }
         window.closeMOModal = function() { document.getElementById('moActionModal').classList.add('hidden'); }
 
         window.executeAction = async function() {
             if(!window.activeAction) return; const { fId, pIdx, st, role } = window.activeAction; let reason = '';
-            document.getElementById('moActionConfirmBtn').innerText="Proses...";
+            
+            // Tampilkan loading modal
+            window.showModal('loading', 'Menyimpan...', 'Harap tunggu...');
+            
             try {
                 const ref = doc(db, 'artifacts', appId, 'forms', fId); const s = await getDoc(ref);
                 if(s.exists()) {
@@ -1209,17 +1225,38 @@
         }
         window.clearGlobalSignature = function() { if(sig.ctx){ sig.ctx.clearRect(0,0,sig.cv.width,sig.cv.height); window.globalStore.signatureDataUrl=null; } }
         
-        // PERBAIKAN 2: Cetak PDF Rekap Landscape
+        // PERBAIKAN 3: Cetak PDF Rekapitulasi Tampil Penuh Landscape
         window.printRekapanTable = function() { 
             const printContainer = document.getElementById('print-container');
-            const tableHtml = document.querySelector('#view-rekapan .overflow-x-auto').outerHTML;
+            
+            // Kloning tabel agar tidak merusak tampilan aslinya
+            const tableClone = document.querySelector('#main-rekapan-table').cloneNode(true);
+            
+            // Hapus kelas-kelas tailwind yang memaksakan ukuran lebar statis
+            tableClone.classList.remove('min-w-max');
+            tableClone.querySelectorAll('th, td').forEach(cell => {
+                cell.className = cell.className.replace(/min-w-[150px]/g, '')
+                                               .replace(/min-w-[120px]/g, '')
+                                               .replace(/p-3/g, '')
+                                               .replace(/p-2/g, '');
+            });
+
             printContainer.innerHTML = `
-            <style>@page { size: landscape; margin: 1cm; }</style>
-            <div class="print-table-wrapper">
-                <h2 style="text-align:center; font-size:18px; color:#881337; margin-bottom:5px;">REKAPITULASI PENILAIAN OJT SPG MISTER DONUT</h2>
-                <p style="text-align:center; font-size:10px; color:#666; margin-bottom:20px;">Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
-                <div class="print-table">${tableHtml}</div>
+            <style>
+                @page { size: landscape; margin: 10mm; }
+                .print-wrapper { width: 100%; font-family: sans-serif; }
+                .print-table { width: 100%; border-collapse: collapse; font-size: 8px !important; table-layout: auto; }
+                .print-table th, .print-table td { border: 1px solid #ddd; padding: 4px 3px !important; text-align: center; vertical-align: middle; }
+                .print-table th { background-color: #881337 !important; color: white !important; font-size: 9px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                .print-table tr.bg-green-50 { background-color: #f0fdf4 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                .print-table tr.bg-red-50 { background-color: #fef2f2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            </style>
+            <div class="print-wrapper">
+                <h2 style="text-align:center; font-size:16px; color:#881337; margin-bottom:5px; font-weight:900;">REKAPITULASI PENILAIAN OJT SPG MISTER DONUT</h2>
+                <p style="text-align:center; font-size:9px; color:#666; margin-bottom:15px;">Dicetak pada: ${new Date().toLocaleString('id-ID')}</p>
+                ${tableClone.outerHTML.replace('<table', '<table class="print-table"')}
             </div>`;
+            
             window.print(); 
             setTimeout(() => printContainer.innerHTML = '', 500);
         }
