@@ -177,6 +177,8 @@
         .ac-item { padding: .5rem .65rem; border-radius: .5rem; font-size: .875rem; color: #362219; cursor: pointer; line-height: 1.25; }
         .ac-item.act, .ac-item:hover { background: #f2e8e5; }
         .ac-item mark { background: #fde68a; color: inherit; border-radius: 2px; padding: 0; font-weight: 800; }
+        .ac-warn { display: none; margin-top: .3rem; font-size: .7rem; line-height: 1.3; color: #b45309; }
+        .ac-warn.on { display: block; }
         .ac-foot { padding: .35rem .65rem .25rem; font-size: .65rem; color: #a18072; }
         .pg-btn { min-width: 2rem; height: 2rem; padding: 0 .6rem; border-radius: .5rem; border: 1px solid #d1d5db; background: #fff; color: #374151; font-weight: 700; font-size: .8rem; cursor: pointer; }
         .pg-btn:hover:not(:disabled) { background: #f3f4f6; }
@@ -422,6 +424,7 @@
         html.dark .ss-more:hover, html.dark .ss-did { background:#33271f;border-color:#52403a;color:#dcc6bb }
         html.dark .ss-b-gray { background:#33271f;color:#cdbdb3 }
         html.dark .ac-list { background:#221915;border-color:#52403a;box-shadow:0 12px 28px -8px rgba(0,0,0,.6) }
+        html.dark .ac-warn { color:#fcd34d }
         html.dark .ac-item { color:#f4ebe6 }
         html.dark .ac-item.act, html.dark .ac-item:hover { background:#33271f }
         html.dark .ac-item mark { background:#78561a;color:#fff }
@@ -1670,8 +1673,8 @@
 
         // ---- Kelola Data: Lokasi & Mentor (daftar standar) + autosuggest di form
         const KD = {
-            lokasi: { coll: 'master_lokasi', label: 'Lokasi', icon: 'map-pin', ph: 'Tambah nama lokasi / store...', hint: 'Contoh: FX Sudirman. Saat form diisi, mentor cukup mengetik beberapa huruf lalu memilih dari saran.' },
-            mentor: { coll: 'master_mentor', label: 'Mentor', icon: 'user-round-check', ph: 'Tambah nama mentor...', hint: 'Tulis nama lengkap sesuai kaidah. Mentor akan melihat nama ini sebagai saran saat mengisi form.' }
+            lokasi: { coll: 'master_lokasi', label: 'Lokasi', icon: 'map-pin', ph: 'Tambah nama lokasi / store...', hint: 'Contoh: FX Sudirman. Hanya lokasi di daftar ini yang muncul sebagai saran saat mentor mengisi form.' },
+            mentor: { coll: 'master_mentor', label: 'Mentor', icon: 'user-round-check', ph: 'Tambah nama mentor...', hint: 'Tulis nama lengkap sesuai kaidah (EYD). Hanya nama di daftar ini yang muncul sebagai saran saat mentor mengisi form.' }
         };
         // Penulisan nama mentor sesuai EYD/PUEBI: tiap kata diawali huruf kapital, gelar (S.Kom., M.M.) rapi,
         // partikel (bin, binti, van, de ...) tetap huruf kecil; kata yang sudah campur huruf (mis. McDonald) dibiarkan.
@@ -1685,7 +1688,7 @@
             }).join(' ');
         };
         window.kdTab = window.kdTab || 'user';
-        window.kdMaster = { lokasi: { items: [], unsub: null }, mentor: { items: [], unsub: null } };
+        window.kdMaster = { lokasi: { items: [], ignored: [], unsub: null }, mentor: { items: [], ignored: [], unsub: null } };
         window.kdHist = { lokasi: [], mentor: [] }; window.kdHistView = { lokasi: [], mentor: [] }; window.kdHistLoaded = false; window.kdEditing = null;
         const kdClean = (v) => String(v || '').replace(/\s+/g, ' ').trim();
         const kdBad = /^(toko belum diisi|tanpa nama|-)?$/i;
@@ -1695,8 +1698,8 @@
             ['lokasi', 'mentor'].forEach(t => {
                 if (window.kdMaster[t].unsub) return;
                 try { window.kdMaster[t].unsub = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', KD[t].coll), (snap) => {
-                    const items = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(x => x.nama); items.sort((a, b) => String(a.nama).localeCompare(String(b.nama), 'id', { sensitivity: 'base' }));
-                    window.kdMaster[t].items = items; window.kdChanged();
+                    const all = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(x => x.nama); const srt = (a, b) => String(a.nama).localeCompare(String(b.nama), 'id', { sensitivity: 'base' });
+                    window.kdMaster[t].items = all.filter(x => !x.ignored).sort(srt); window.kdMaster[t].ignored = all.filter(x => x.ignored).sort(srt); window.kdChanged();
                 }, () => {}); } catch (e) {}
             });
         };
@@ -1720,7 +1723,9 @@
             window.kdHistLoaded = true; window.kdChanged();
         };
         // Sumber saran: daftar standar bila sudah ada isinya; kalau masih kosong -> otomatis dari isian lama
-        window.kdNames = function(t) { const m = window.kdMaster[t].items; return m.length ? m.map(x => x.nama) : window.kdHist[t].map(x => x.nama); };
+        window.kdIgnoredKeys = (t) => new Set(window.kdMaster[t].ignored.map(x => kdKey(x.nama)));
+        // Saran di form HANYA dari daftar standar yang sudah ditambahkan ETD (isian lama/typo tidak ikut disarankan)
+        window.kdNames = function(t) { return window.kdMaster[t].items.map(x => x.nama); };
 
         window.openKelolaData = function() { window.kdEditing = null; window.renderKelolaData(); window.kdLoadHistory(true); };
         window.setKelolaTab = function(t) { window.kdTab = t; window.kdEditing = null; window.renderKelolaData(); };
@@ -1748,7 +1753,7 @@
             }
             const items = window.kdMaster[t].items; const q = kdKey((document.getElementById('kd-search-' + t) || {}).value);
             document.getElementById('kd-count-' + t).textContent = items.length ? `${items.length} ${cfg.label.toLowerCase()}` : '';
-            document.getElementById('kd-mode-' + t).innerHTML = items.length ? '' : `<div class="mt-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs p-3 leading-relaxed"><b>Daftar masih kosong.</b> Untuk sementara saran di form diambil otomatis dari isian yang pernah masuk. Begitu Anda menambahkan ${cfg.label.toLowerCase()} di sini, saran hanya memakai daftar ini.</div>`;
+            document.getElementById('kd-mode-' + t).innerHTML = items.length ? '' : `<div class="mt-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs p-3 leading-relaxed"><b>Daftar masih kosong.</b> Saran di form baru muncul setelah ${cfg.label.toLowerCase()} ditambahkan di sini. Isian lama di bawah tidak otomatis disarankan, tambahkan yang ejaannya sudah benar.</div>`;
             const shown = items.filter(x => !q || kdKey(x.nama).includes(q)); const box = document.getElementById('kd-list-' + t);
             if (!items.length) box.innerHTML = `<div class="text-center py-8 bg-white rounded-2xl border border-dashed border-gray-300"><div class="mx-auto w-12 h-12 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center mb-3"><i data-lucide="${cfg.icon}" class="w-6 h-6"></i></div><div class="font-bold text-gray-700">Belum ada ${cfg.label}</div><div class="text-xs text-gray-400 mt-1 px-6">Tambahkan di atas, atau ambil dari isian lama di bawah.</div></div>`;
             else if (!shown.length) box.innerHTML = `<div class="text-center text-sm text-gray-500 py-6">Tidak ada yang cocok dengan "${uEsc(q)}".</div>`;
@@ -1758,20 +1763,23 @@
                 return `<div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-3 flex items-center gap-3 hover:border-gray-300 transition-colors">${ic}<div class="flex-1 min-w-0 font-bold text-gray-800 break-words">${uEsc(x.nama)}</div><button onclick="window.kdStartEdit('${t}','${x.id}')" aria-label="Ubah" class="w-9 h-9 shrink-0 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-gray-800 flex items-center justify-center transition-colors"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="window.kdDelete('${t}','${x.id}')" aria-label="Hapus" class="w-9 h-9 shrink-0 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>`;
             }).join('');
             // isian lama yang belum ada di daftar
-            const have = new Set(items.map(x => kdKey(x.nama))); const hv = window.kdHist[t].filter(h => !have.has(h.key)); window.kdHistView[t] = hv; const hb = document.getElementById('kd-hist-' + t);
+            const have = new Set(items.map(x => kdKey(x.nama))); const ign = window.kdIgnoredKeys(t); const hv = window.kdHist[t].filter(h => !have.has(h.key) && !ign.has(h.key)); window.kdHistView[t] = hv; const hb = document.getElementById('kd-hist-' + t);
             if (!window.kdHistLoaded) hb.innerHTML = `<div class="text-xs text-gray-400 px-1">Memuat isian lama...</div>`;
-            else if (!hv.length) hb.innerHTML = '';
-            else hb.innerHTML = `<div class="flex items-center justify-between gap-2 mb-2 px-1"><div><div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Dari isian lama (belum ada di daftar)</div><div class="text-[11px] text-gray-400">Periksa ejaan, lalu tambahkan. Bisa diedit setelahnya.</div></div><button onclick="window.kdAddAllHist('${t}')" class="shrink-0 px-3 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-700 text-xs font-bold border border-sky-200">Tambahkan semua (${hv.length})</button></div><div class="space-y-1.5">${hv.map((h, i) => `<div class="bg-gray-50 rounded-xl border border-gray-200 px-3 py-2 flex items-center gap-3"><div class="flex-1 min-w-0 text-sm text-gray-700 break-words">${uEsc(h.nama)}</div><span class="text-[10px] text-gray-400 shrink-0">${h.count}× dipakai</span><button onclick="window.kdAddHist('${t}', ${i})" aria-label="Tambahkan" class="w-8 h-8 shrink-0 rounded-lg bg-white hover:bg-sky-50 border border-gray-200 text-sky-700 flex items-center justify-center"><i data-lucide="plus" class="w-4 h-4"></i></button></div>`).join('')}</div>`;
+            else if (!hv.length) hb.innerHTML = '<div class="text-xs text-gray-400 px-1">Tidak ada isian lama yang tersisa.</div>';
+            else hb.innerHTML = `<div class="flex items-center justify-between gap-2 mb-2 px-1"><div><div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Dari isian lama (belum ada di daftar)</div><div class="text-[11px] text-gray-400">Periksa ejaan, lalu tambahkan. Yang mirip/duplikat bisa dihapus (disembunyikan).</div></div><button onclick="window.kdAddAllHist('${t}')" class="shrink-0 px-3 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-700 text-xs font-bold border border-sky-200">Tambahkan semua (${hv.length})</button></div><div class="space-y-1.5">${hv.map((h, i) => `<div class="bg-gray-50 rounded-xl border border-gray-200 px-3 py-2 flex items-center gap-3"><div class="flex-1 min-w-0 text-sm text-gray-700 break-words">${uEsc(h.nama)}</div><span class="text-[10px] text-gray-400 shrink-0">${h.count}× dipakai</span><button onclick="window.kdIgnoreHist('${t}', ${i})" aria-label="Hapus dari daftar isian lama" title="Hapus (sembunyikan)" class="w-8 h-8 shrink-0 rounded-lg bg-white hover:bg-red-50 border border-gray-200 text-red-500 flex items-center justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button><button onclick="window.kdAddHist('${t}', ${i})" aria-label="Tambahkan" title="Tambahkan ke daftar" class="w-8 h-8 shrink-0 rounded-lg bg-white hover:bg-sky-50 border border-gray-200 text-sky-700 flex items-center justify-center"><i data-lucide="plus" class="w-4 h-4"></i></button></div>`).join('')}</div>`;
+            const igs = window.kdMaster[t].ignored;
+            if (window.kdHistLoaded && igs.length) hb.innerHTML += `<details class="mt-4"><summary class="text-[11px] font-bold text-gray-400 uppercase tracking-wider cursor-pointer select-none px-1">Disembunyikan (${igs.length})</summary><div class="flex justify-end mt-2"><button onclick="window.kdRestoreAll('${t}')" class="text-xs font-bold text-sky-700 hover:underline">Pulihkan semua</button></div><div class="space-y-1.5 mt-1">${igs.map(x => `<div class="bg-gray-50 rounded-xl border border-dashed border-gray-300 px-3 py-2 flex items-center gap-3"><div class="flex-1 min-w-0 text-sm text-gray-500 line-through break-words">${uEsc(x.nama)}</div><button onclick="window.kdRestore('${t}', '${x.id}')" class="shrink-0 px-2.5 py-1 rounded-lg bg-white hover:bg-sky-50 border border-gray-200 text-sky-700 text-xs font-bold">Pulihkan</button></div>`).join('')}</div></details>`;
             if (window.lucide) window.lucide.createIcons();
             if (window.kdEditing && window.kdEditing.t === t) { const el = document.getElementById('kd-edit-input'); if (el && document.activeElement !== el) { el.focus(); el.select(); } }
         };
+        const kdUnhide = (t, n) => Promise.all(window.kdMaster[t].ignored.filter(x => kdKey(x.nama) === kdKey(n)).map(x => deleteDoc(kdRef(t, x.id))));
         const kdTaken = (t, n, exceptId) => window.kdMaster[t].items.some(x => x.id !== exceptId && kdKey(x.nama) === kdKey(n));
         const kdNewId = () => 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
         const kdRef = (t, id) => doc(db, 'artifacts', appId, 'public', 'data', KD[t].coll, id);
         window.kdAdd = async function(t) {
             const inp = document.getElementById('kd-add-' + t); const n = kdClean(inp.value); if (!n) { inp.focus(); return; }
             if (kdTaken(t, n)) return window.showModal('error', 'Sudah Ada', `"${n}" sudah ada di daftar ${KD[t].label}.`);
-            try { await setDoc(kdRef(t, kdNewId()), { nama: n, createdAt: Date.now() }); inp.value = ''; inp.focus(); window.miniToast(`${n} ditambahkan`); }
+            try { await kdUnhide(t, n); await setDoc(kdRef(t, kdNewId()), { nama: n, createdAt: Date.now() }); inp.value = ''; inp.focus(); window.miniToast(`${n} ditambahkan`); }
             catch (e) { window.showModal('error', 'Gagal', `Tidak bisa menambahkan ${KD[t].label}. Coba lagi.`); }
         };
         window.kdAddHist = async function(t, i) {
@@ -1785,6 +1793,13 @@
             try { await Promise.all(hv.map((h, i) => setDoc(kdRef(t, kdNewId() + i), { nama: h.nama, createdAt: Date.now() + i, source: 'import' }))); window.miniToast(`${hv.length} ${KD[t].label.toLowerCase()} ditambahkan`); }
             catch (e) { window.showModal('error', 'Gagal', 'Sebagian data gagal ditambahkan. Coba lagi.'); }
         };
+        window.kdIgnoreHist = async function(t, i) {
+            const h = window.kdHistView[t][i]; if (!h) return;
+            try { await setDoc(kdRef(t, kdNewId()), { nama: h.nama, ignored: true, createdAt: Date.now() }); window.miniToast(`${h.nama} dihapus dari daftar isian lama`); }
+            catch (e) { window.showModal('error', 'Gagal', 'Tidak bisa menghapus. Coba lagi.'); }
+        };
+        window.kdRestore = async function(t, id) { try { await deleteDoc(kdRef(t, id)); } catch (e) { window.showModal('error', 'Gagal', 'Tidak bisa memulihkan.'); } };
+        window.kdRestoreAll = async function(t) { try { await Promise.all(window.kdMaster[t].ignored.map(x => deleteDoc(kdRef(t, x.id)))); window.miniToast('Semua dipulihkan'); } catch (e) { window.showModal('error', 'Gagal', 'Tidak bisa memulihkan.'); } };
         window.kdStartEdit = function(t, id) { window.kdEditing = { t, id }; window.renderKdMaster(t); };
         window.kdCancelEdit = function(t) { window.kdEditing = null; window.renderKdMaster(t); };
         window.kdSaveEdit = async function(t, id) {
@@ -1804,6 +1819,7 @@
         window.attachSuggest = function(input, type, fmt) {
             if (!input || input.dataset.acReady) return; input.dataset.acReady = '1'; input.setAttribute('autocomplete', 'off'); input.setAttribute('role', 'combobox'); input.setAttribute('aria-autocomplete', 'list');
             const wrap = document.createElement('div'); wrap.className = 'ac-wrap'; input.parentNode.insertBefore(wrap, input); wrap.appendChild(input);
+            const warn = document.createElement('div'); warn.className = 'ac-warn'; warn.textContent = 'Belum ada di daftar standar. Periksa ejaan atau pilih dari saran bila tersedia.'; wrap.appendChild(warn);
             const list = document.createElement('div'); list.className = 'ac-list'; list.setAttribute('role', 'listbox'); wrap.appendChild(list);
             let act = -1, cur = [];
             const hide = () => { list.classList.remove('on'); act = -1; input.setAttribute('aria-expanded', 'false'); };
@@ -1817,12 +1833,12 @@
                 const all = window.kdNames(type);
                 cur = all.map(n => ({ n, r: rank(n, q) })).filter(x => x.r >= 0 && x.n.toLowerCase() !== q).sort((a, b) => a.r - b.r || a.n.localeCompare(b.n, 'id', { sensitivity: 'base' })).slice(0, 8).map(x => x.n);
                 if (!cur.length) return hide();
-                list.innerHTML = cur.map((n, i) => `<div class="ac-item${i === act ? ' act' : ''}" role="option" data-i="${i}">${mark(n, q)}</div>`).join('') + `<div class="ac-foot">${window.kdMaster[type].items.length ? 'Dari daftar standar' : 'Dari isian yang pernah masuk'} · tetap bisa ketik sendiri</div>`;
+                list.innerHTML = cur.map((n, i) => `<div class="ac-item${i === act ? ' act' : ''}" role="option" data-i="${i}">${mark(n, q)}</div>`).join('') + `<div class="ac-foot">Dari daftar standar · tetap bisa ketik sendiri</div>`;
                 list.classList.add('on'); input.setAttribute('aria-expanded', 'true');
             };
             const setAct = (i) => { act = i; list.querySelectorAll('.ac-item').forEach((el, k) => el.classList.toggle('act', k === i)); const el = list.querySelectorAll('.ac-item')[i]; if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' }); };
             input.addEventListener('input', refresh);
-            input.addEventListener('focus', () => { window.kdLoadHistory(); refresh(); });
+            input.addEventListener('focus', () => { warn.classList.remove('on'); refresh(); });
             input.addEventListener('keydown', (e) => {
                 if (!list.classList.contains('on')) return;
                 if (e.key === 'ArrowDown') { e.preventDefault(); setAct((act + 1) % cur.length); }
@@ -1835,7 +1851,8 @@
             input.addEventListener('blur', () => {
                 setTimeout(hide, 120); if (input.readOnly || input.disabled) return;
                 let v = kdClean(input.value); const mst = window.kdMaster[type].items.find(x => kdKey(x.nama) === kdKey(v));
-                if (mst) v = mst.nama; /* ejaan yang ditetapkan ETD dipakai persis */ else if (fmt) v = fmt(v); else { const hit = window.kdNames(type).find(n => kdKey(n) === kdKey(v)); if (hit) v = hit; }
+                if (mst) v = mst.nama; /* ejaan yang ditetapkan ETD dipakai persis */ else if (fmt) v = fmt(v);
+                warn.classList.toggle('on', !!v && !mst && window.kdMaster[type].items.length > 0);
                 if (v !== input.value) { input.value = v; fire(); }
             });
             document.addEventListener('kd-changed', () => { if (document.activeElement === input) refresh(); });
