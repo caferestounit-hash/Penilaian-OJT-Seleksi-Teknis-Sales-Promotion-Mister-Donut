@@ -167,10 +167,48 @@
         /* navbar: geser ke atas saat scroll turun, muncul lagi saat scroll naik */
         nav.sticky { transition: transform .28s ease, box-shadow .28s ease; }
         nav.sticky.nav-hidden { transform: translateY(-100%); box-shadow: none; }
+
+        /* ===== Filter smart (multi-select bulan + batch) ===== */
+        .flt-btn { display: inline-flex; align-items: center; gap: .4rem; height: 36px; padding: 0 .7rem; border-radius: .5rem; border: 1px solid #d1d5db; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.05); font-weight: 700; font-size: .875rem; color: #374151; cursor: pointer; max-width: 100%; }
+        .flt-btn[aria-expanded="true"] { border-color: #4d3327; box-shadow: 0 0 0 2px rgba(77,51,39,.15); }
+        .flt-btn .flt-lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 11rem; }
+        .flt-badge { display: none; min-width: 1.25rem; height: 1.25rem; padding: 0 .35rem; border-radius: 9999px; background: #4d3327; color: #fff; font-size: .7rem; font-weight: 800; align-items: center; justify-content: center; }
+        .flt-badge.on { display: inline-flex; }
+        .flt-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: 0 0 .6rem; font-size: .75rem; color: #6b7280; }
+        .flt-bar b { color: #374151; }
+        .flt-chip { display: inline-flex; align-items: center; gap: .3rem; height: 1.65rem; padding: 0 .6rem; border-radius: 9999px; background: #f5ece6; border: 1px solid #e6d3c7; color: #4d3327; font-weight: 700; font-size: .72rem; cursor: pointer; }
+        .flt-chip:hover { background: #efe0d6; }
+        .flt-chip svg { width: .7rem; height: .7rem; }
+        .flt-reset { background: none; border: 0; padding: 0 .25rem; color: #0369a1; font-weight: 700; font-size: .72rem; cursor: pointer; text-decoration: underline; }
+        #flt-back { position: fixed; inset: 0; z-index: 59; background: rgba(0,0,0,.28); display: none; }
+        #flt-pop { position: fixed; z-index: 60; display: none; flex-direction: column; width: min(23rem, calc(100vw - 1rem)); max-height: min(34rem, calc(100vh - 6rem)); background: #fff; border: 1px solid #e5e7eb; border-radius: .9rem; box-shadow: 0 18px 40px -8px rgba(54,34,25,.35); }
+        #flt-pop.on { display: flex; }
+        .flt-head { display: flex; gap: .5rem; padding: .6rem; border-bottom: 1px solid #f0e6df; }
+        .flt-search { flex: 1; display: flex; align-items: center; gap: .4rem; height: 2.25rem; padding: 0 .6rem; border: 1px solid #d1d5db; border-radius: .6rem; background: #fff; color: #9ca3af; }
+        .flt-search:focus-within { border-color: #4d3327; }
+        .flt-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: .875rem; color: #374151; }
+        .flt-body { overflow: auto; padding: .15rem .6rem .5rem; flex: 1; min-height: 0; overscroll-behavior: contain; }
+        .flt-sec { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin: .65rem 0 .25rem; font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #9a8a80; }
+        .flt-quick { display: flex; gap: .3rem; }
+        .flt-quick button { height: 1.55rem; padding: 0 .55rem; border-radius: 9999px; border: 1px solid #e0cfc4; background: #fff; color: #6b4a3a; font-size: .68rem; font-weight: 800; text-transform: none; letter-spacing: 0; cursor: pointer; }
+        .flt-quick button.on { background: #4d3327; border-color: #4d3327; color: #fff; }
+        .flt-it { display: flex; align-items: center; gap: .55rem; padding: .42rem .45rem; border-radius: .5rem; cursor: pointer; font-size: .85rem; color: #374151; user-select: none; }
+        .flt-it:hover { background: #faf5f1; }
+        .flt-it input { accent-color: #4d3327; width: 1rem; height: 1rem; flex-shrink: 0; }
+        .flt-it .flt-nm { flex: 1; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .flt-it .flt-n { font-size: .72rem; font-weight: 800; color: #8c7a70; background: #f3ece7; border-radius: 9999px; padding: 0 .5rem; }
+        .flt-it.zero { opacity: .5; }
+        .flt-empty { padding: .4rem .45rem; font-size: .78rem; color: #9ca3af; }
+        .flt-foot { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .55rem .6rem; border-top: 1px solid #f0e6df; }
+        .flt-done { height: 2.1rem; padding: 0 1.1rem; border-radius: .6rem; border: 0; background: #4d3327; color: #fff; font-weight: 800; font-size: .8rem; cursor: pointer; }
+        @media (max-width: 639px) {
+            #flt-pop { left: .5rem !important; right: .5rem !important; top: auto !important; bottom: .5rem; width: auto; max-height: 72vh !important; }
+            #flt-pop.on ~ #flt-back, #flt-back.on { display: block; }
+            .flt-search input { font-size: 16px; }
+        }
         /* form penilaian rata tengah */
         #view-form { margin-left: auto; margin-right: auto; width: calc(100% - 1rem); }
         @media (min-width: 640px) { #view-form { width: calc(100% - 3rem); } }
-        .pg-btn { display: inline-flex; align-items: center; justify-content: center; }
         .kd-tab { color: #6b7280; }
         .kd-tab:hover { color: #374151; background: rgba(255,255,255,.6); }
         .kd-tab[aria-selected="true"] { background: #fff; color: #4d3327; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
@@ -187,10 +225,6 @@
         .ac-warn { display: none; margin-top: .3rem; font-size: .7rem; line-height: 1.3; color: #b45309; }
         .ac-warn.on { display: block; }
         .ac-foot { padding: .35rem .65rem .25rem; font-size: .65rem; color: #a18072; }
-        .pg-btn { min-width: 2rem; height: 2rem; padding: 0 .6rem; border-radius: .5rem; border: 1px solid #d1d5db; background: #fff; color: #374151; font-weight: 700; font-size: .8rem; cursor: pointer; }
-        .pg-btn:hover:not(:disabled) { background: #f3f4f6; }
-        .pg-btn:disabled { opacity: .4; cursor: not-allowed; }
-        .pg-btn.on { background: #4d3327; border-color: #4d3327; color: #fff; }
         #view-rekapan th[data-sort] { cursor: pointer; user-select: none; }
         #view-rekapan th[data-sort]:hover { background-color: #5c4032; }
         #view-rekapan th[data-sort]:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
@@ -210,6 +244,20 @@
         html.dark { color-scheme: dark }
         html.dark body.bg-misdo-50 { background-color:#17110e;color:#f4ebe6 }
         html.dark .bg-white { background-color:#221915 }
+        html.dark .flt-btn { background:#221915; border-color:#4a3a32; color:#e3d5cd }
+        html.dark .flt-bar, html.dark .flt-bar b { color:#c9b8ae }
+        html.dark .flt-chip { background:#33251e; border-color:#5a4338; color:#f0ddd0 }
+        html.dark .flt-chip:hover { background:#41302a }
+        html.dark .flt-reset { color:#7cc4ee }
+        html.dark #flt-pop { background:#1d1512; border-color:#4a3a32 }
+        html.dark .flt-head, html.dark .flt-foot { border-color:#3a2d26 }
+        html.dark .flt-search { background:#2a201b; border-color:#4f3d33 }
+        html.dark .flt-search input { color:#f0e6df }
+        html.dark .flt-it { color:#e3d5cd }
+        html.dark .flt-it:hover { background:#2a201b }
+        html.dark .flt-it .flt-n { background:#33251e; color:#c9b8ae }
+        html.dark .flt-quick button { background:#2a201b; border-color:#4f3d33; color:#e3d5cd }
+        html.dark .flt-quick button.on, html.dark .flt-badge, html.dark .flt-done { background:#8a5a3f; border-color:#8a5a3f; color:#fff }
         html.dark .rv-toggle { background:#221915; border-color:#4a3a32 }
         html.dark .rv-toggle button { color:#b9a79c }
         html.dark .rv-toggle button[aria-pressed="true"] { background:#8a5a3f; color:#fff }
@@ -438,9 +486,6 @@
         html.dark .ac-item { color:#f4ebe6 }
         html.dark .ac-item.act, html.dark .ac-item:hover { background:#33271f }
         html.dark .ac-item mark { background:#78561a;color:#fff }
-        html.dark .pg-btn { background:#2a201b;border-color:#4f3d33;color:#e3d5cd }
-        html.dark .pg-btn:hover:not(:disabled) { background:#3a2d25 }
-        html.dark .pg-btn.on { background:#6a4a3c;border-color:#6a4a3c;color:#fff }
         html.dark .kd-tab { color:#b3a197 }
         html.dark .kd-tab:hover { color:#f4ebe6;background:rgba(255,255,255,.06) }
         html.dark .kd-tab[aria-selected="true"] { background:#33271f;color:#f4ebe6;box-shadow:none }
@@ -712,9 +757,7 @@
             <button type="button" data-smart-back onclick="window.smartBack()" class="smart-back" title="Kembali" aria-label="Kembali"></button>
             <div class="min-w-0 mr-auto"><h2 class="text-base sm:text-lg font-black text-gray-800 uppercase leading-tight">Rekapan Penilaian OJT</h2><p class="hidden lg:block text-[11px] text-gray-500 leading-tight">Data rekapitulasi penilaian yang sudah diapprove oleh ETD.</p></div>
             <div class="flex flex-wrap items-center gap-2">
-                <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm"><i data-lucide="calendar" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="mo-year-filter-rekap" onchange="window.pg.rekap.page=1;window.renderMOTableData()" aria-label="Filter tahun" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer"><option value="">Semua Tahun</option></select></label>
-                <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm"><i data-lucide="filter" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="mo-batch-filter-rekap" onchange="window.pg.rekap.page=1;window.renderMOTableData()" aria-label="Filter batch" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer"><option value="">Semua Batch</option></select></label>
-                <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm"><i data-lucide="list-ordered" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="rekap-size" onchange="window.pgSize('rekap', this.value)" aria-label="Jumlah data per halaman" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer"><option value="10">10 Entries</option><option value="25">25 Entries</option><option value="50">50 Entries</option><option value="100">100 Entries</option></select></label>
+                <button type="button" class="flt-btn" data-flt-btn="rekap" onclick="window.fltToggle('rekap', this)" aria-haspopup="dialog" aria-expanded="false" title="Filter periode &amp; batch"><i data-lucide="sliders-horizontal" class="w-4 h-4 text-gray-400 shrink-0"></i><span class="flt-lbl">Filter</span><span class="flt-badge"></span></button>
                 <div class="rv-toggle" role="group" aria-label="Mode tampilan">
                     <button type="button" id="rv-btn-card" onclick="window.setRekapView('card')" title="Tampilan kartu" aria-label="Tampilan kartu" aria-pressed="true"><i data-lucide="layout-grid" class="w-4 h-4"></i></button>
                     <button type="button" id="rv-btn-table" onclick="window.setRekapView('table')" title="Tampilan tabel" aria-label="Tampilan tabel" aria-pressed="false"><i data-lucide="table-2" class="w-4 h-4"></i></button>
@@ -723,6 +766,7 @@
                 <button onclick="window.printRekapanTable()" title="Cetak PDF" aria-label="Cetak PDF" class="h-9 w-9 shrink-0 rounded-lg bg-misdo-800 hover:bg-misdo-900 text-white flex items-center justify-center shadow-sm transition-colors"><i data-lucide="printer" class="w-4 h-4"></i></button>
             </div>
         </div>
+        <div id="rekap-fbar" class="flt-bar"></div>
         <div class="rekap-tablewrap bg-white rounded-xl shadow-sm border border-gray-200 w-full">
             <table class="rekap-table w-full text-sm text-left border-collapse">
                 <thead class="bg-misdo-800 text-white uppercase text-xs font-black tracking-wider">
@@ -734,22 +778,19 @@
             </table>
         </div>
         <div id="mo-rekapan-cards" class="rekap-cards grid grid-cols-1 gap-3"></div>
-        <div id="rekap-pager" class="flex flex-wrap items-center justify-between gap-2 mt-3"></div>
-    </div>
+            </div>
 
     <div id="view-hasil-mentor" class="max-w-[1400px] mx-auto px-3 sm:px-4 pt-2 pb-4 hidden no-print">
         <div class="vtb flex flex-wrap items-center gap-x-2 gap-y-2 mb-3">
             <button type="button" data-smart-back onclick="window.smartBack()" class="smart-back" title="Kembali" aria-label="Kembali"></button>
             <div class="min-w-0 mr-auto"><h2 class="text-base sm:text-lg font-black text-gray-800 uppercase leading-tight">Hasil Penilaian Mentor</h2><p class="hidden lg:block text-[11px] text-gray-500 leading-tight">Lihat rincian form penilaian utuh dari masing-masing peserta.</p></div>
             <div class="flex flex-wrap items-center gap-2">
-                <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm"><i data-lucide="calendar" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="mo-year-filter-hasil" onchange="window.pg.hasil.page=1;window.renderMOCardsData()" aria-label="Filter tahun" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer"><option value="">Semua Tahun</option></select></label>
-                <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm"><i data-lucide="filter" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="mo-batch-filter-hasil" onchange="window.pg.hasil.page=1;window.renderMOCardsData()" aria-label="Filter batch" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer"><option value="">Semua Batch</option></select></label>
-                <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm"><i data-lucide="arrow-up-down" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="mo-sort-hasil" onchange="window.pg.hasil.page=1;window.renderMOCardsData()" aria-label="Urutkan peserta" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer"><option value="">Urutan Awal</option><option value="nama-asc">Nama (A-Z)</option><option value="nama-desc">Nama (Z-A)</option><option value="id-asc">ID Pelamar (terkecil)</option><option value="id-desc">ID Pelamar (terbesar)</option><option value="lokasi-asc">Lokasi OJT (A-Z)</option><option value="mentor-asc">Mentor (A-Z)</option><option value="batch-asc">Batch (A-Z)</option><option value="status-lulus">Diluluskan dulu</option><option value="status-tidak">Tidak Diluluskan dulu</option></select></label>
-                <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm"><i data-lucide="list-ordered" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="hasil-size" onchange="window.pgSize('hasil', this.value)" aria-label="Jumlah data per halaman" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer"><option value="10">10 Entries</option><option value="25">25 Entries</option><option value="50">50 Entries</option><option value="100">100 Entries</option></select></label>
+                <button type="button" class="flt-btn" data-flt-btn="hasil" onclick="window.fltToggle('hasil', this)" aria-haspopup="dialog" aria-expanded="false" title="Filter periode &amp; batch"><i data-lucide="sliders-horizontal" class="w-4 h-4 text-gray-400 shrink-0"></i><span class="flt-lbl">Filter</span><span class="flt-badge"></span></button>
+                <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm"><i data-lucide="arrow-up-down" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="mo-sort-hasil" onchange="window.renderMOCardsData()" aria-label="Urutkan peserta" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer"><option value="">Terakhir diapprove</option><option value="nama-asc">Nama (A-Z)</option><option value="nama-desc">Nama (Z-A)</option><option value="id-asc">ID Pelamar (terkecil)</option><option value="id-desc">ID Pelamar (terbesar)</option><option value="lokasi-asc">Lokasi OJT (A-Z)</option><option value="mentor-asc">Mentor (A-Z)</option><option value="batch-asc">Batch (A-Z)</option><option value="status-lulus">Diluluskan dulu</option><option value="status-tidak">Tidak Diluluskan dulu</option></select></label>
             </div>
         </div>
+        <div id="hasil-fbar" class="flt-bar"></div>
         <div id="mo-hasil-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"></div>
-        <div id="hasil-pager" class="flex flex-wrap items-center justify-between gap-2 mt-4"></div>
     </div>
 
     <!-- MAIN FORM WRAPPER -->
@@ -1366,21 +1407,21 @@
         }
 
         window.loadMOView = async function(viewName) {
-            const containerId = viewName === 'rekapan' ? 'mo-rekapan-tbody' : 'mo-hasil-container'; const filterYearId = viewName === 'rekapan' ? 'mo-year-filter-rekap' : 'mo-year-filter-hasil'; const filterBatchId = viewName === 'rekapan' ? 'mo-batch-filter-rekap' : 'mo-batch-filter-hasil';
+            const containerId = viewName === 'rekapan' ? 'mo-rekapan-tbody' : 'mo-hasil-container';
             document.getElementById(containerId).innerHTML = `<div class="col-span-full p-8 text-center text-gray-500"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2"></i> Memuat Data...</div>`;
             try {
                 await window.fetchAllSubmittedForms(); const approvedForms = window.allSubmittedForms.filter(f => f.isApprovedByETD);
-                const yearSet = new Set(); const batchSet = new Set(); window.moParticipantRecords = [];
+                window.moParticipantRecords = [];
                 approvedForms.forEach(form => {
-                    const formYear = new Date(form.createdAt).getFullYear().toString(); yearSet.add(formYear); if(form.globalStore.batch) batchSet.add(form.globalStore.batch);
+                    const formYear = new Date(form.createdAt).getFullYear().toString();
                     form.globalStore.selectedParticipants.forEach((p, index) => {
                         if (!p) return;
-                        window.moParticipantRecords.push({ formId: form.id, form: form, pIndex: index, participant: p, formYear: formYear, mentorStatus: form.participants_scale14[index].status || 'Diluluskan', mentorReason: form.participants_scale14[index].rejectionReason || '', userApp: (form.userApprovals && form.userApprovals[index]) ? form.userApprovals[index] : {status: 'PENDING', reason: ''}, moApp: (form.moApprovals && form.moApprovals[index]) ? form.moApprovals[index] : {status: 'PENDING', reason: ''} });
+                        window.moParticipantRecords.push({ formId: form.id, form: form, pIndex: index, participant: p, formYear: formYear, mentorStatus: form.participants_scale14[index].status || 'Diluluskan', mentorReason: form.participants_scale14[index].rejectionReason || '', userApp: (form.userApprovals && form.userApprovals[index]) ? form.userApprovals[index] : {status: 'PENDING', reason: ''}, moApp: (form.moApprovals && form.moApprovals[index]) ? form.moApprovals[index] : {status: 'PENDING', reason: ''}, ts: (form.approvedAt || form.createdAt || 0), monthKey: window.fltMonthKey(form.approvedAt || form.createdAt || 0), batchName: String((form.globalStore && form.globalStore.batch) || '') });
                     });
                 });
-                window.moParticipantRecords.sort((a,b) => { if (a.mentorStatus === 'Diluluskan' && b.mentorStatus !== 'Diluluskan') return -1; if (a.mentorStatus !== 'Diluluskan' && b.mentorStatus === 'Diluluskan') return 1; return 0; });
-                let optY = `<option value="">Semua Tahun</option>`; Array.from(yearSet).sort().reverse().forEach(y => optY += `<option value="${y}">${y}</option>`); document.getElementById(filterYearId).innerHTML = optY;
-                let optB = `<option value="">Semua Batch</option>`; Array.from(batchSet).sort().forEach(b => optB += `<option value="${b}">${b}</option>`); document.getElementById(filterBatchId).innerHTML = optB;
+                // urutan awal: yang paling baru diapprove ETD di atas (sort stabil, urutan peserta dalam satu form tetap)
+                window.moParticipantRecords.sort((a, b) => b.ts - a.ts);
+                window.fltUpdateUI(viewName);
                 if(viewName === 'rekapan') window.renderMOTableData(); else window.renderMOCardsData();
             } catch(e) {}
         }
@@ -1434,40 +1475,103 @@
         window.rekapToggleSort = function(key) {
             const st = window.rekapSort;
             if (st.key !== key) { st.key = key; st.dir = 'asc'; } else if (st.dir === 'asc') { st.dir = 'desc'; } else { st.key = null; st.dir = null; }
-            window.pg.rekap.page = 1; window.renderMOTableData();
+            window.renderMOTableData();
         };
         document.addEventListener('click', (e) => { const th = e.target.closest && e.target.closest('#view-rekapan thead th[data-sort]'); if (th) window.rekapToggleSort(th.dataset.sort); });
         document.addEventListener('keydown', (e) => { if (e.key !== 'Enter' && e.key !== ' ') return; const th = e.target.closest && e.target.closest('#view-rekapan thead th[data-sort]'); if (th) { e.preventDefault(); window.rekapToggleSort(th.dataset.sort); } });
 
-        // ---- Pagination generik ("Show Entries")
-        const pgLoad = (k) => { try { const v = parseInt(localStorage.getItem('pgSize_' + k)); return [10, 25, 50, 100].includes(v) ? v : 25; } catch (e) { return 25; } };
-        window.pg = { rekap: { size: pgLoad('rekap'), page: 1, render: () => window.renderMOTableData() }, hasil: { size: pgLoad('hasil'), page: 1, render: () => window.renderMOCardsData() } };
-        window.pgSlice = function(k, arr) {
-            const st = window.pg[k]; const total = arr.length; const pages = Math.max(1, Math.ceil(total / st.size));
-            st.page = Math.min(Math.max(1, st.page), pages); const start = (st.page - 1) * st.size; const end = Math.min(total, start + st.size);
-            const sel = document.getElementById(k + '-size'); if (sel && sel.value !== String(st.size)) sel.value = String(st.size);
-            return { items: arr.slice(start, end), total, pages, page: st.page, start, end };
+        // ---- Filter smart: pilih banyak bulan + banyak batch (Rekapan & Hasil Mentor)
+        const MON = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const MON_S = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const fesc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        window.fltMonthKey = (t) => { const d = new Date(t || 0); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); };
+        const mLabel = (k, short) => { const [y, m] = k.split('-'); return (short ? MON_S : MON)[+m - 1] + ' ' + y; };
+        // mode: 'default' = bulan lalu + bulan berjalan | 'all' = semua bulan | 'custom' = pilihan sendiri. batches kosong = semua batch.
+        window.fltState = { rekap: { mode: 'default', months: new Set(), batches: new Set() }, hasil: { mode: 'default', months: new Set(), batches: new Set() } };
+        window.fltDefaultMonths = () => { const n = new Date(); return [window.fltMonthKey(new Date(n.getFullYear(), n.getMonth() - 1, 1)), window.fltMonthKey(n)]; };
+        window.fltMonths = (k) => { const s = window.fltState[k]; if (s.mode === 'default') return new Set(window.fltDefaultMonths()); if (s.mode === 'custom' && s.months.size) return s.months; return null; };
+        window.fltFilter = (k, recs, skip) => {
+            const mo = skip === 'month' ? null : window.fltMonths(k); const bs = skip === 'batch' ? new Set() : window.fltState[k].batches;
+            return recs.filter(r => (!mo || mo.has(r.monthKey)) && (!bs.size || bs.has(r.batchName)));
         };
-        window.pgSize = function(k, v) { const n = parseInt(v) || 25; window.pg[k].size = n; window.pg[k].page = 1; try { localStorage.setItem('pgSize_' + k, n); } catch (e) {} window.pg[k].render(); };
-        window.pgGo = function(k, n) { window.pg[k].page = n; window.pg[k].render(); const el = document.getElementById(k === 'rekap' ? 'view-rekapan' : 'view-hasil-mentor'); if (el) window.scrollTo({ top: Math.max(0, el.offsetTop - 8), behavior: 'smooth' }); };
-        window.pgRender = function(k, meta) {
-            const box = document.getElementById(k + '-pager'); if (!box) return;
-            const txt = meta.total ? `Menampilkan <b>${meta.start + 1}</b>\u2013<b>${meta.end}</b> dari <b>${meta.total}</b> data` : 'Tidak ada data';
-            const ch = (d) => `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
-            let btns = '';
-            if (meta.pages > 1) {
-                const p = meta.page, n = meta.pages; const set = new Set([1, n, p - 1, p, p + 1]); const nums = [...set].filter(x => x >= 1 && x <= n).sort((x, y) => x - y);
-                btns = `<button class="pg-btn" ${p === 1 ? 'disabled' : ''} onclick="window.pgGo('${k}', ${p - 1})" aria-label="Sebelumnya">${ch('M15 18l-6-6 6-6')}</button>`; let prev = 0;
-                nums.forEach(x => { if (x - prev > 1) btns += `<span class="px-1 text-gray-400">&hellip;</span>`; btns += `<button class="pg-btn ${x === p ? 'on' : ''}" ${x === p ? 'aria-current="page"' : ''} onclick="window.pgGo('${k}', ${x})">${x}</button>`; prev = x; });
-                btns += `<button class="pg-btn" ${p === n ? 'disabled' : ''} onclick="window.pgGo('${k}', ${p + 1})" aria-label="Berikutnya">${ch('M9 18l6-6-6-6')}</button>`;
-            }
-            box.innerHTML = `<div class="text-xs text-gray-500">${txt}</div>` + (btns ? `<div class="flex flex-wrap items-center gap-1">${btns}</div>` : '');
+        const fltRefresh = (k) => { if (k === 'rekap') window.renderMOTableData(); else window.renderMOCardsData(); };
+        window.fltSet = (k, mode) => { const s = window.fltState[k]; s.mode = mode; s.months = new Set(); fltRefresh(k); window.fltRenderLists(); };
+        window.fltShowAll = (k) => { const s = window.fltState[k]; s.mode = 'all'; s.months = new Set(); s.batches = new Set(); fltRefresh(k); window.fltRenderLists(); };
+        window.fltReset = (k) => { const s = window.fltState[k]; s.mode = 'default'; s.months = new Set(); s.batches = new Set(); fltRefresh(k); window.fltRenderLists(); };
+        window.fltToggleMonth = (k, key) => { const s = window.fltState[k]; const cur = new Set(window.fltMonths(k) || []); if (cur.has(key)) cur.delete(key); else cur.add(key); s.months = cur; s.mode = cur.size ? 'custom' : 'all'; fltRefresh(k); window.fltRenderLists(); };
+        window.fltToggleBatch = (k, b) => { const s = window.fltState[k]; if (s.batches.has(b)) s.batches.delete(b); else s.batches.add(b); fltRefresh(k); window.fltRenderLists(); };
+        window.fltIsDefault = (k) => { const s = window.fltState[k]; return s.mode === 'default' && !s.batches.size; };
+        window.fltPeriodText = (k, full) => {
+            const s = window.fltState[k]; if (s.mode === 'default') { const d = window.fltDefaultMonths(); return full ? `Bulan lalu & ini · ${mLabel(d[0], true).split(' ')[0]} – ${mLabel(d[1], true)}` : 'Bulan lalu & ini'; }
+            const m = window.fltMonths(k); if (!m) return 'Semua periode';
+            const ks = [...m].sort(); if (ks.length === 1) return mLabel(ks[0], !full); if (ks.length <= 3 && full) return ks.map(x => mLabel(x, true)).join(', ');
+            return ks.length + ' bulan';
         };
+        window.fltEmptyHint = (k) => window.fltIsDefault(k) || window.fltState[k].mode !== 'all' || window.fltState[k].batches.size
+            ? `<div class="mt-3"><button type="button" class="flt-chip" onclick="window.fltShowAll('${k}')">Tampilkan semua data</button></div>` : '';
+        window.fltUpdateUI = (k, count) => {
+            if (k === 'hasil' || k === 'rekap') {} else k = (k === 'rekapan' ? 'rekap' : 'hasil');
+            const s = window.fltState[k]; const btn = document.querySelector(`[data-flt-btn="${k}"]`);
+            if (btn) { btn.querySelector('.flt-lbl').textContent = window.fltPeriodText(k, false); const bd = btn.querySelector('.flt-badge'); bd.textContent = s.batches.size; bd.classList.toggle('on', s.batches.size > 0); bd.title = s.batches.size + ' batch dipilih'; }
+            const bar = document.getElementById(k + '-fbar'); if (!bar) return;
+            if (count == null) count = (bar.dataset.count != null) ? +bar.dataset.count : 0; bar.dataset.count = count;
+            const x = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+            let h = `<span><b>${count}</b> peserta</span><button type="button" class="flt-chip" onclick="window.fltOpen('${k}')" title="Ubah periode">${fesc(window.fltPeriodText(k, true))}</button>`;
+            [...s.batches].sort((a, b) => a.localeCompare(b, 'id', { numeric: true })).forEach(b => { h += `<button type="button" class="flt-chip" onclick="window.fltToggleBatch('${k}', this.dataset.b)" data-b="${fesc(b)}" title="Hapus filter batch ini">${fesc(b)}${x}</button>`; });
+            if (!window.fltIsDefault(k)) h += `<button type="button" class="flt-reset" onclick="window.fltReset('${k}')">Reset</button>`;
+            bar.innerHTML = h;
+        };
+
+        // popover filter (satu elemen dipakai bersama oleh Rekapan & Hasil Mentor)
+        const fltPop = () => {
+            let p = document.getElementById('flt-pop'); if (p) return p;
+            p = document.createElement('div'); p.id = 'flt-pop'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', 'Filter periode dan batch');
+            p.innerHTML = `<div class="flt-head"><label class="flt-search"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="flt-q" type="text" autocomplete="off" placeholder="Cari bulan atau batch…" aria-label="Cari bulan atau batch"></label></div>`
+                + `<div class="flt-body"><div class="flt-sec"><span>Periode</span><span class="flt-quick"><button type="button" data-q="default">Bulan lalu &amp; ini</button><button type="button" data-q="all">Semua</button></span></div><div id="flt-months"></div>`
+                + `<div class="flt-sec"><span>Batch</span><span class="flt-quick"><button type="button" data-q="batch-all">Semua</button></span></div><div id="flt-batches"></div></div>`
+                + `<div class="flt-foot"><button type="button" class="flt-reset" data-q="reset">Reset ke awal</button><button type="button" class="flt-done" data-q="close">Selesai</button></div>`;
+            document.body.appendChild(p);
+            const back = document.createElement('div'); back.id = 'flt-back'; back.onclick = () => window.fltClose(); document.body.appendChild(back);
+            p.addEventListener('click', (e) => { const q = e.target.closest('[data-q]'); if (!q) return; const k = p.dataset.k, v = q.dataset.q; if (v === 'default' || v === 'all') window.fltSet(k, v); else if (v === 'batch-all') { window.fltState[k].batches = new Set(); fltRefresh(k); window.fltRenderLists(); } else if (v === 'reset') window.fltReset(k); else if (v === 'close') window.fltClose(); });
+            p.addEventListener('change', (e) => { const t = e.target, k = p.dataset.k; if (t.dataset.m) window.fltToggleMonth(k, t.dataset.m); else if (t.dataset.b != null) window.fltToggleBatch(k, t.dataset.b); });
+            p.querySelector('#flt-q').addEventListener('input', () => window.fltRenderLists());
+            return p;
+        };
+        window.fltRenderLists = () => {
+            const p = document.getElementById('flt-pop'); if (!p || !p.classList.contains('on')) return; const k = p.dataset.k; const s = window.fltState[k]; const recs = window.moParticipantRecords || [];
+            const q = p.querySelector('#flt-q').value.trim().toLowerCase();
+            const mo = window.fltMonths(k); const dm = window.fltDefaultMonths();
+            p.querySelector('[data-q="default"]').classList.toggle('on', s.mode === 'default'); p.querySelector('[data-q="all"]').classList.toggle('on', !mo); p.querySelector('[data-q="batch-all"]').classList.toggle('on', !s.batches.size);
+            // hitungan per bulan mengikuti pilihan batch, hitungan per batch mengikuti pilihan bulan
+            const mc = {}; window.fltFilter(k, recs, 'month').forEach(r => { mc[r.monthKey] = (mc[r.monthKey] || 0) + 1; }); dm.forEach(m => { if (!(m in mc)) mc[m] = 0; });
+            const bc = {}; window.fltFilter(k, recs, 'batch').forEach(r => { if (r.batchName) bc[r.batchName] = (bc[r.batchName] || 0) + 1; }); recs.forEach(r => { if (r.batchName && !(r.batchName in bc)) bc[r.batchName] = 0; });
+            const sv = (el, sc) => { const t = el.scrollTop; return () => { el.scrollTop = t; }; };
+            const body = p.querySelector('.flt-body'); const restore = sv(body);
+            const mk = Object.keys(mc).sort().reverse().filter(m => !q || (mLabel(m) + ' ' + mLabel(m, true) + ' ' + m).toLowerCase().includes(q));
+            p.querySelector('#flt-months').innerHTML = mk.length ? mk.map(m => `<label class="flt-it ${mc[m] ? '' : 'zero'}"><input type="checkbox" data-m="${m}" ${mo && mo.has(m) ? 'checked' : ''}><span class="flt-nm">${mLabel(m)}${dm.includes(m) ? ' <small style="opacity:.6;font-weight:600">' + (m === dm[1] ? '(bulan ini)' : '(bulan lalu)') + '</small>' : ''}</span><span class="flt-n">${mc[m]}</span></label>`).join('') : '<div class="flt-empty">Bulan tidak ditemukan.</div>';
+            const bk = Object.keys(bc).sort((a, b) => a.localeCompare(b, 'id', { numeric: true })).filter(b => !q || b.toLowerCase().includes(q));
+            p.querySelector('#flt-batches').innerHTML = bk.length ? bk.map(b => `<label class="flt-it ${bc[b] ? '' : 'zero'}"><input type="checkbox" data-b="${fesc(b)}" ${s.batches.has(b) ? 'checked' : ''}><span class="flt-nm">${fesc(b)}</span><span class="flt-n">${bc[b]}</span></label>`).join('') : '<div class="flt-empty">Batch tidak ditemukan.</div>';
+            restore();
+        };
+        window.fltPlace = () => {
+            const p = document.getElementById('flt-pop'); if (!p || !p.classList.contains('on')) return; const b = document.querySelector(`[data-flt-btn="${p.dataset.k}"]`); if (!b) return;
+            if (innerWidth < 640) { p.style.left = ''; p.style.top = ''; p.style.maxHeight = ''; return; }
+            const r = b.getBoundingClientRect(); const w = p.offsetWidth; p.style.left = Math.min(Math.max(8, r.right - w), innerWidth - w - 8) + 'px'; p.style.top = (r.bottom + 6) + 'px'; p.style.maxHeight = Math.max(260, innerHeight - r.bottom - 16) + 'px';
+        };
+        window.fltOpen = (k) => {
+            const p = fltPop(); const b = document.querySelector(`[data-flt-btn="${k}"]`); document.querySelectorAll('[data-flt-btn]').forEach(x => x.setAttribute('aria-expanded', x === b ? 'true' : 'false'));
+            p.dataset.k = k; p.classList.add('on'); document.getElementById('flt-back').classList.add('on'); p.querySelector('#flt-q').value = ''; window.fltRenderLists(); window.fltPlace();
+            if (innerWidth >= 640) p.querySelector('#flt-q').focus();
+        };
+        window.fltClose = () => { const p = document.getElementById('flt-pop'); if (!p) return; p.classList.remove('on'); document.getElementById('flt-back').classList.remove('on'); document.querySelectorAll('[data-flt-btn]').forEach(x => x.setAttribute('aria-expanded', 'false')); };
+        window.fltToggle = (k) => { const p = document.getElementById('flt-pop'); if (p && p.classList.contains('on') && p.dataset.k === k) window.fltClose(); else window.fltOpen(k); };
+        document.addEventListener('mousedown', (e) => { const p = document.getElementById('flt-pop'); if (p && p.classList.contains('on') && !e.target.closest('#flt-pop, [data-flt-btn], .flt-chip')) window.fltClose(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') window.fltClose(); });
+        window.addEventListener('scroll', () => window.fltPlace(), { passive: true }); window.addEventListener('resize', () => window.fltPlace());
 
         // ---- Rekapan: data baris (filter + hitung + urut), dipakai tabel, kartu HP, dan cetak
         window.rekapGetRows = function() {
-            const yearFilter = document.getElementById('mo-year-filter-rekap').value; const batchFilter = document.getElementById('mo-batch-filter-rekap').value;
-            const filteredRecords = (window.moParticipantRecords || []).filter(rec => { return (yearFilter ? rec.formYear === yearFilter : true) && (batchFilter ? rec.form.globalStore.batch === batchFilter : true); });
+            const filteredRecords = window.fltFilter('rekap', window.moParticipantRecords || []);
             return window.rekapApplySort(filteredRecords.map(rec => ({ rec, c: window.rekapCalc(rec) })));
         };
         window.rekapParts = function({ rec, c }) {
@@ -1519,20 +1623,20 @@
                 + `<details class="mt-3 text-xs"><summary class="font-bold cursor-pointer text-gray-600 select-none">Catatan mentor</summary>${note('Hal yang dipertahankan', P.str)}${note('Hal yang ditingkatkan', P.imp)}${note('Keterangan mentor', P.keteranganMentor)}</details>`
                 + `<div class="grid grid-cols-1 gap-3 mt-3 pt-3 border-t border-black/5"><div><div class="text-[10px] font-black uppercase text-gray-400 mb-1">Keputusan User</div>${P.actionUser}</div><div><div class="text-[10px] font-black uppercase text-gray-400 mb-1">Validasi MO</div>${P.actionMO}</div></div></div>`;
         };
-        window.rekapSortMobile = function(v) { const [k, d] = String(v).split('|'); window.rekapSort = k ? { key: k, dir: d } : { key: null, dir: null }; window.pg.rekap.page = 1; window.renderMOTableData(); };
+        window.rekapSortMobile = function(v) { const [k, d] = String(v).split('|'); window.rekapSort = k ? { key: k, dir: d } : { key: null, dir: null }; window.renderMOTableData(); };
         window.rekapFillSortMobile = function() {
             const sel = document.getElementById('rekap-sort-m'); if (!sel) return;
-            if (!sel.options.length) { let o = '<option value="">Urutan Awal</option>'; document.querySelectorAll('#view-rekapan thead th[data-sort]').forEach(th => { const lb = th.querySelector('.rekap-th-label').textContent; o += `<option value="${th.dataset.sort}|asc">${lb} (naik)</option><option value="${th.dataset.sort}|desc">${lb} (turun)</option>`; }); sel.innerHTML = o; }
+            if (!sel.options.length) { let o = '<option value="">Terakhir diapprove</option>'; document.querySelectorAll('#view-rekapan thead th[data-sort]').forEach(th => { const lb = th.querySelector('.rekap-th-label').textContent; o += `<option value="${th.dataset.sort}|asc">${lb} (naik)</option><option value="${th.dataset.sort}|desc">${lb} (turun)</option>`; }); sel.innerHTML = o; }
             const { key, dir } = window.rekapSort; sel.value = key ? `${key}|${dir}` : '';
         };
         window.renderMOTableData = function() {
             const rows = window.rekapGetRows(); window.rekapUpdateSortUI(); window.rekapFillSortMobile();
-            const meta = window.pgSlice('rekap', rows); const emptyMsg = 'Tidak ada data untuk filter ini.';
-            let tHtml = meta.items.map((r, i) => window.rekapRowHtml(r, meta.start + i + 1)).join('');
-            let cHtml = meta.items.map((r, i) => window.rekapCardHtml(r, meta.start + i + 1)).join('');
-            if (!tHtml) { tHtml = `<tr><td colspan="14" class="p-8 text-center text-gray-500 font-bold bg-gray-50">${emptyMsg}</td></tr>`; cHtml = `<div class="p-8 text-center text-gray-500 font-bold bg-gray-50 rounded-xl border border-dashed border-gray-300">${emptyMsg}</div>`; }
+            const emptyMsg = 'Tidak ada data untuk filter ini.'; const hint = window.fltEmptyHint('rekap');
+            let tHtml = rows.map((r, i) => window.rekapRowHtml(r, i + 1)).join('');
+            let cHtml = rows.map((r, i) => window.rekapCardHtml(r, i + 1)).join('');
+            if (!tHtml) { tHtml = `<tr><td colspan="14" class="p-8 text-center text-gray-500 font-bold bg-gray-50">${emptyMsg}${hint}</td></tr>`; cHtml = `<div class="p-8 text-center text-gray-500 font-bold bg-gray-50 rounded-xl border border-dashed border-gray-300">${emptyMsg}${hint}</div>`; }
             document.getElementById('mo-rekapan-tbody').innerHTML = tHtml; document.getElementById('mo-rekapan-cards').innerHTML = cHtml;
-            window.pgRender('rekap', meta); if (window.lucide) window.lucide.createIcons(); window.setRekapView(window.rekapView);
+            window.fltUpdateUI('rekap', rows.length); if (window.lucide) window.lucide.createIcons(); window.setRekapView(window.rekapView);
         }
         // mode tampilan HP: 'card' (default) atau 'table'; tersimpan di perangkat
         window.setRekapView = function(m) {
@@ -1573,17 +1677,16 @@
         };
 
         window.renderMOCardsData = function() {
-            const yearFilter = document.getElementById('mo-year-filter-hasil').value; const batchFilter = document.getElementById('mo-batch-filter-hasil').value;
-            let filteredRecords = window.moParticipantRecords.filter(rec => { return (yearFilter ? rec.formYear === yearFilter : true) && (batchFilter ? rec.form.globalStore.batch === batchFilter : true); });
+            let filteredRecords = window.fltFilter('hasil', window.moParticipantRecords || []);
             filteredRecords = window.hasilApplySort(filteredRecords, document.getElementById('mo-sort-hasil').value);
-            const hMeta = window.pgSlice('hasil', filteredRecords); window.pgRender('hasil', hMeta);
+            window.fltUpdateUI('hasil', filteredRecords.length);
             const cardContainer = document.getElementById('mo-hasil-container'); let cHtml = '';
-            hMeta.items.forEach(rec => {
+            filteredRecords.forEach(rec => {
                 let cardBg = rec.mentorStatus === 'Diluluskan' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200';
                 let deleteBtnCard = window.userRole === 'ETD' ? `<button onclick="window.deleteSubmittedForm('${rec.formId}', 'mo')" class="w-full py-2.5 sm:py-3 bg-red-50 border border-red-200 text-red-700 font-black uppercase tracking-wider rounded-xl hover:bg-red-100 transition-colors text-xs shadow-sm flex items-center justify-center gap-2 mt-2">Hapus Form <i data-lucide="trash-2" class="w-3 h-3"></i></button>` : '';
                 cHtml += `<div class="${cardBg} border rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between transition-transform hover:-translate-y-1"><div><div class="flex justify-between items-start mb-3"><span class="font-black text-gray-800 text-base sm:text-lg uppercase leading-tight pr-2">${rec.participant.namaPeserta}</span><span class="px-2 py-1 text-[10px] font-bold uppercase rounded shrink-0 ${rec.mentorStatus === 'Diluluskan' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'}">${rec.mentorStatus}</span></div><p class="text-xs text-gray-600 mb-4 bg-white/50 inline-block px-2 py-1 rounded">ID: <b>${rec.participant.idPelamar}</b> <br class="sm:hidden"/>| Batch: <b>${rec.form.globalStore.batch}</b></p><div class="text-xs sm:text-sm space-y-1.5 mb-5 bg-white/40 p-3 rounded-lg border border-white/50"><p class="flex justify-between"><span class="font-semibold text-gray-500">Mentor</span> <span class="font-bold text-gray-800 text-right">${rec.form.mentorName}</span></p><p class="flex justify-between"><span class="font-semibold text-gray-500">Lokasi</span> <span class="font-bold text-gray-800 text-right truncate pl-2">${rec.form.globalStore.flagship}</span></p></div></div><div><button onclick="window.openSubmittedForm('${rec.formId}')" class="w-full py-2.5 sm:py-3 bg-white border border-gray-300 text-gray-800 font-black uppercase tracking-wider rounded-xl hover:bg-gray-50 transition-colors text-xs shadow-sm flex items-center justify-center gap-2">Buka Detail <i data-lucide="external-link" class="w-3 h-3"></i></button>${deleteBtnCard}</div></div>`;
             });
-            if(!cHtml) cHtml = `<div class="col-span-full p-8 text-center text-gray-500 bg-white rounded-xl border border-dashed border-gray-300">Tidak ada data untuk filter ini.</div>`;
+            if(!cHtml) cHtml = `<div class="col-span-full p-8 text-center text-gray-500 bg-white rounded-xl border border-dashed border-gray-300">Tidak ada data untuk filter ini.${window.fltEmptyHint('hasil')}</div>`;
             cardContainer.innerHTML = cHtml; if(window.lucide) window.lucide.createIcons();
         }
 
@@ -2458,8 +2561,6 @@
 
         window.printRekapanTable = function() {
             const container = document.getElementById('print-container');
-            const yearSelect = document.getElementById('mo-year-filter-rekap'); const batchSelect = document.getElementById('mo-batch-filter-rekap');
-            const yearFilter = yearSelect.options[yearSelect.selectedIndex]?.text || '-'; const batchFilter = batchSelect.options[batchSelect.selectedIndex]?.text || '-';
             const E = window.ppEsc;
 
             // Bersihkan kelas yang mengunci lebar kolom, ukuran font, dan border Tailwind agar 100% seragam
@@ -2478,7 +2579,7 @@
             const headClone = headRow.cloneNode(true);
             headClone.querySelectorAll('th').forEach(th => { const lb = th.querySelector('.rekap-th-label'); th.textContent = lb ? lb.textContent : th.textContent.trim(); ['data-sort', 'tabindex', 'aria-sort', 'title'].forEach(a => th.removeAttribute(a)); });
             const headCells = cleanHtml(headClone.innerHTML);
-            const allRows = window.rekapGetRows(); // cetak SEMUA data hasil filter/urutan, bukan hanya halaman yang tampil
+            const allRows = window.rekapGetRows(); // cetak SEMUA data hasil filter/urutan
             const bodyRows = cleanHtml(allRows.length ? allRows.map((r, i) => window.rekapRowHtml(r, i + 1)).join('') : '<tr><td colspan="14" class="p-8 text-center text-gray-500 font-bold bg-gray-50">Tidak ada data untuk filter ini.</td></tr>');
 
             // Margin kertas (mm): atas/bawah dibuat lewat baris spacer yang berulang di setiap halaman
