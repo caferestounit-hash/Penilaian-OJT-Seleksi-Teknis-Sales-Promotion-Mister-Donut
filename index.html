@@ -168,7 +168,7 @@
         nav.sticky { transition: transform .28s ease, box-shadow .28s ease; }
         nav.sticky.nav-hidden { transform: translateY(-100%); box-shadow: none; }
 
-        /* ===== Filter smart (multi-select bulan + batch) ===== */
+        /* ===== Filter smart (multi-select tahun + batch; tanpa pilihan = otomatis bulan lalu & ini) ===== */
         .flt-btn { display: inline-flex; align-items: center; gap: .4rem; height: 36px; padding: 0 .7rem; border-radius: .5rem; border: 1px solid #d1d5db; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.05); font-weight: 700; font-size: .875rem; color: #374151; cursor: pointer; max-width: 100%; }
         .flt-btn[aria-expanded="true"] { border-color: #4d3327; box-shadow: 0 0 0 2px rgba(77,51,39,.15); }
         .flt-btn .flt-lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 11rem; }
@@ -181,30 +181,44 @@
         .flt-chip svg { width: .7rem; height: .7rem; }
         .flt-reset { background: none; border: 0; padding: 0 .25rem; color: #0369a1; font-weight: 700; font-size: .72rem; cursor: pointer; text-decoration: underline; }
         #flt-back { position: fixed; inset: 0; z-index: 59; background: rgba(0,0,0,.28); display: none; }
-        #flt-pop { position: fixed; z-index: 60; display: none; flex-direction: column; width: min(23rem, calc(100vw - 1rem)); max-height: min(34rem, calc(100vh - 6rem)); background: #fff; border: 1px solid #e5e7eb; border-radius: .9rem; box-shadow: 0 18px 40px -8px rgba(54,34,25,.35); }
+        #flt-pop { position: fixed; z-index: 60; display: none; flex-direction: column; width: min(21rem, calc(100vw - 1rem)); max-height: min(34rem, calc(100vh - 6rem)); background: #fff; border: 1px solid #e5e7eb; border-radius: .9rem; box-shadow: 0 18px 40px -8px rgba(54,34,25,.35); }
         #flt-pop.on { display: flex; }
-        .flt-head { display: flex; gap: .5rem; padding: .6rem; border-bottom: 1px solid #f0e6df; }
-        .flt-search { flex: 1; display: flex; align-items: center; gap: .4rem; height: 2.25rem; padding: 0 .6rem; border: 1px solid #d1d5db; border-radius: .6rem; background: #fff; color: #9ca3af; }
+        .flt-head { display: flex; align-items: center; justify-content: space-between; padding: .6rem .75rem .35rem; }
+        .flt-title { font-weight: 900; font-size: .95rem; color: #362219; }
+        .flt-x { width: 1.9rem; height: 1.9rem; border-radius: 9999px; border: 0; background: #f3f4f6; color: #6b7280; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .flt-searchrow { display: none; padding: 0 .75rem .35rem; }
+        .flt-searchrow.on { display: block; }
+        .flt-search { display: flex; align-items: center; gap: .4rem; height: 2.2rem; padding: 0 .6rem; border: 1px solid #d1d5db; border-radius: .6rem; background: #fff; color: #9ca3af; }
         .flt-search:focus-within { border-color: #4d3327; }
         .flt-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: .875rem; color: #374151; }
-        .flt-body { overflow: auto; padding: .15rem .6rem .5rem; flex: 1; min-height: 0; overscroll-behavior: contain; }
-        .flt-sec { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin: .65rem 0 .25rem; font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #9a8a80; }
-        .flt-quick { display: flex; gap: .3rem; }
-        .flt-quick button { height: 1.55rem; padding: 0 .55rem; border-radius: 9999px; border: 1px solid #e0cfc4; background: #fff; color: #6b4a3a; font-size: .68rem; font-weight: 800; text-transform: none; letter-spacing: 0; cursor: pointer; }
-        .flt-quick button.on { background: #4d3327; border-color: #4d3327; color: #fff; }
-        .flt-it { display: flex; align-items: center; gap: .55rem; padding: .42rem .45rem; border-radius: .5rem; cursor: pointer; font-size: .85rem; color: #374151; user-select: none; }
-        .flt-it:hover { background: #faf5f1; }
-        .flt-it input { accent-color: #4d3327; width: 1rem; height: 1rem; flex-shrink: 0; }
-        .flt-it .flt-nm { flex: 1; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .flt-it .flt-n { font-size: .72rem; font-weight: 800; color: #8c7a70; background: #f3ece7; border-radius: 9999px; padding: 0 .5rem; }
-        .flt-it.zero { opacity: .5; }
-        .flt-empty { padding: .4rem .45rem; font-size: .78rem; color: #9ca3af; }
-        .flt-foot { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .55rem .6rem; border-top: 1px solid #f0e6df; }
-        .flt-done { height: 2.1rem; padding: 0 1.1rem; border-radius: .6rem; border: 0; background: #4d3327; color: #fff; font-weight: 800; font-size: .8rem; cursor: pointer; }
+        .flt-body { overflow: auto; padding: 0 .75rem .5rem; flex: 1; min-height: 0; overscroll-behavior: contain; }
+        .flt-note { font-size: .72rem; line-height: 1.35; color: #8c7a70; background: #faf5f1; border-radius: .6rem; padding: .45rem .6rem; margin-bottom: .2rem; }
+        .flt-note b { color: #4d3327; }
+        .flt-sec { display: flex; align-items: center; gap: .5rem; width: 100%; margin-top: .45rem; padding: .4rem .1rem; border: 0; background: none; cursor: pointer; text-align: left; }
+        .flt-st { font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #7a6a60; }
+        .flt-sum { margin-left: auto; font-size: .7rem; font-weight: 700; color: #4d3327; }
+        .flt-chev { width: 1rem; height: 1rem; color: #9a8a80; transition: transform .15s; flex-shrink: 0; }
+        .flt-sec[aria-expanded="false"] .flt-chev { transform: rotate(-90deg); }
+        .flt-pills { display: flex; flex-wrap: wrap; gap: .4rem; padding: .1rem 0 .3rem; }
+        .flt-pills.scroll { max-height: 10.5rem; overflow: auto; overscroll-behavior: contain; }
+        .flt-pills.col { display: none; }
+        .flt-pill { position: relative; display: inline-flex; align-items: center; gap: .4rem; height: 2.1rem; padding: 0 .7rem; border-radius: 9999px; border: 1px solid #e0cfc4; background: #fff; color: #4b3a31; font-size: .8rem; font-weight: 700; cursor: pointer; user-select: none; }
+        .flt-pill input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; }
+        .flt-pill em { font-style: normal; font-size: .68rem; font-weight: 800; color: #8c7a70; background: #f3ece7; border-radius: 9999px; padding: 0 .4rem; }
+        .flt-pill.on { background: #4d3327; border-color: #4d3327; color: #fff; }
+        .flt-pill.on em { background: rgba(255,255,255,.22); color: #fff; }
+        .flt-pill.zero { opacity: .5; }
+        .flt-pill:focus-within { outline: 2px solid #4d3327; outline-offset: 2px; }
+        .flt-empty { padding: .3rem .1rem; font-size: .78rem; color: #9ca3af; }
+        .flt-foot { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .55rem .75rem; border-top: 1px solid #f0e6df; }
+        .flt-done { height: 2.2rem; padding: 0 1.1rem; border-radius: .6rem; border: 0; background: #4d3327; color: #fff; font-weight: 800; font-size: .8rem; cursor: pointer; }
         @media (max-width: 639px) {
-            #flt-pop { left: .5rem !important; right: .5rem !important; top: auto !important; bottom: .5rem; width: auto; max-height: 72vh !important; }
-            #flt-pop.on ~ #flt-back, #flt-back.on { display: block; }
+            #flt-pop { left: 0 !important; right: 0 !important; top: auto !important; bottom: 0; width: auto; max-height: 78vh !important; border-radius: 1.1rem 1.1rem 0 0; border-bottom: 0; }
+            #flt-back.on { display: block; }
             .flt-search input { font-size: 16px; }
+            .flt-pill { height: 2.4rem; font-size: .85rem; }
+            .flt-done { height: 2.6rem; flex: 1; max-width: 14rem; font-size: .88rem; }
+            .flt-foot { padding-bottom: calc(.55rem + env(safe-area-inset-bottom, 0px)); }
         }
         /* form penilaian rata tengah */
         #view-form { margin-left: auto; margin-right: auto; width: calc(100% - 1rem); }
@@ -250,14 +264,18 @@
         html.dark .flt-chip:hover { background:#41302a }
         html.dark .flt-reset { color:#7cc4ee }
         html.dark #flt-pop { background:#1d1512; border-color:#4a3a32 }
-        html.dark .flt-head, html.dark .flt-foot { border-color:#3a2d26 }
+        html.dark .flt-title { color:#f0e6df }
+        html.dark .flt-x { background:#2a201b; color:#c9b8ae }
+        html.dark .flt-foot { border-color:#3a2d26 }
         html.dark .flt-search { background:#2a201b; border-color:#4f3d33 }
         html.dark .flt-search input { color:#f0e6df }
-        html.dark .flt-it { color:#e3d5cd }
-        html.dark .flt-it:hover { background:#2a201b }
-        html.dark .flt-it .flt-n { background:#33251e; color:#c9b8ae }
-        html.dark .flt-quick button { background:#2a201b; border-color:#4f3d33; color:#e3d5cd }
-        html.dark .flt-quick button.on, html.dark .flt-badge, html.dark .flt-done { background:#8a5a3f; border-color:#8a5a3f; color:#fff }
+        html.dark .flt-note { background:#2a201b; color:#c9b8ae }
+        html.dark .flt-note b, html.dark .flt-sum { color:#e8c9b5 }
+        html.dark .flt-st { color:#b9a79c }
+        html.dark .flt-pill { background:#2a201b; border-color:#4f3d33; color:#e3d5cd }
+        html.dark .flt-pill em { background:#33251e; color:#c9b8ae }
+        html.dark .flt-pill.on, html.dark .flt-badge, html.dark .flt-done { background:#8a5a3f; border-color:#8a5a3f; color:#fff }
+        html.dark .flt-pill.on em { background:rgba(255,255,255,.22); color:#fff }
         html.dark .rv-toggle { background:#221915; border-color:#4a3a32 }
         html.dark .rv-toggle button { color:#b9a79c }
         html.dark .rv-toggle button[aria-pressed="true"] { background:#8a5a3f; color:#fff }
@@ -757,7 +775,7 @@
             <button type="button" data-smart-back onclick="window.smartBack()" class="smart-back" title="Kembali" aria-label="Kembali"></button>
             <div class="min-w-0 mr-auto"><h2 class="text-base sm:text-lg font-black text-gray-800 uppercase leading-tight">Rekapan Penilaian OJT</h2><p class="hidden lg:block text-[11px] text-gray-500 leading-tight">Data rekapitulasi penilaian yang sudah diapprove oleh ETD.</p></div>
             <div class="flex flex-wrap items-center gap-2">
-                <button type="button" class="flt-btn" data-flt-btn="rekap" onclick="window.fltToggle('rekap', this)" aria-haspopup="dialog" aria-expanded="false" title="Filter periode &amp; batch"><i data-lucide="sliders-horizontal" class="w-4 h-4 text-gray-400 shrink-0"></i><span class="flt-lbl">Filter</span><span class="flt-badge"></span></button>
+                <button type="button" class="flt-btn" data-flt-btn="rekap" onclick="window.fltToggle('rekap', this)" aria-haspopup="dialog" aria-expanded="false" title="Filter tahun &amp; batch"><i data-lucide="sliders-horizontal" class="w-4 h-4 text-gray-400 shrink-0"></i><span class="flt-lbl">Filter</span><span class="flt-badge"></span></button>
                 <div class="rv-toggle" role="group" aria-label="Mode tampilan">
                     <button type="button" id="rv-btn-card" onclick="window.setRekapView('card')" title="Tampilan kartu" aria-label="Tampilan kartu" aria-pressed="true"><i data-lucide="layout-grid" class="w-4 h-4"></i></button>
                     <button type="button" id="rv-btn-table" onclick="window.setRekapView('table')" title="Tampilan tabel" aria-label="Tampilan tabel" aria-pressed="false"><i data-lucide="table-2" class="w-4 h-4"></i></button>
@@ -785,7 +803,7 @@
             <button type="button" data-smart-back onclick="window.smartBack()" class="smart-back" title="Kembali" aria-label="Kembali"></button>
             <div class="min-w-0 mr-auto"><h2 class="text-base sm:text-lg font-black text-gray-800 uppercase leading-tight">Hasil Penilaian Mentor</h2><p class="hidden lg:block text-[11px] text-gray-500 leading-tight">Lihat rincian form penilaian utuh dari masing-masing peserta.</p></div>
             <div class="flex flex-wrap items-center gap-2">
-                <button type="button" class="flt-btn" data-flt-btn="hasil" onclick="window.fltToggle('hasil', this)" aria-haspopup="dialog" aria-expanded="false" title="Filter periode &amp; batch"><i data-lucide="sliders-horizontal" class="w-4 h-4 text-gray-400 shrink-0"></i><span class="flt-lbl">Filter</span><span class="flt-badge"></span></button>
+                <button type="button" class="flt-btn" data-flt-btn="hasil" onclick="window.fltToggle('hasil', this)" aria-haspopup="dialog" aria-expanded="false" title="Filter tahun &amp; batch"><i data-lucide="sliders-horizontal" class="w-4 h-4 text-gray-400 shrink-0"></i><span class="flt-lbl">Filter</span><span class="flt-badge"></span></button>
                 <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm"><i data-lucide="arrow-up-down" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="mo-sort-hasil" onchange="window.renderMOCardsData()" aria-label="Urutkan peserta" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer"><option value="">Terakhir diapprove</option><option value="nama-asc">Nama (A-Z)</option><option value="nama-desc">Nama (Z-A)</option><option value="id-asc">ID Pelamar (terkecil)</option><option value="id-desc">ID Pelamar (terbesar)</option><option value="lokasi-asc">Lokasi OJT (A-Z)</option><option value="mentor-asc">Mentor (A-Z)</option><option value="batch-asc">Batch (A-Z)</option><option value="status-lulus">Diluluskan dulu</option><option value="status-tidak">Tidak Diluluskan dulu</option></select></label>
             </div>
         </div>
@@ -1480,78 +1498,80 @@
         document.addEventListener('click', (e) => { const th = e.target.closest && e.target.closest('#view-rekapan thead th[data-sort]'); if (th) window.rekapToggleSort(th.dataset.sort); });
         document.addEventListener('keydown', (e) => { if (e.key !== 'Enter' && e.key !== ' ') return; const th = e.target.closest && e.target.closest('#view-rekapan thead th[data-sort]'); if (th) { e.preventDefault(); window.rekapToggleSort(th.dataset.sort); } });
 
-        // ---- Filter smart: pilih banyak bulan + banyak batch (Rekapan & Hasil Mentor)
-        const MON = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        // ---- Filter smart (Rekapan & Hasil Mentor): pilih banyak tahun + banyak batch.
+        // Tanpa pilihan apa pun -> otomatis hanya bulan lalu + bulan berjalan. Pilih tahun/batch -> semua bulan pada pilihan itu ditampilkan.
         const MON_S = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         const fesc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         window.fltMonthKey = (t) => { const d = new Date(t || 0); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); };
-        const mLabel = (k, short) => { const [y, m] = k.split('-'); return (short ? MON_S : MON)[+m - 1] + ' ' + y; };
-        // mode: 'default' = bulan lalu + bulan berjalan | 'all' = semua bulan | 'custom' = pilihan sendiri. batches kosong = semua batch.
-        window.fltState = { rekap: { mode: 'default', months: new Set(), batches: new Set() }, hasil: { mode: 'default', months: new Set(), batches: new Set() } };
+        const mShort = (k) => { const [y, m] = k.split('-'); return MON_S[+m - 1] + ' ' + y; };
+        const natDesc = (a, b) => b.localeCompare(a, 'id', { numeric: true });
+        window.fltState = { rekap: { all: false, years: new Set(), batches: new Set() }, hasil: { all: false, years: new Set(), batches: new Set() } };
+        const fltCollapsed = { year: false, batch: false };
         window.fltDefaultMonths = () => { const n = new Date(); return [window.fltMonthKey(new Date(n.getFullYear(), n.getMonth() - 1, 1)), window.fltMonthKey(n)]; };
-        window.fltMonths = (k) => { const s = window.fltState[k]; if (s.mode === 'default') return new Set(window.fltDefaultMonths()); if (s.mode === 'custom' && s.months.size) return s.months; return null; };
+        window.fltIsDefault = (k) => { const s = window.fltState[k]; return !s.all && !s.years.size && !s.batches.size; };
         window.fltFilter = (k, recs, skip) => {
-            const mo = skip === 'month' ? null : window.fltMonths(k); const bs = skip === 'batch' ? new Set() : window.fltState[k].batches;
-            return recs.filter(r => (!mo || mo.has(r.monthKey)) && (!bs.size || bs.has(r.batchName)));
+            const s = window.fltState[k]; const none = new Set();
+            const mo = (skip || !window.fltIsDefault(k)) ? null : new Set(window.fltDefaultMonths());
+            const ys = skip === 'year' ? none : s.years; const bs = skip === 'batch' ? none : s.batches;
+            return recs.filter(r => (!mo || mo.has(r.monthKey)) && (!ys.size || ys.has(r.monthKey.slice(0, 4))) && (!bs.size || bs.has(r.batchName)));
         };
-        const fltRefresh = (k) => { if (k === 'rekap') window.renderMOTableData(); else window.renderMOCardsData(); };
-        window.fltSet = (k, mode) => { const s = window.fltState[k]; s.mode = mode; s.months = new Set(); fltRefresh(k); window.fltRenderLists(); };
-        window.fltShowAll = (k) => { const s = window.fltState[k]; s.mode = 'all'; s.months = new Set(); s.batches = new Set(); fltRefresh(k); window.fltRenderLists(); };
-        window.fltReset = (k) => { const s = window.fltState[k]; s.mode = 'default'; s.months = new Set(); s.batches = new Set(); fltRefresh(k); window.fltRenderLists(); };
-        window.fltToggleMonth = (k, key) => { const s = window.fltState[k]; const cur = new Set(window.fltMonths(k) || []); if (cur.has(key)) cur.delete(key); else cur.add(key); s.months = cur; s.mode = cur.size ? 'custom' : 'all'; fltRefresh(k); window.fltRenderLists(); };
-        window.fltToggleBatch = (k, b) => { const s = window.fltState[k]; if (s.batches.has(b)) s.batches.delete(b); else s.batches.add(b); fltRefresh(k); window.fltRenderLists(); };
-        window.fltIsDefault = (k) => { const s = window.fltState[k]; return s.mode === 'default' && !s.batches.size; };
-        window.fltPeriodText = (k, full) => {
-            const s = window.fltState[k]; if (s.mode === 'default') { const d = window.fltDefaultMonths(); return full ? `Bulan lalu & ini · ${mLabel(d[0], true).split(' ')[0]} – ${mLabel(d[1], true)}` : 'Bulan lalu & ini'; }
-            const m = window.fltMonths(k); if (!m) return 'Semua periode';
-            const ks = [...m].sort(); if (ks.length === 1) return mLabel(ks[0], !full); if (ks.length <= 3 && full) return ks.map(x => mLabel(x, true)).join(', ');
-            return ks.length + ' bulan';
-        };
-        window.fltEmptyHint = (k) => window.fltIsDefault(k) || window.fltState[k].mode !== 'all' || window.fltState[k].batches.size
-            ? `<div class="mt-3"><button type="button" class="flt-chip" onclick="window.fltShowAll('${k}')">Tampilkan semua data</button></div>` : '';
+        const fltRefresh = (k) => { if (k === 'rekap') window.renderMOTableData(); else window.renderMOCardsData(); window.fltRenderLists(); };
+        window.fltShowAll = (k) => { const s = window.fltState[k]; s.all = true; s.years = new Set(); s.batches = new Set(); fltRefresh(k); };
+        window.fltReset = (k) => { const s = window.fltState[k]; s.all = false; s.years = new Set(); s.batches = new Set(); fltRefresh(k); };
+        const fltToggleIn = (k, field, v) => { const s = window.fltState[k]; s.all = false; if (s[field].has(v)) s[field].delete(v); else s[field].add(v); fltRefresh(k); };
+        window.fltToggleYear = (k, v) => fltToggleIn(k, 'years', v);
+        window.fltToggleBatch = (k, v) => fltToggleIn(k, 'batches', v);
+        window.fltEmptyHint = (k) => window.fltState[k].all ? '' : `<div class="mt-3"><button type="button" class="flt-chip" onclick="window.fltShowAll('${k}')">Tampilkan semua data</button></div>`;
         window.fltUpdateUI = (k, count) => {
-            if (k === 'hasil' || k === 'rekap') {} else k = (k === 'rekapan' ? 'rekap' : 'hasil');
-            const s = window.fltState[k]; const btn = document.querySelector(`[data-flt-btn="${k}"]`);
-            if (btn) { btn.querySelector('.flt-lbl').textContent = window.fltPeriodText(k, false); const bd = btn.querySelector('.flt-badge'); bd.textContent = s.batches.size; bd.classList.toggle('on', s.batches.size > 0); bd.title = s.batches.size + ' batch dipilih'; }
+            if (k !== 'hasil' && k !== 'rekap') k = (k === 'rekapan' ? 'rekap' : 'hasil');
+            const s = window.fltState[k]; const n = s.years.size + s.batches.size; const btn = document.querySelector(`[data-flt-btn="${k}"]`);
+            if (btn) { btn.querySelector('.flt-lbl').textContent = s.all ? 'Semua data' : 'Filter'; const bd = btn.querySelector('.flt-badge'); bd.textContent = n; bd.classList.toggle('on', n > 0); }
             const bar = document.getElementById(k + '-fbar'); if (!bar) return;
             if (count == null) count = (bar.dataset.count != null) ? +bar.dataset.count : 0; bar.dataset.count = count;
             const x = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>';
-            let h = `<span><b>${count}</b> peserta</span><button type="button" class="flt-chip" onclick="window.fltOpen('${k}')" title="Ubah periode">${fesc(window.fltPeriodText(k, true))}</button>`;
-            [...s.batches].sort((a, b) => a.localeCompare(b, 'id', { numeric: true })).forEach(b => { h += `<button type="button" class="flt-chip" onclick="window.fltToggleBatch('${k}', this.dataset.b)" data-b="${fesc(b)}" title="Hapus filter batch ini">${fesc(b)}${x}</button>`; });
+            let h = `<span><b>${count}</b> peserta</span>`;
+            if (window.fltIsDefault(k)) { const d = window.fltDefaultMonths(); h += `<button type="button" class="flt-chip" onclick="window.fltOpen('${k}')" title="Otomatis: bulan lalu &amp; bulan ini">Bulan lalu &amp; ini · ${mShort(d[0]).split(' ')[0]} – ${mShort(d[1])}</button>`; }
+            else if (s.all) h += `<button type="button" class="flt-chip" onclick="window.fltReset('${k}')" title="Kembali ke otomatis">Semua data${x}</button>`;
+            [...s.years].sort(natDesc).forEach(v => { h += `<button type="button" class="flt-chip" data-v="${fesc(v)}" onclick="window.fltToggleYear('${k}', this.dataset.v)" title="Hapus filter tahun">${fesc(v)}${x}</button>`; });
+            [...s.batches].sort(natDesc).forEach(v => { h += `<button type="button" class="flt-chip" data-v="${fesc(v)}" onclick="window.fltToggleBatch('${k}', this.dataset.v)" title="Hapus filter batch">${fesc(v)}${x}</button>`; });
             if (!window.fltIsDefault(k)) h += `<button type="button" class="flt-reset" onclick="window.fltReset('${k}')">Reset</button>`;
             bar.innerHTML = h;
         };
 
-        // popover filter (satu elemen dipakai bersama oleh Rekapan & Hasil Mentor)
+        // popover/sheet filter (satu elemen dipakai bersama)
+        const CHEV = '<svg class="flt-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
         const fltPop = () => {
             let p = document.getElementById('flt-pop'); if (p) return p;
-            p = document.createElement('div'); p.id = 'flt-pop'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', 'Filter periode dan batch');
-            p.innerHTML = `<div class="flt-head"><label class="flt-search"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="flt-q" type="text" autocomplete="off" placeholder="Cari bulan atau batch…" aria-label="Cari bulan atau batch"></label></div>`
-                + `<div class="flt-body"><div class="flt-sec"><span>Periode</span><span class="flt-quick"><button type="button" data-q="default">Bulan lalu &amp; ini</button><button type="button" data-q="all">Semua</button></span></div><div id="flt-months"></div>`
-                + `<div class="flt-sec"><span>Batch</span><span class="flt-quick"><button type="button" data-q="batch-all">Semua</button></span></div><div id="flt-batches"></div></div>`
-                + `<div class="flt-foot"><button type="button" class="flt-reset" data-q="reset">Reset ke awal</button><button type="button" class="flt-done" data-q="close">Selesai</button></div>`;
+            p = document.createElement('div'); p.id = 'flt-pop'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', 'Filter tahun dan batch');
+            p.innerHTML = `<div class="flt-head"><span class="flt-title">Filter</span><button type="button" class="flt-x" data-q="close" aria-label="Tutup"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>`
+                + `<div class="flt-searchrow" id="flt-sr"><label class="flt-search"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="flt-q" type="text" autocomplete="off" placeholder="Cari batch…" aria-label="Cari batch"></label></div>`
+                + `<div class="flt-body"><div class="flt-note">Tanpa pilihan, otomatis tampil <b>bulan lalu &amp; bulan ini</b>. Pilih tahun atau batch untuk melihat data yang lebih lama.</div>`
+                + `<button type="button" class="flt-sec" data-sec="year" aria-expanded="true"><span class="flt-st">Tahun</span><span class="flt-sum"></span>${CHEV}</button><div id="flt-years" class="flt-pills"></div>`
+                + `<button type="button" class="flt-sec" data-sec="batch" aria-expanded="true"><span class="flt-st">Batch</span><span class="flt-sum"></span>${CHEV}</button><div id="flt-batches" class="flt-pills scroll"></div></div>`
+                + `<div class="flt-foot"><button type="button" class="flt-reset" data-q="reset">Reset</button><button type="button" class="flt-done" data-q="close" id="flt-done">Lihat peserta</button></div>`;
             document.body.appendChild(p);
             const back = document.createElement('div'); back.id = 'flt-back'; back.onclick = () => window.fltClose(); document.body.appendChild(back);
-            p.addEventListener('click', (e) => { const q = e.target.closest('[data-q]'); if (!q) return; const k = p.dataset.k, v = q.dataset.q; if (v === 'default' || v === 'all') window.fltSet(k, v); else if (v === 'batch-all') { window.fltState[k].batches = new Set(); fltRefresh(k); window.fltRenderLists(); } else if (v === 'reset') window.fltReset(k); else if (v === 'close') window.fltClose(); });
-            p.addEventListener('change', (e) => { const t = e.target, k = p.dataset.k; if (t.dataset.m) window.fltToggleMonth(k, t.dataset.m); else if (t.dataset.b != null) window.fltToggleBatch(k, t.dataset.b); });
+            p.addEventListener('click', (e) => {
+                const k = p.dataset.k; const sec = e.target.closest('[data-sec]'); if (sec) { const n = sec.dataset.sec; fltCollapsed[n] = !fltCollapsed[n]; window.fltRenderLists(); return; }
+                const q = e.target.closest('[data-q]'); if (!q) return; if (q.dataset.q === 'reset') window.fltReset(k); else window.fltClose();
+            });
+            p.addEventListener('change', (e) => { const t = e.target, k = p.dataset.k; if (t.dataset.y != null) window.fltToggleYear(k, t.dataset.y); else if (t.dataset.b != null) window.fltToggleBatch(k, t.dataset.b); });
             p.querySelector('#flt-q').addEventListener('input', () => window.fltRenderLists());
             return p;
         };
         window.fltRenderLists = () => {
             const p = document.getElementById('flt-pop'); if (!p || !p.classList.contains('on')) return; const k = p.dataset.k; const s = window.fltState[k]; const recs = window.moParticipantRecords || [];
             const q = p.querySelector('#flt-q').value.trim().toLowerCase();
-            const mo = window.fltMonths(k); const dm = window.fltDefaultMonths();
-            p.querySelector('[data-q="default"]').classList.toggle('on', s.mode === 'default'); p.querySelector('[data-q="all"]').classList.toggle('on', !mo); p.querySelector('[data-q="batch-all"]').classList.toggle('on', !s.batches.size);
-            // hitungan per bulan mengikuti pilihan batch, hitungan per batch mengikuti pilihan bulan
-            const mc = {}; window.fltFilter(k, recs, 'month').forEach(r => { mc[r.monthKey] = (mc[r.monthKey] || 0) + 1; }); dm.forEach(m => { if (!(m in mc)) mc[m] = 0; });
+            // jumlah per tahun mengikuti pilihan batch; jumlah per batch mengikuti pilihan tahun
+            const yc = {}; window.fltFilter(k, recs, 'year').forEach(r => { const y = r.monthKey.slice(0, 4); yc[y] = (yc[y] || 0) + 1; });
             const bc = {}; window.fltFilter(k, recs, 'batch').forEach(r => { if (r.batchName) bc[r.batchName] = (bc[r.batchName] || 0) + 1; }); recs.forEach(r => { if (r.batchName && !(r.batchName in bc)) bc[r.batchName] = 0; });
-            const sv = (el, sc) => { const t = el.scrollTop; return () => { el.scrollTop = t; }; };
-            const body = p.querySelector('.flt-body'); const restore = sv(body);
-            const mk = Object.keys(mc).sort().reverse().filter(m => !q || (mLabel(m) + ' ' + mLabel(m, true) + ' ' + m).toLowerCase().includes(q));
-            p.querySelector('#flt-months').innerHTML = mk.length ? mk.map(m => `<label class="flt-it ${mc[m] ? '' : 'zero'}"><input type="checkbox" data-m="${m}" ${mo && mo.has(m) ? 'checked' : ''}><span class="flt-nm">${mLabel(m)}${dm.includes(m) ? ' <small style="opacity:.6;font-weight:600">' + (m === dm[1] ? '(bulan ini)' : '(bulan lalu)') + '</small>' : ''}</span><span class="flt-n">${mc[m]}</span></label>`).join('') : '<div class="flt-empty">Bulan tidak ditemukan.</div>';
-            const bk = Object.keys(bc).sort((a, b) => a.localeCompare(b, 'id', { numeric: true })).filter(b => !q || b.toLowerCase().includes(q));
-            p.querySelector('#flt-batches').innerHTML = bk.length ? bk.map(b => `<label class="flt-it ${bc[b] ? '' : 'zero'}"><input type="checkbox" data-b="${fesc(b)}" ${s.batches.has(b) ? 'checked' : ''}><span class="flt-nm">${fesc(b)}</span><span class="flt-n">${bc[b]}</span></label>`).join('') : '<div class="flt-empty">Batch tidak ditemukan.</div>';
-            restore();
+            const yk = Object.keys(yc).sort(natDesc); const bk = Object.keys(bc).sort(natDesc);
+            p.querySelector('#flt-sr').classList.toggle('on', bk.length > 8);
+            const pill = (attr, v, c, on) => `<label class="flt-pill ${on ? 'on' : ''} ${c ? '' : 'zero'}"><input type="checkbox" ${attr}="${fesc(v)}" ${on ? 'checked' : ''}>${fesc(v)}<em>${c}</em></label>`;
+            const fill = (id, secName, html, sel, empty) => { const box = p.querySelector(id); const sec = p.querySelector(`[data-sec="${secName}"]`); const t = box.scrollTop; box.innerHTML = html || `<div class="flt-empty">${empty}</div>`; box.scrollTop = t; box.classList.toggle('col', !!fltCollapsed[secName]); sec.setAttribute('aria-expanded', fltCollapsed[secName] ? 'false' : 'true'); sec.querySelector('.flt-sum').textContent = sel ? sel + ' dipilih' : ''; };
+            fill('#flt-years', 'year', yk.map(v => pill('data-y', v, yc[v], s.years.has(v))).join(''), s.years.size, 'Belum ada data.');
+            fill('#flt-batches', 'batch', bk.filter(v => !q || v.toLowerCase().includes(q)).map(v => pill('data-b', v, bc[v], s.batches.has(v))).join(''), s.batches.size, q ? 'Batch tidak ditemukan.' : 'Belum ada data.');
+            const n = window.fltFilter(k, recs).length; p.querySelector('#flt-done').textContent = `Lihat ${n} peserta`;
         };
         window.fltPlace = () => {
             const p = document.getElementById('flt-pop'); if (!p || !p.classList.contains('on')) return; const b = document.querySelector(`[data-flt-btn="${p.dataset.k}"]`); if (!b) return;
@@ -1561,7 +1581,6 @@
         window.fltOpen = (k) => {
             const p = fltPop(); const b = document.querySelector(`[data-flt-btn="${k}"]`); document.querySelectorAll('[data-flt-btn]').forEach(x => x.setAttribute('aria-expanded', x === b ? 'true' : 'false'));
             p.dataset.k = k; p.classList.add('on'); document.getElementById('flt-back').classList.add('on'); p.querySelector('#flt-q').value = ''; window.fltRenderLists(); window.fltPlace();
-            if (innerWidth >= 640) p.querySelector('#flt-q').focus();
         };
         window.fltClose = () => { const p = document.getElementById('flt-pop'); if (!p) return; p.classList.remove('on'); document.getElementById('flt-back').classList.remove('on'); document.querySelectorAll('[data-flt-btn]').forEach(x => x.setAttribute('aria-expanded', 'false')); };
         window.fltToggle = (k) => { const p = document.getElementById('flt-pop'); if (p && p.classList.contains('on') && p.dataset.k === k) window.fltClose(); else window.fltOpen(k); };
