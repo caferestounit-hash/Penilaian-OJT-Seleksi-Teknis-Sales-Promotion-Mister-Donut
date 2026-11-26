@@ -41,6 +41,7 @@
         @media (min-width: 640px) { .smart-back .smart-back-label { display: inline; } .smart-back { padding: 0 14px; } }
         .smart-back.on-dark { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.25); color: #fff; box-shadow: none; }
         .smart-back.on-dark:hover { background: rgba(255,255,255,.22); }
+        #view-form .smart-back { height: 34px; min-width: 34px; padding: 0 10px; border-radius: 10px; }
         .bg-pattern { background-image: radial-gradient(#8c6b5d 1px, transparent 1px); background-size: 20px 20px; }
     </style>
     <style id="ss-style">
@@ -118,27 +119,30 @@
         #view-rekapan .rekap-table th, #view-rekapan .rekap-table td { min-width: 0; }
         /* lebar kolom dalam persen -> tabel menyesuaikan ukuran layar, tidak lagi dikunci px */
         #view-rekapan .rekap-table th:nth-child(1)  { width: 3%; }
-        #view-rekapan .rekap-table th:nth-child(2)  { width: 11%; }
-        #view-rekapan .rekap-table th:nth-child(3)  { width: 6.5%; }
-        #view-rekapan .rekap-table th:nth-child(4)  { width: 6.5%; }
-        #view-rekapan .rekap-table th:nth-child(5)  { width: 6.5%; }
-        #view-rekapan .rekap-table th:nth-child(6)  { width: 6%; }
-        #view-rekapan .rekap-table th:nth-child(7)  { width: 6%; }
-        #view-rekapan .rekap-table th:nth-child(8)  { width: 6%; }
-        #view-rekapan .rekap-table th:nth-child(9)  { width: 9%; }
-        #view-rekapan .rekap-table th:nth-child(10) { width: 9%; }
-        #view-rekapan .rekap-table th:nth-child(11) { width: 6.5%; }
-        #view-rekapan .rekap-table th:nth-child(12) { width: 8%; }
-        #view-rekapan .rekap-table th:nth-child(13) { width: 8.5%; }
-        #view-rekapan .rekap-table th:nth-child(14) { width: 7.5%; }
+        #view-rekapan .rekap-table th:nth-child(2)  { width: 10%; }
+        #view-rekapan .rekap-table th:nth-child(3)  { width: 6%; }
+        #view-rekapan .rekap-table th:nth-child(4)  { width: 6%; }
+        #view-rekapan .rekap-table th:nth-child(5)  { width: 6%; }
+        #view-rekapan .rekap-table th:nth-child(6)  { width: 5.5%; }
+        #view-rekapan .rekap-table th:nth-child(7)  { width: 5.5%; }
+        #view-rekapan .rekap-table th:nth-child(8)  { width: 5.5%; }
+        #view-rekapan .rekap-table th:nth-child(9)  { width: 8%; }
+        #view-rekapan .rekap-table th:nth-child(10) { width: 8%; }
+        #view-rekapan .rekap-table th:nth-child(11) { width: 7%; }
+        #view-rekapan .rekap-table th:nth-child(12) { width: 7.5%; }
+        #view-rekapan .rekap-table th:nth-child(13) { width: 11%; }
+        #view-rekapan .rekap-table th:nth-child(14) { width: 11%; }
         /* No & ID Pelamar tetap satu baris */
         #view-rekapan .rekap-table th:nth-child(1), #view-rekapan .rekap-table td:nth-child(1),
         #view-rekapan .rekap-table td:nth-child(3) { white-space: nowrap; }
         /* ukuran huruf & padding ikut lebar layar (vw) supaya semua kolom muat tanpa scroll saat layar diperkecil */
-        #view-rekapan .rekap-table thead th { font-size: clamp(10px, .72vw, 12px); padding: 10px 8px; letter-spacing: .03em; }
-        #view-rekapan .rekap-table tbody td { font-size: clamp(12px, .85vw, 14px); padding: 10px 8px; }
+        #view-rekapan .rekap-table thead th { font-size: clamp(10px, .72vw, 12px); padding: 12px 7px; letter-spacing: .03em; vertical-align: middle; }
+        #view-rekapan .rekap-table tbody td { font-size: clamp(12px, .85vw, 14px); padding: 12px 7px; vertical-align: middle; line-height: 1.45; border-bottom: 1px solid #e5e7eb; }
+        #view-rekapan .rekap-table th:nth-child(1), #view-rekapan .rekap-table tbody td:nth-child(1) { padding-left: 6px; padding-right: 6px; }
+        #view-rekapan .rekap-table tbody tr:last-child td { border-bottom-color: transparent; }
         #view-rekapan .rekap-table td { overflow-wrap: anywhere; }
         #view-rekapan .rekap-table td:nth-child(3) { overflow-wrap: normal; }
+        #view-rekapan .rekap-table td:nth-child(2) { overflow-wrap: break-word; }
 
         /* Latar header dibuat solid di thead, tr, dan th (tanpa transisi/transparansi) agar tidak ada glitch header putih saat repaint */
         #view-rekapan .rekap-table thead, #view-rekapan .rekap-table thead tr, #view-rekapan .rekap-table thead th { background-color: #4d3327; }
@@ -250,6 +254,93 @@
         #view-rekapan th[data-sort]:hover .sort-ico { background: rgba(255,255,255,.26); }
         #view-rekapan th[aria-sort="ascending"] .sort-ico, #view-rekapan th[aria-sort="descending"] .sort-ico { background: rgba(255,255,255,.32); border-color: #fff; }
         #view-rekapan th[aria-sort="ascending"] .sort-ico .up, #view-rekapan th[aria-sort="descending"] .sort-ico .dn { opacity: 1; }
+    </style>
+    <style id="hp-style">
+        .hp-panel { display: none; }
+        @media (min-width: 768px) { .hp-toggle { display: none; } }
+        @media print { .hp-panel, .hp-toggle { display: none !important; } .hp-tbl, .hp-fb { display: block !important; } }
+        @media (max-width: 767.98px) {
+            html.hp-mode { scroll-padding-top: 150px; scroll-padding-bottom: 92px; }
+            html.hp-mode #view-form { overflow: clip; }
+            html.hp-mode .hp-panel { display: block; }
+            html.hp-mode .hp-tbl, html.hp-mode .hp-fb { display: none !important; }
+            html.hp-mode #tab-content-scale14 > .mb-3, html.hp-mode #tab-content-beverage > .mb-3, html.hp-mode #tab-content-sidedish > .mb-3 { display: none; }
+            html.hp-mode .form-tab-content { padding: 0 0 12px; }
+            html.hp-mode .form-tab-content > :not(.hp-panel):not(.step-bar) { margin-left: 12px; margin-right: 12px; }
+            html.hp-mode .step-bar { position: sticky; bottom: 8px; z-index: 20; margin: 12px 12px 0; padding: 8px; background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; box-shadow: 0 4px 16px rgba(60,35,20,.14); flex-wrap: nowrap; }
+            html.hp-mode .step-bar { gap: 6px; }
+            html.hp-mode .step-bar > div { gap: 6px; flex-wrap: nowrap; }
+            html.hp-mode .step-bar button { height: 44px; padding: 0 12px; font-size: 13px; border-radius: 10px; white-space: nowrap; }
+            html.hp-mode .step-bar .hp-lb { display: none; }
+            html.hp-mode .step-bar > div:first-child { min-width: 0; }
+            html.hp-mode .step-bar > div:last-child { margin-left: auto; }
+        }
+        .hp-bar { position: sticky; top: var(--nav-off, 0px); z-index: 15; background: #fff; border-bottom: 1px solid #e5e7eb; padding: 8px 12px 8px; transition: top .28s ease; }
+        .hp-chips { display: flex; gap: 6px; overflow-x: auto; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; padding-bottom: 2px; scrollbar-width: none; }
+        .hp-chips::-webkit-scrollbar { display: none; }
+        .hp-chip { flex: 0 0 auto; max-width: 150px; scroll-snap-align: center; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 44px; padding: 5px 12px; border-radius: 12px; border: 1px solid #d6c8c0; background: #fff; color: #3b2a22; cursor: pointer; text-align: left; }
+        .hp-chip b { font-size: 13px; font-weight: 700; max-width: 124px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.2; }
+        .hp-chip small { font-size: 10.5px; color: #8b7a70; line-height: 1.2; }
+        .hp-chip.on { background: #4d3327; border-color: #4d3327; color: #fff; }
+        .hp-chip.on small { color: rgba(255,255,255,.75); }
+        .hp-chip.done small { color: #15803d; font-weight: 700; }
+        .hp-chip.on.done small { color: #86efac; }
+        .hp-prog { margin-top: 7px; }
+        .hp-progtxt { display: flex; justify-content: space-between; font-size: 11px; color: #6b5a50; margin-bottom: 4px; gap: 8px; }
+        .hp-progtxt b { color: #3b2a22; font-weight: 700; }
+        .hp-track { height: 4px; background: #eee5e0; border-radius: 2px; overflow: hidden; }
+        .hp-track i { display: block; height: 100%; width: 0; background: #4d3327; border-radius: 2px; transition: width .2s; }
+        .hp-body { padding: 12px 12px 4px; display: flex; flex-direction: column; gap: 10px; }
+        .hp-sec { font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #6b4a3a; margin: 6px 2px -2px; }
+        .hp-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 12px; }
+        .hp-card.ok { border-color: #bfe3c9; }
+        .hp-q { font-size: 14px; font-weight: 700; color: #2b1d16; line-height: 1.3; }
+        .hp-d { font-size: 12px; color: #6b7280; line-height: 1.4; margin-top: 3px; }
+        .hp-sc { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+        .hp-sc button, .hp-nl button, .hp-sz button { min-height: 46px; border: 1px solid #d6c8c0; background: #fff; color: #3b2a22; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; padding: 0; }
+        .hp-sc button.on, .hp-nl button.on, .hp-sz button.on { background: #4d3327; border-color: #4d3327; color: #fff; }
+        .hp-sc button:disabled, .hp-nl button:disabled, .hp-sz button:disabled { cursor: default; opacity: 1; }
+        .hp-ends { display: flex; justify-content: space-between; font-size: 10.5px; color: #9a8c84; margin-top: 5px; }
+        .hp-lbl { font-size: 11px; font-weight: 700; color: #6b5a50; margin: 10px 0 5px; text-transform: uppercase; letter-spacing: .03em; }
+        .hp-lbl:first-child { margin-top: 0; }
+        .hp-in { width: 100%; min-height: 46px; border: 1px solid #d6c8c0; border-radius: 12px; padding: 0 12px; font-size: 16px; background: #fff; color: #2b1d16; outline: none; }
+        .hp-in:focus, .hp-ta:focus { border-color: #4d3327; box-shadow: 0 0 0 3px rgba(77,51,39,.15); }
+        .hp-ta { width: 100%; min-height: 84px; border: 1px solid #d6c8c0; border-radius: 12px; padding: 10px 12px; font-size: 16px; background: #fff; color: #2b1d16; outline: none; resize: none; }
+        .hp-sz { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .hp-nl { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .hp-sum { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+        .hp-sum > div { background: #f6f1ee; border-radius: 12px; padding: 8px 4px; font-size: 11px; color: #6b5a50; }
+        .hp-sum strong { display: block; font-size: 18px; font-weight: 800; color: #2b1d16; margin-top: 2px; }
+        .hp-sum .pill { display: inline-block; margin-top: 5px; font-size: 10.5px; font-weight: 800; padding: 4px 8px; border-radius: 999px; white-space: nowrap; }
+        .hp-sum .pill.g { background: #dcfce7; color: #15803d; } .hp-sum .pill.r { background: #fee2e2; color: #b91c1c; } .hp-sum .pill.n { background: #eee5e0; color: #7a685d; }
+        .hp-st { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .hp-st button { min-height: 48px; border-radius: 12px; border: 1px solid #d6c8c0; background: #fff; font-size: 13px; font-weight: 800; color: #3b2a22; cursor: pointer; }
+        .hp-st button.g.on { background: #16a34a; border-color: #16a34a; color: #fff; }
+        .hp-st button.r.on { background: #dc2626; border-color: #dc2626; color: #fff; }
+        .hp-st button:disabled { cursor: default; opacity: 1; }
+        .hp-req { color: #dc2626; }
+        .hp-item { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; }
+        .hp-item.ok { border-color: #bfe3c9; }
+        .hp-ih { width: 100%; display: flex; align-items: center; gap: 8px; min-height: 54px; padding: 8px 12px; background: transparent; border: 0; text-align: left; cursor: pointer; }
+        .hp-ih .t { flex: 1; min-width: 0; }
+        .hp-ih .n { font-size: 14px; font-weight: 700; color: #2b1d16; line-height: 1.25; }
+        .hp-ih .s { font-size: 11.5px; color: #9a8c84; margin-top: 1px; }
+        .hp-ih .s.v { color: #15803d; font-weight: 700; }
+        .hp-ih svg, .hp-ih i svg { width: 18px; height: 18px; color: #9a8c84; transition: transform .15s; }
+        .hp-item.open .hp-ih svg { transform: rotate(180deg); }
+        .hp-ib { display: none; padding: 2px 12px 14px; border-top: 1px dashed #eadfd9; }
+        .hp-item.open .hp-ib { display: block; }
+        .hp-bd { display: inline-block; font-size: 10px; font-weight: 800; padding: 1px 7px; border-radius: 999px; margin-right: 5px; vertical-align: 1px; }
+        .hp-bd.h { background: #fee2e2; color: #b91c1c; } .hp-bd.i { background: #dbeafe; color: #1d4ed8; }
+        .hp-note { font-size: 12px; color: #6b5a50; background: #f6f1ee; border-radius: 12px; padding: 10px 12px; }
+        html.dark .hp-bar, html.dark .hp-card, html.dark .hp-item, html.dark .hp-chip, html.dark .hp-in, html.dark .hp-ta, html.dark .hp-sc button, html.dark .hp-nl button, html.dark .hp-sz button, html.dark .hp-st button, html.dark.hp-mode .step-bar { background: #221915; border-color: #4a3a32; color: #f0e6df; }
+        html.dark .hp-q, html.dark .hp-ih .n, html.dark .hp-sum strong, html.dark .hp-progtxt b { color: #f0e6df; }
+        html.dark .hp-d, html.dark .hp-progtxt, html.dark .hp-lbl, html.dark .hp-note { color: #b9a79c; }
+        html.dark .hp-sum > div, html.dark .hp-note { background: #2a201b; }
+        html.dark .hp-track { background: #3a2d26; }
+        html.dark .hp-chip.on, html.dark .hp-sc button.on, html.dark .hp-nl button.on, html.dark .hp-sz button.on, html.dark .hp-track i { background: #8a5a3f; border-color: #8a5a3f; color: #fff; }
+        html.dark .hp-st button.g.on { background: #16a34a; border-color: #16a34a; color: #fff; } html.dark .hp-st button.r.on { background: #dc2626; border-color: #dc2626; color: #fff; }
+        html.dark .hp-ib { border-color: #3a2d26; }
     </style>
     <style id="dark-style">
         /* ===== Mode gelap (hanya layar; cetak/PDF tetap terang) ===== */
@@ -511,6 +602,7 @@
         html.dark .kd-tab[aria-selected="true"] .kd-n { background:#6a4a3c;color:#fff }
         html.dark #view-rekapan th[data-sort]:hover { background-color:#7a5646 }
         html.dark #view-rekapan .rekap-table thead, html.dark #view-rekapan .rekap-table thead tr, html.dark #view-rekapan .rekap-table thead th { background-color:#5a3d2f }
+        html.dark #view-rekapan .rekap-table tbody td { border-bottom-color:#3d2f27 }
         html.dark .bg-pattern { background-image:radial-gradient(#4a392f 1px,transparent 1px) }
         html.dark ::-webkit-scrollbar-track { background:#17110e }
         html.dark ::-webkit-scrollbar-thumb { background:#4f3d33;border-radius:8px }
@@ -655,8 +747,8 @@
                 <div class="w-12 h-12 sm:w-14 sm:h-14 bg-teal-50 text-teal-700 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform border border-teal-100">
                     <i data-lucide="clipboard-check" class="w-6 h-6 sm:w-7 sm:h-7"></i>
                 </div>
-                <h3 class="text-lg sm:text-xl font-black text-gray-800 mb-2 uppercase">Butuh Persetujuan User</h3>
-                <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Peserta yang di-assign ke Anda dan menunggu persetujuan OK / NOK.</p>
+                <h3 class="text-lg sm:text-xl font-black text-gray-800 mb-2 uppercase">Butuh Keputusan User</h3>
+                <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Peserta yang di-assign ke Anda dan menunggu keputusan Anda: Meluluskan / Tidak Meluluskan.</p>
             </button>
             <button id="card-buat" onclick="window.createNewAssessment()" class="group text-left bg-white rounded-2xl p-5 sm:p-8 border border-gray-200 shadow-sm hover:shadow-xl hover:border-misdo-500 transition-all duration-300 transform hover:-translate-y-1">
                 <div class="w-12 h-12 sm:w-14 sm:h-14 bg-misdo-100 text-misdo-800 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform">
@@ -684,7 +776,7 @@
                     <i data-lucide="clipboard-signature" class="w-6 h-6 sm:w-7 sm:h-7"></i>
                 </div>
                 <h3 class="text-lg sm:text-xl font-black text-gray-800 mb-2 uppercase">Rekap Penilaian</h3>
-                <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Lihat rekapan nilai penilaian per batch beserta status persetujuan User dan validasi MO.</p>
+                <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Lihat rekapan nilai penilaian per batch beserta keputusan User dan validasi MO.</p>
             </button>
             <button id="card-hasil-mentor" onclick="window.showView('hasil-mentor')" class="group text-left bg-white rounded-2xl p-5 sm:p-8 border border-gray-200 shadow-sm hover:shadow-xl hover:border-orange-400 transition-all duration-300 transform hover:-translate-y-1">
                 <div class="w-12 h-12 sm:w-14 sm:h-14 bg-orange-50 text-orange-700 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform border border-orange-100">
@@ -765,7 +857,7 @@
     <div id="view-konfirmasi" class="max-w-5xl mx-auto p-4 sm:p-6 mt-4 hidden no-print">
         <div class="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
             <button type="button" data-smart-back onclick="window.smartBack()" class="smart-back" title="Kembali" aria-label="Kembali"></button>
-            <div><h2 class="text-lg sm:text-2xl font-black text-gray-800 uppercase">Butuh Persetujuan User</h2><p class="text-xs sm:text-sm text-gray-500" id="konf-sub">Pilih nama Anda untuk melihat peserta yang perlu Anda konfirmasi.</p></div>
+            <div><h2 class="text-lg sm:text-2xl font-black text-gray-800 uppercase">Butuh Keputusan User</h2><p class="text-xs sm:text-sm text-gray-500" id="konf-sub">Pilih nama Anda untuk melihat peserta yang menunggu keputusan Anda.</p></div>
         </div>
         <div id="konf-body"></div>
     </div>
@@ -824,17 +916,28 @@
                 </div>
             </div>
         </div>
-        <div class="bg-gradient-to-r from-misdo-800 to-misdo-900 p-4 sm:p-6 text-white text-center border-b-4 border-[#d32f2f] relative overflow-hidden print-border-none no-print-bg">
-            <div class="flex flex-col sm:flex-row items-center justify-between relative z-10 gap-3 sm:gap-4">
+        <div class="bg-gradient-to-r from-misdo-800 to-misdo-900 px-3 py-2.5 sm:px-5 sm:py-3 text-white border-b-2 border-[#d32f2f] relative overflow-hidden print-border-none no-print-bg">
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-2 relative z-10">
                 <button type="button" data-smart-back onclick="window.smartBack()" id="btn-form-smart-back" class="smart-back on-dark hidden no-print" title="Kembali" aria-label="Kembali"></button>
-                <button id="btn-exit-form" onclick="window.confirmExitForm()" class="px-3 py-2 sm:px-4 sm:py-2 bg-white/10 hover:bg-white/20 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-2 transition-colors no-print w-full sm:w-auto justify-center">
-                    <i data-lucide="home" class="w-4 h-4"></i> Kembali ke Dashboard
+                <button id="btn-exit-form" onclick="window.confirmExitForm()" class="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-colors no-print justify-center">
+                    <i data-lucide="home" class="w-4 h-4"></i> <span>Dashboard</span>
                 </button>
-                <div class="flex-1 text-center w-full">
-                    <h1 class="text-lg sm:text-2xl font-black uppercase tracking-wider text-misdo-100" style="-webkit-print-color-adjust: exact; color-adjust: exact;">Lembar Penilaian</h1>
-                    <p class="text-[10px] sm:text-sm font-medium opacity-70 tracking-wide text-misdo-300">ID: <span id="display-draft-id" class="font-mono text-white">Baru</span></p>
+                <div class="min-w-0 flex-1 text-left">
+                    <h1 class="text-sm sm:text-lg font-black uppercase tracking-wider text-misdo-100 leading-tight" style="-webkit-print-color-adjust: exact; color-adjust: exact;">Lembar Penilaian</h1>
+                    <p class="text-[10px] sm:text-xs font-medium opacity-70 tracking-wide text-misdo-300 leading-tight">ID: <span id="display-draft-id" class="font-mono text-white">Baru</span></p>
                 </div>
-                <div class="flex flex-wrap justify-center sm:justify-end gap-2 w-full sm:w-auto no-print shrink-0 mt-2 sm:mt-0" id="form-header-right">
+                <div class="rv-toggle hp-toggle no-print" role="group" aria-label="Mode tampilan form">
+                    <button type="button" id="hp-btn-hp" onclick="window.setFormView('hp')" title="Mode HP" aria-label="Mode HP" aria-pressed="false"><i data-lucide="smartphone" class="w-4 h-4"></i></button>
+                    <button type="button" id="hp-btn-table" onclick="window.setFormView('desktop')" title="Tampilan tabel (default)" aria-label="Tampilan tabel" aria-pressed="true"><i data-lucide="table-2" class="w-4 h-4"></i></button>
+                </div>
+                <div class="order-last lg:order-none w-full lg:w-auto flex items-center justify-center gap-1.5 no-print" id="step-nav">
+                    <button onclick="window.goToStep(1)" id="step-1" class="step-indicator px-3 py-1.5 rounded-lg font-bold text-[11px] sm:text-xs flex items-center gap-1.5 bg-white text-misdo-900 transition-all cursor-pointer"><span class="bg-misdo-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">1</span> Skala 1-4</button>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-misdo-400 shrink-0"></i>
+                    <button onclick="window.goToStep(2)" id="step-2" class="step-indicator px-3 py-1.5 rounded-lg font-bold text-[11px] sm:text-xs flex items-center gap-1.5 bg-misdo-700/60 text-white transition-all opacity-80 hover:opacity-100 cursor-pointer"><span class="bg-white/20 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">2</span> Beverage</button>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-misdo-400 shrink-0"></i>
+                    <button onclick="window.goToStep(3)" id="step-3" class="step-indicator px-3 py-1.5 rounded-lg font-bold text-[11px] sm:text-xs flex items-center gap-1.5 bg-misdo-700/60 text-white transition-all opacity-80 hover:opacity-100 cursor-pointer"><span class="bg-white/20 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">3</span> Side Dish</button>
+                </div>
+                <div class="flex flex-wrap justify-end gap-2 no-print shrink-0" id="form-header-right">
                     <button onclick="window.generateAndPrintPDF()" class="hidden px-4 py-2 sm:px-3 sm:py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-xs sm:text-sm font-bold text-white flex items-center justify-center gap-1.5 transition-colors shadow-lg flex-1 sm:flex-none" id="btn-print-form">
                         <i data-lucide="printer" class="w-4 h-4 sm:w-4 sm:h-4"></i> PDF
                     </button>
@@ -846,90 +949,92 @@
                     </button>
                 </div>
             </div>
-            
-            <div class="flex flex-wrap justify-center gap-2 relative z-10 mt-4 sm:mt-6 no-print">
-                <button onclick="window.goToStep(1)" id="step-1" class="step-indicator px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg font-bold text-[10px] sm:text-sm shadow-md flex items-center gap-1.5 sm:gap-2 bg-white text-misdo-900 transition-all cursor-pointer border border-gray-200"><span class="bg-misdo-900 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[10px] sm:text-xs">1</span> <span class="hidden sm:inline">Form</span> Skala 1-4</button>
-                <i data-lucide="arrow-right" class="w-4 h-4 sm:w-5 sm:h-5 text-misdo-500 hidden sm:block mt-1 sm:mt-2"></i>
-                <button onclick="window.goToStep(2)" id="step-2" class="step-indicator px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg font-bold text-[10px] sm:text-sm shadow-md flex items-center gap-1.5 sm:gap-2 bg-misdo-700/80 text-white transition-all opacity-70 hover:opacity-100 cursor-pointer"><span class="bg-white/20 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[10px] sm:text-xs">2</span> <span class="hidden sm:inline">Form</span> Beverage</button>
-                <i data-lucide="arrow-right" class="w-4 h-4 sm:w-5 sm:h-5 text-misdo-500 hidden sm:block mt-1 sm:mt-2"></i>
-                <button onclick="window.goToStep(3)" id="step-3" class="step-indicator px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg font-bold text-[10px] sm:text-sm shadow-md flex items-center gap-1.5 sm:gap-2 bg-misdo-700/80 text-white transition-all opacity-70 hover:opacity-100 cursor-pointer"><span class="bg-white/20 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[10px] sm:text-xs">3</span> <span class="hidden sm:inline">Form</span> Side Dish</button>
-            </div>
         </div>
 
-        <div class="bg-misdo-50 border-b border-misdo-200 p-3 sm:p-6 shadow-sm">
+        <div id="info-main" class="bg-misdo-50 border-b border-misdo-200 px-3 py-3 sm:px-5 sm:py-4">
             <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2.5">
                     <div class="flex items-center gap-2">
                         <i data-lucide="store" class="w-5 h-5 text-misdo-800"></i>
                         <h3 class="text-sm font-black text-misdo-900 uppercase tracking-wide">Informasi Utama</h3>
                     </div>
-                    <button onclick="window.fetchMasterData()" id="btnSyncMaster" type="button" class="w-full sm:w-auto text-xs bg-misdo-200 hover:bg-misdo-300 text-misdo-900 font-bold px-3 py-2 rounded-lg border border-misdo-300 flex items-center justify-center gap-1.5 transition-colors cursor-pointer no-print readonly-hide">
+                    <button onclick="window.fetchMasterData()" id="btnSyncMaster" type="button" class="w-full sm:w-auto text-[11px] bg-misdo-200 hover:bg-misdo-300 text-misdo-900 font-bold px-2.5 py-1.5 rounded-lg border border-misdo-300 flex items-center justify-center gap-1.5 transition-colors cursor-pointer no-print readonly-hide">
                         <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Muat Ulang Master
                     </button>
                 </div>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
                     <div>
-                        <label class="block text-xs font-bold text-misdo-800 mb-1 uppercase tracking-wider">Tanggal <span class="text-red-500 readonly-hide">*</span></label>
-                        <input type="date" id="global_date" onchange="window.syncGlobalData('date', this.value)" class="form-control w-full p-2.5 sm:p-3 border border-misdo-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none bg-white text-sm text-gray-800">
+                        <label class="block text-[11px] font-bold text-misdo-800 mb-1 uppercase tracking-wide">Tanggal <span class="text-red-500 readonly-hide">*</span></label>
+                        <input type="date" id="global_date" onchange="window.syncGlobalData('date', this.value)" class="form-control w-full px-3 py-2 border border-misdo-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none bg-white text-sm text-gray-800">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-misdo-800 mb-1 uppercase tracking-wider">Batch <span class="text-red-500 readonly-hide">*</span></label>
-                        <select id="global_batch_select" onchange="window.handleBatchSelect(this.value)" class="form-control w-full p-2.5 sm:p-3 border border-misdo-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none bg-white text-sm text-gray-800 cursor-pointer"><option value="">-- Pilih Batch --</option></select>
+                        <label class="block text-[11px] font-bold text-misdo-800 mb-1 uppercase tracking-wide">Batch <span class="text-red-500 readonly-hide">*</span></label>
+                        <select id="global_batch_select" onchange="window.handleBatchSelect(this.value)" class="form-control w-full px-3 py-2 border border-misdo-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none bg-white text-sm text-gray-800 cursor-pointer"><option value="">-- Pilih Batch --</option></select>
                     </div>
                     <div class="readonly-hide">
-                        <label class="block text-xs font-bold text-misdo-800 mb-1 uppercase tracking-wider">Jml Peserta <span class="text-red-500">*</span></label>
-                        <input type="number" id="global_participantCount" min="1" max="10" value="1" onchange="window.syncGlobalParticipants(this.value)" class="form-control w-full p-2.5 sm:p-3 border border-misdo-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none bg-white text-sm text-gray-800">
+                        <label class="block text-[11px] font-bold text-misdo-800 mb-1 uppercase tracking-wide">Jml Peserta <span class="text-red-500">*</span></label>
+                        <input type="number" id="global_participantCount" min="1" max="10" value="1" onchange="window.syncGlobalParticipants(this.value)" class="form-control w-full px-3 py-2 border border-misdo-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none bg-white text-sm text-gray-800">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-misdo-800 mb-1 uppercase tracking-wider">Nama Store <span class="text-red-500 readonly-hide">*</span></label>
-                        <input type="text" id="global_flagship" oninput="window.syncGlobalData('flagship', this.value)" class="form-control w-full p-2.5 sm:p-3 border border-misdo-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none bg-white text-sm text-gray-800" placeholder="Contoh: FX Sudirman">
+                        <label class="block text-[11px] font-bold text-misdo-800 mb-1 uppercase tracking-wide">Nama Store <span class="text-red-500 readonly-hide">*</span></label>
+                        <input type="text" id="global_flagship" oninput="window.syncGlobalData('flagship', this.value)" class="form-control w-full px-3 py-2 border border-misdo-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none bg-white text-sm text-gray-800" placeholder="Contoh: FX Sudirman">
                     </div>
                 </div>
 
-                <div class="mb-6 bg-white p-3 sm:p-4 rounded-xl border border-misdo-200 readonly-hide shadow-sm">
-                    <label class="block text-xs font-bold text-misdo-800 mb-3 uppercase tracking-wider">PILIH PESERTA DARI MASTER DATA <span class="text-red-500">*</span></label>
-                    <div id="global_participant_names_container" class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4"></div>
+                <div class="mb-3 bg-white p-3 rounded-lg border border-misdo-200 readonly-hide">
+                    <label class="block text-[11px] font-bold text-misdo-800 mb-2 uppercase tracking-wide">PILIH PESERTA DARI MASTER DATA <span class="text-red-500">*</span></label>
+                    <div id="global_participant_names_container" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-3"></div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 bg-white p-3 sm:p-4 rounded-xl border border-misdo-200 shadow-sm">
+                <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_auto] gap-3 sm:gap-5 bg-white p-3 rounded-lg border border-misdo-200">
                     <div>
-                        <label class="block text-xs font-bold text-misdo-800 mb-2 uppercase tracking-wider">Nama Mentor <span class="text-red-500 readonly-hide">*</span></label>
-                        <input type="text" id="global_mentor" oninput="window.updateMentorName(this.value)" class="form-control w-full p-2.5 sm:p-3 border border-misdo-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none bg-gray-50 text-sm text-gray-800" placeholder="Masukkan nama Anda">
+                        <label class="block text-[11px] font-bold text-misdo-800 mb-1 uppercase tracking-wide">Nama Mentor <span class="text-red-500 readonly-hide">*</span></label>
+                        <input type="text" id="global_mentor" oninput="window.updateMentorName(this.value)" class="form-control w-full px-3 py-2 border border-misdo-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none bg-gray-50 text-sm text-gray-800" placeholder="Masukkan nama Anda">
                     </div>
-                    <div class="flex flex-col items-start w-full">
-                        <label class="block text-xs font-bold text-misdo-800 mb-2 uppercase tracking-wider">Tanda Tangan <span class="text-red-500 readonly-hide">*</span></label>
-                        <div class="flex flex-col border-2 border-dashed border-misdo-300 rounded-lg bg-gray-50 overflow-hidden w-full max-w-sm mx-auto md:mx-0">
+                    <div class="flex flex-col items-start w-full md:w-[260px]">
+                        <label class="block text-[11px] font-bold text-misdo-800 mb-1 uppercase tracking-wide">Tanda Tangan <span class="text-red-500 readonly-hide">*</span></label>
+                        <div class="flex flex-col border-2 border-dashed border-misdo-300 rounded-lg bg-gray-50 overflow-hidden w-full max-w-[260px] mx-auto md:mx-0">
                             <canvas id="signatureCanvas_global" width="300" height="150" style="touch-action: none;" class="bg-white touch-none cursor-crosshair w-full"></canvas>
                             <div class="w-full flex justify-between items-center px-3 py-2 bg-misdo-50 border-t border-misdo-200 readonly-hide no-print"><span class="text-[10px] sm:text-xs text-misdo-700 italic">Gunakan jari untuk ttd</span><button type="button" onclick="window.clearGlobalSignature()" class="text-xs text-red-500 hover:text-red-700 font-bold p-1">Hapus</button></div>
                         </div>
                     </div>
                 </div>
-                <div id="mo-stamps-container" class="mt-6 hidden print-only border-t-2 border-dashed border-gray-300 pt-4"></div>
+                <div id="mo-stamps-container" class="mt-3 hidden print-only border-t-2 border-dashed border-gray-300 pt-4"></div>
             </div>
         </div>
 
-        <div id="tab-content-scale14" class="form-tab-content p-3 sm:p-8 block">
-            <div class="mb-4 sm:mb-6 bg-misdo-50 p-3 sm:p-4 rounded-xl border border-misdo-200 flex flex-col sm:flex-row sm:items-center justify-between no-print-bg print-border-none shadow-sm gap-2">
-                <div><h2 class="text-base sm:text-lg font-black text-misdo-900 uppercase">1: Penilaian Teknis &amp; Nonteknis</h2><p class="text-[10px] sm:text-xs text-misdo-700 no-print">Keterampilan kerja dan etika Baker & Crew.</p></div>
+        <div id="info-summary" class="hidden no-print bg-misdo-50 border-b border-misdo-200 px-3 sm:px-5 py-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-misdo-800">
+            <span class="inline-flex items-center gap-1.5 font-black uppercase tracking-wide text-misdo-900"><i data-lucide="store" class="w-3.5 h-3.5"></i><span id="sum-store">-</span></span>
+            <span><span class="text-misdo-600">Batch</span> <b id="sum-batch">-</b></span>
+            <span><span class="text-misdo-600">Tanggal</span> <b id="sum-date">-</b></span>
+            <span><span class="text-misdo-600">Mentor</span> <b id="sum-mentor">-</b></span>
+            <button type="button" onclick="window.goToStep(1)" id="sum-info-btn" class="ml-auto text-[11px] font-bold text-misdo-700 hover:text-misdo-900 underline">Lihat info</button>
+        </div>
+        <div id="tab-content-scale14" class="form-tab-content p-3 sm:p-5 block">
+            <div class="mb-3 bg-misdo-50 px-3 py-2 rounded-lg border border-misdo-200 flex flex-col sm:flex-row sm:items-center justify-between no-print-bg print-border-none gap-0.5">
+                <div><h2 class="text-sm sm:text-base font-black text-misdo-900 uppercase leading-tight">1: Penilaian Teknis &amp; Nonteknis</h2><p class="text-[10px] sm:text-xs text-misdo-700 no-print">Keterampilan kerja dan etika Baker & Crew.</p></div>
             </div>
-            <div class="overflow-x-auto w-full mb-6 sm:mb-8 border border-gray-300 rounded-xl shadow-sm print-border-none"><table class="w-full text-left border-collapse min-w-[1100px]"><thead id="tableHead_scale14"></thead><tbody id="tableBody_scale14"></tbody></table></div>
-            <div class="mb-6 sm:mb-8"><h3 class="text-sm font-black text-misdo-900 uppercase tracking-wide mb-3 sm:mb-4 flex items-center gap-2"><i data-lucide="message-square-text" class="w-5 h-5 text-misdo-700 no-print"></i> Catatan Pengembangan</h3><div id="participantFeedbackContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"></div></div>
-            <div class="flex flex-col-reverse sm:flex-row justify-between gap-3 border-t pt-4 sm:pt-6 no-print readonly-hide"><button onclick="window.handleSaveDraft()" class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 sm:py-3.5 text-blue-700 bg-blue-50 border border-blue-200 hover:bg-blue-100 rounded-xl font-bold cursor-pointer text-sm sm:text-base"><i data-lucide="save" class="w-5 h-5"></i> Simpan Draft</button><button onclick="window.goToStep(2)" class="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 sm:py-3.5 text-white bg-misdo-800 hover:bg-misdo-900 rounded-xl font-bold cursor-pointer shadow-lg transition-transform active:scale-95 text-sm sm:text-base">Lanjut <span class="hidden sm:inline">ke Form Beverage</span> <i data-lucide="arrow-right-circle" class="w-5 h-5"></i></button></div>
+            <div id="hp-scale14" class="hp-panel no-print"></div>
+            <div class="hp-tbl overflow-x-auto w-full mb-4 border border-gray-300 rounded-lg print-border-none"><table class="w-full text-left border-collapse min-w-[1100px]"><thead id="tableHead_scale14"></thead><tbody id="tableBody_scale14"></tbody></table></div>
+            <div class="hp-fb mb-4"><h3 class="text-xs sm:text-sm font-black text-misdo-900 uppercase tracking-wide mb-2 flex items-center gap-2"><i data-lucide="message-square-text" class="w-5 h-5 text-misdo-700 no-print"></i> Catatan Pengembangan</h3><div id="participantFeedbackContainer" class="grid grid-cols-1 gap-3"></div></div>
+            <div class="step-bar no-print flex flex-wrap items-center justify-between gap-2 border-t border-gray-200 pt-3"><div class="flex items-center gap-1.5"><button type="button" onclick="window.handleSaveDraft()" class="readonly-hide h-8 px-3 inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition-colors"><i data-lucide="save" class="w-3.5 h-3.5"></i>Simpan Draft</button></div><div class="flex items-center gap-1.5"><button type="button" onclick="window.goToStep(2)" class="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg bg-misdo-800 hover:bg-misdo-900 text-white text-xs font-bold transition-colors">Beverage<i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></button></div></div>
         </div>
 
-        <div id="tab-content-beverage" class="form-tab-content p-3 sm:p-8 hidden">
-            <div class="mb-4 sm:mb-6 bg-misdo-50 p-3 sm:p-4 rounded-xl border border-misdo-200 flex flex-col sm:flex-row sm:items-center justify-between no-print-bg print-border-none shadow-sm gap-2"><div><h2 class="text-base sm:text-lg font-black text-misdo-900 uppercase">2: Tes Praktik Beverage</h2></div></div>
-            <div class="overflow-x-auto w-full mb-6 sm:mb-8 border border-gray-300 rounded-xl shadow-sm print-border-none"><table class="w-full text-left border-collapse min-w-[1000px]"><thead id="tableHead_beverage"></thead><tbody id="tableBody_beverage"></tbody></table></div>
-            <div class="flex flex-col bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm mb-6 print-border-none"><label class="text-xs sm:text-sm font-bold text-gray-800 mb-2">KOMENTAR PEMEGANG SHIFT</label><textarea id="comments_beverage" oninput="window.globalStore.commentsBeverage = this.value" class="form-control w-full min-h-[100px] sm:min-h-[150px] p-3 sm:p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-misdo-500 outline-none resize-none bg-white text-sm" placeholder="Tuliskan evaluasi teknis, catatan sikap..."></textarea></div>
-            <div class="flex flex-col-reverse sm:flex-row justify-between gap-3 border-t pt-4 sm:pt-6 no-print readonly-hide"><div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto"><button onclick="window.goToStep(1)" class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 sm:py-3.5 text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-xl font-bold text-sm sm:text-base"><i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali</button><button onclick="window.handleSaveDraft()" class="hidden sm:flex items-center justify-center gap-2 px-6 py-3 sm:py-3.5 text-blue-700 bg-blue-50 border border-blue-200 hover:bg-blue-100 rounded-xl font-bold text-sm sm:text-base"><i data-lucide="save" class="w-4 h-4"></i> Simpan Draft</button></div><button onclick="window.goToStep(3)" class="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 sm:py-3.5 text-white bg-misdo-800 hover:bg-misdo-900 rounded-xl font-bold shadow-lg transition-transform active:scale-95 text-sm sm:text-base">Lanjut <span class="hidden sm:inline">ke Form Side Dish</span> <i data-lucide="arrow-right-circle" class="w-5 h-5"></i></button></div>
+        <div id="tab-content-beverage" class="form-tab-content p-3 sm:p-5 hidden">
+            <div class="mb-3 bg-misdo-50 px-3 py-2 rounded-lg border border-misdo-200 flex flex-col sm:flex-row sm:items-center justify-between no-print-bg print-border-none gap-0.5"><div><h2 class="text-sm sm:text-base font-black text-misdo-900 uppercase leading-tight">2: Tes Praktik Beverage</h2></div></div>
+            <div id="hp-beverage" class="hp-panel no-print"></div>
+            <div class="hp-tbl overflow-x-auto w-full mb-4 border border-gray-300 rounded-lg print-border-none"><table class="w-full text-left border-collapse min-w-[1000px]"><thead id="tableHead_beverage"></thead><tbody id="tableBody_beverage"></tbody></table></div>
+            <div class="flex flex-col bg-white p-3 rounded-lg border border-gray-200 mb-4 print-border-none"><label class="text-[11px] sm:text-xs font-bold text-gray-800 mb-1.5">KOMENTAR PEMEGANG SHIFT</label><textarea id="comments_beverage" oninput="window.globalStore.commentsBeverage = this.value" class="form-control w-full min-h-[76px] sm:min-h-[92px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none resize-none bg-white text-sm" placeholder="Tuliskan evaluasi teknis, catatan sikap..."></textarea></div>
+            <div class="step-bar no-print flex flex-wrap items-center justify-between gap-2 border-t border-gray-200 pt-3"><div class="flex items-center gap-1.5"><button type="button" aria-label="Kembali ke Skala 1-4" onclick="window.goToStep(1)" class="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-bold transition-colors"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i><span class="hp-lb">Skala 1-4</span></button><button type="button" onclick="window.handleSaveDraft()" class="readonly-hide h-8 px-3 inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition-colors"><i data-lucide="save" class="w-3.5 h-3.5"></i>Simpan Draft</button></div><div class="flex items-center gap-1.5"><button type="button" onclick="window.goToStep(3)" class="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg bg-misdo-800 hover:bg-misdo-900 text-white text-xs font-bold transition-colors">Side Dish<i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></button></div></div>
         </div>
 
-        <div id="tab-content-sidedish" class="form-tab-content p-3 sm:p-8 hidden">
-            <div class="mb-4 sm:mb-6 bg-misdo-50 p-3 sm:p-4 rounded-xl border border-misdo-200 flex flex-col sm:flex-row sm:items-center justify-between no-print-bg print-border-none shadow-sm gap-2"><div><h2 class="text-base sm:text-lg font-black text-misdo-900 uppercase">3: Tes Praktik Side Dish</h2></div></div>
-            <div class="overflow-x-auto w-full mb-6 sm:mb-8 border border-gray-300 rounded-xl shadow-sm print-border-none"><table class="w-full text-left border-collapse min-w-[1000px]"><thead id="tableHead_sidedish"></thead><tbody id="tableBody_sidedish"></tbody></table></div>
-            <div class="flex flex-col bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm mb-6 print-border-none"><label class="text-xs sm:text-sm font-bold text-gray-800 mb-2">KOMENTAR PEMEGANG SHIFT</label><textarea id="comments_sidedish" oninput="window.globalStore.commentsSideDish = this.value" class="form-control w-full min-h-[100px] sm:min-h-[150px] p-3 sm:p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-misdo-500 outline-none resize-none bg-white text-sm" placeholder="Tuliskan evaluasi teknik..."></textarea></div>
-            <div class="flex flex-col sm:flex-row justify-between gap-3 border-t pt-4 sm:pt-6 bg-gray-50 -mx-3 sm:-mx-8 -mb-3 sm:-mb-8 p-4 sm:p-8 rounded-b-xl border-t border-gray-200 no-print readonly-hide"><button onclick="window.goToStep(2)" class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 sm:py-3.5 text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-xl font-bold text-sm sm:text-base shadow-sm"><i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali</button><div class="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto"><button onclick="window.handleSaveDraft()" class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 sm:py-3.5 text-blue-700 bg-blue-100 hover:bg-blue-200 border border-blue-300 rounded-xl font-bold transition-colors text-sm sm:text-base"><i data-lucide="save" class="w-5 h-5"></i> Simpan Draft</button><button id="btnSubmitAll" onclick="window.handleSubmitAll()" class="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 sm:py-3.5 text-white bg-green-600 hover:bg-green-700 rounded-xl font-bold shadow-lg transition-transform active:scale-95 text-sm sm:text-base"><i data-lucide="send" class="w-5 h-5"></i> Kirim & Selesai</button></div></div>
+        <div id="tab-content-sidedish" class="form-tab-content p-3 sm:p-5 hidden">
+            <div class="mb-3 bg-misdo-50 px-3 py-2 rounded-lg border border-misdo-200 flex flex-col sm:flex-row sm:items-center justify-between no-print-bg print-border-none gap-0.5"><div><h2 class="text-sm sm:text-base font-black text-misdo-900 uppercase leading-tight">3: Tes Praktik Side Dish</h2></div></div>
+            <div id="hp-sidedish" class="hp-panel no-print"></div>
+            <div class="hp-tbl overflow-x-auto w-full mb-4 border border-gray-300 rounded-lg print-border-none"><table class="w-full text-left border-collapse min-w-[1000px]"><thead id="tableHead_sidedish"></thead><tbody id="tableBody_sidedish"></tbody></table></div>
+            <div class="flex flex-col bg-white p-3 rounded-lg border border-gray-200 mb-4 print-border-none"><label class="text-[11px] sm:text-xs font-bold text-gray-800 mb-1.5">KOMENTAR PEMEGANG SHIFT</label><textarea id="comments_sidedish" oninput="window.globalStore.commentsSideDish = this.value" class="form-control w-full min-h-[76px] sm:min-h-[92px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none resize-none bg-white text-sm" placeholder="Tuliskan evaluasi teknik..."></textarea></div>
+            <div class="step-bar no-print flex flex-wrap items-center justify-between gap-2 border-t border-gray-200 pt-3"><div class="flex items-center gap-1.5"><button type="button" aria-label="Kembali ke Beverage" onclick="window.goToStep(2)" class="h-8 px-3 inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-bold transition-colors"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i><span class="hp-lb">Beverage</span></button><button type="button" onclick="window.handleSaveDraft()" class="readonly-hide h-8 px-3 inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition-colors"><i data-lucide="save" class="w-3.5 h-3.5"></i>Simpan Draft</button></div><div class="flex items-center gap-1.5"><button type="button" id="btnSubmitAll" onclick="window.handleSubmitAll()" class="readonly-hide h-8 px-3 inline-flex items-center gap-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white text-xs font-bold transition-colors"><i data-lucide="send" class="w-3.5 h-3.5"></i>Kirim &amp; Selesai</button></div></div>
         </div>
     </div>
 
@@ -978,7 +1083,10 @@
         <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl relative"><h3 id="userActionTitle" class="text-lg sm:text-xl font-black text-gray-800 mb-2 text-center">Set Keputusan User</h3><p id="userActionDesc" class="text-gray-600 mb-4 text-xs sm:text-sm text-center">Tindakan ini bersifat final. Silakan berikan alasan.</p><div class="mb-4 sm:mb-6"><label class="block text-[10px] sm:text-xs font-bold text-gray-700 mb-2 uppercase">Alasan Keputusan <span class="text-red-500">*</span></label><textarea id="userActionReason" class="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-misdo-500 resize-none h-20 sm:h-24 text-sm" placeholder="Sebutkan alasannya secara detail..."></textarea></div><div class="flex gap-2 sm:gap-3"><button onclick="window.closeUserModal()" class="flex-1 bg-gray-100 text-gray-800 font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-gray-200 transition-colors text-xs sm:text-sm">Batal</button><button id="userActionConfirmBtn" class="flex-1 text-white font-bold py-3 px-2 sm:px-4 rounded-xl transition-colors text-xs sm:text-sm">Konfirmasi Final</button></div></div>
     </div>
     <div id="moActionModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden no-print">
-        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl relative"><h3 id="moActionTitle" class="text-lg sm:text-xl font-black text-gray-800 mb-2 text-center">Validasi MO</h3><p id="moActionDesc" class="text-gray-600 mb-6 text-xs sm:text-sm text-center">Apakah Anda yakin akan mengesahkan hasil ini secara final?</p><div class="flex gap-2 sm:gap-3"><button onclick="window.closeMOModal()" class="flex-1 bg-gray-100 text-gray-800 font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-gray-200 transition-colors text-xs sm:text-sm">Batal</button><button id="moActionConfirmBtn" class="flex-1 text-white font-bold py-3 px-2 sm:px-4 rounded-xl transition-colors text-xs sm:text-sm">Konfirmasi Final</button></div></div>
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl relative"><h3 id="moActionTitle" class="text-lg sm:text-xl font-black text-gray-800 mb-2 text-center">Stempel Sudah Divalidasi</h3><p id="moActionDesc" class="text-gray-600 mb-6 text-xs sm:text-sm text-center">Dengan konfirmasi ini, Anda menyatakan keputusan User untuk peserta ini sudah divalidasi. Tindakan ini bersifat final.</p><div class="flex gap-2 sm:gap-3"><button onclick="window.closeMOModal()" class="flex-1 bg-gray-100 text-gray-800 font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-gray-200 transition-colors text-xs sm:text-sm">Batal</button><button id="moActionConfirmBtn" class="flex-1 text-white font-bold py-3 px-2 sm:px-4 rounded-xl transition-colors text-xs sm:text-sm">Konfirmasi Final</button></div></div>
+    </div>
+    <div id="moSuggestModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden no-print">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl relative"><h3 class="text-lg sm:text-xl font-black text-gray-800 mb-2 text-center">Sarankan Perubahan Keputusan</h3><p id="moSuggestDesc" class="text-gray-600 mb-4 text-xs sm:text-sm text-center">Peserta akan dikembalikan ke User untuk diputuskan ulang.</p><div class="mb-4 sm:mb-6"><label class="block text-[10px] sm:text-xs font-bold text-gray-700 mb-2 uppercase">Catatan saran untuk User <span class="text-red-500">*</span></label><textarea id="moSuggestNote" class="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-misdo-500 resize-none h-20 sm:h-24 text-sm" placeholder="Jelaskan alasan MO menyarankan keputusan ditinjau ulang..."></textarea></div><div class="flex gap-2 sm:gap-3"><button onclick="window.closeMOSuggestModal()" class="flex-1 bg-gray-100 text-gray-800 font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-gray-200 transition-colors text-xs sm:text-sm">Batal</button><button id="moSuggestConfirmBtn" onclick="window.executeMOSuggest()" class="flex-1 bg-amber-500 text-white font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-amber-600 transition-colors text-xs sm:text-sm">Kirim Saran</button></div></div>
     </div>
     <div id="etdNotifLayer" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-sm no-print" onclick="window.closeETDNotif()">
         <div id="etdNotifPop" onclick="event.stopPropagation()" class="etd-pop relative bg-white rounded-2xl shadow-2xl w-full max-w-sm max-h-[85vh] flex flex-col p-4 sm:p-5">
@@ -1161,7 +1269,7 @@
         // ===== Smart Back: merekam halaman sebelumnya dan menyesuaikan ikon/label tujuan =====
         (function() {
             const origShowView = window.showView;
-            const NAMES = { dashboard: 'Dashboard', drafts: 'Draft', history: null, rekapan: 'Rekapan', 'hasil-mentor': 'Hasil Mentor', trash: 'Tempat Sampah', users: 'Kelola Data', konfirmasi: 'Persetujuan User' };
+            const NAMES = { dashboard: 'Dashboard', drafts: 'Draft', history: null, rekapan: 'Rekapan', 'hasil-mentor': 'Hasil Mentor', trash: 'Tempat Sampah', users: 'Kelola Data', konfirmasi: 'Keputusan User' };
             window.navStack = []; window.currentView = null;
             const nameOf = (v) => v === 'history' ? (window.userRole === 'ETD' ? 'Antrean Approve' : 'Riwayat') : (NAMES[v] || 'Dashboard');
             window.updateSmartBack = function() {
@@ -1356,7 +1464,7 @@
         }
         window.commitApprove = async function(formId, assignArr) {
             const btnApprove = document.getElementById('btn-etd-approve'); btnApprove.disabled = true; btnApprove.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Memproses...`;
-            try { await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'submitted_forms', formId), { isApprovedByETD: true, approvedAt: Date.now(), userAssignments: assignArr }); window.showModal('success', 'Berhasil Diapprove!', 'Form disetujui dan dikirim ke User yang di-assign untuk dikonfirmasi.'); setTimeout(() => { window.showView('history'); }, 2000); }
+            try { await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'submitted_forms', formId), { isApprovedByETD: true, approvedAt: Date.now(), userAssignments: assignArr }); window.showModal('success', 'Berhasil Diapprove!', 'Form disetujui dan dikirim ke User yang di-assign untuk diputuskan (meluluskan / tidak meluluskan).'); setTimeout(() => { window.showView('history'); }, 2000); }
             catch(e) { window.showModal('error', 'Gagal', 'Terjadi kesalahan saat melakukan approval.'); btnApprove.disabled = false; btnApprove.innerHTML = `<i data-lucide="check-check" class="w-4 h-4"></i> Approve ETD`; }
         }
 
@@ -1468,7 +1576,7 @@
             rek: (r) => r.rec.mentorStatus,
             ket: (r) => r.rec.mentorReason,
             user: (r) => REKAP_STATUS_RANK[r.rec.userApp.status] ?? 0,
-            mo: (r) => REKAP_STATUS_RANK[r.rec.moApp.status] ?? 0
+            mo: (r) => window.moIsValidated(r.rec.moApp.status) ? 1 : 0
         };
         window.rekapApplySort = function(rows) {
             const { key, dir } = window.rekapSort; const get = REKAP_SORT_GET[key];
@@ -1593,15 +1701,18 @@
             const filteredRecords = window.fltFilter('rekap', window.moParticipantRecords || []);
             return window.rekapApplySort(filteredRecords.map(rec => ({ rec, c: window.rekapCalc(rec) })));
         };
+        // Label tampilan (nilai tersimpan di database tetap OK/NOK/ACCEPT agar data lama tetap terbaca)
+        window.userDecisionLabel = function(st) { return st === 'OK' ? 'Meluluskan' : st === 'NOK' ? 'Tidak Meluluskan' : 'Menunggu'; };
+        window.moIsValidated = function(st) { return !!st && st !== 'PENDING'; };
         window.rekapParts = function({ rec, c }) {
                 const avg14 = c.n14 != null ? c.n14.toFixed(2) : "-"; const avgBev = c.bev != null ? c.bev.toFixed(2) : "-"; const avgSD = c.sd != null ? c.sd.toFixed(2) : "-";
 
-                let rowBg = "bg-white hover:bg-gray-50"; if (rec.moApp.status === 'ACCEPT' || rec.moApp.status === 'OK') rowBg = "bg-green-50 hover:bg-green-100"; else if (rec.moApp.status === 'REJECT' || rec.moApp.status === 'NOK') rowBg = "bg-red-50 hover:bg-red-100"; else if (rec.userApp.status === 'OK') rowBg = "bg-green-50 hover:bg-green-100"; else if (rec.userApp.status === 'NOK') rowBg = "bg-red-50 hover:bg-red-100";
+                let rowBg = "bg-white hover:bg-gray-50"; if (rec.userApp.status === 'OK') rowBg = "bg-green-50 hover:bg-green-100"; else if (rec.userApp.status === 'NOK') rowBg = "bg-red-50 hover:bg-red-100";
 
                 let actionUser = `<div class="flex flex-col gap-1.5 text-center">`;
                 if (rec.userApp.status !== 'PENDING') {
                     const colorClass = rec.userApp.status === 'OK' ? 'text-green-700 bg-green-100 border-green-300' : 'text-red-700 bg-red-100 border-red-300';
-                    actionUser += `<div class="text-[11px] font-black px-2 py-1.5 rounded border ${colorClass} inline-block mx-auto uppercase shadow-sm" style="white-space: nowrap !important; word-break: keep-all !important;">${rec.userApp.status}</div>${rec.userApp.by ? '<div class="text-[10px] text-gray-500 mt-1">oleh <b>' + uEsc(rec.userApp.by) + '</b></div>' : ''}<div class="text-[10px] text-gray-600 italic mt-1 leading-tight text-center bg-white p-1 rounded-md border border-gray-100">${rec.userApp.reason}</div>`;
+                    actionUser += `<div class="text-[10px] font-black px-2 py-1.5 rounded border ${colorClass} inline-block mx-auto uppercase shadow-sm text-center leading-tight pp-decision" style="word-break: keep-all; overflow-wrap: normal;">${window.userDecisionLabel(rec.userApp.status)}</div>${rec.userApp.by ? '<div class="text-[10px] text-gray-500 mt-1">oleh <b>' + uEsc(rec.userApp.by) + '</b></div>' : ''}<div class="text-[10px] text-gray-600 italic mt-1 leading-tight text-center bg-white p-1 rounded-md border border-gray-100">${rec.userApp.reason}</div>`;
                     if (window.userRole === 'ETD') actionUser += `<button onclick="window.undoAction('${rec.formId}', ${rec.pIndex}, 'USER')" class="mt-1 text-[10px] font-bold text-blue-600 hover:text-blue-800 underline transition-colors w-full text-center py-1">Undo (Reset)</button>`;
                 } else {
                     actionUser += window.rekapUserPendingHtml(rec);
@@ -1609,15 +1720,14 @@
                 actionUser += `</div>`;
 
                 let actionMO = `<div class="flex flex-col gap-1.5 text-center">`;
-                if (rec.moApp.status !== 'PENDING') {
-                    let dispStat = rec.moApp.status; const colorClass = (dispStat === 'ACCEPT' || dispStat === 'OK') ? 'text-green-700 bg-green-100 border-green-300' : 'text-red-700 bg-red-100 border-red-300';
-                    actionMO += `<div class="text-[11px] font-black px-2 py-1.5 rounded border ${colorClass} inline-block mx-auto uppercase shadow-sm" style="white-space: nowrap !important; word-break: keep-all !important;">${dispStat}</div>`;
+                if (window.moIsValidated(rec.moApp.status)) {
+                    actionMO += `<div class="text-[10px] font-black px-2 py-1.5 rounded border text-green-700 bg-green-100 border-green-300 inline-block mx-auto uppercase shadow-sm text-center leading-tight pp-decision" style="word-break: keep-all; overflow-wrap: normal;">Sudah Divalidasi</div>`;
                     if (window.userRole === 'ETD') actionMO += `<button onclick="window.undoAction('${rec.formId}', ${rec.pIndex}, 'MO')" class="mt-1 text-[10px] font-bold text-blue-600 hover:text-blue-800 underline transition-colors w-full text-center py-1">Undo (Reset)</button>`;
                 } else {
                     if (window.userRole === 'MO') {
-                        if (rec.userApp.status !== 'PENDING') actionMO += `<div class="flex flex-col sm:flex-row gap-1.5 justify-center mt-1"><button onclick="window.promptMOAction('${rec.formId}', ${rec.pIndex}, 'ACCEPT')" class="w-full text-white bg-green-600 hover:bg-green-700 px-3 py-2 rounded-lg text-[10px] font-bold transition-transform active:scale-95 shadow-sm">ACCEPT</button><button onclick="window.promptMOAction('${rec.formId}', ${rec.pIndex}, 'REJECT')" class="w-full text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded-lg text-[10px] font-bold transition-transform active:scale-95 shadow-sm">REJECT</button></div>`;
-                        else actionMO += `<span class="text-gray-400 text-[10px] italic font-medium bg-gray-50 px-2 py-1 rounded">Menunggu User Selesai</span>`;
-                    } else actionMO += `<span class="text-gray-400 text-xs italic font-medium">Menunggu MO</span>`;
+                        if (rec.userApp.status !== 'PENDING') actionMO += `<button onclick="window.promptMOAction('${rec.formId}', ${rec.pIndex}, 'ACCEPT')" class="w-full text-white bg-green-600 hover:bg-green-700 px-2 py-2 rounded-lg text-[10px] font-bold leading-tight transition-transform active:scale-95 shadow-sm inline-flex items-center justify-center gap-1.5" style="overflow-wrap: normal; word-break: keep-all;"><i data-lucide="stamp" class="w-3.5 h-3.5 shrink-0"></i><span>Stempel Sudah Divalidasi</span></button><button onclick="window.promptMOSuggest('${rec.formId}', ${rec.pIndex})" class="mx-auto text-[10px] font-bold text-amber-700 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-2 py-1 rounded-md inline-flex items-center justify-center gap-1 transition-colors leading-tight" title="Kembalikan ke User untuk memutuskan ulang"><i data-lucide="undo-2" class="w-3 h-3 shrink-0"></i><span>Sarankan ubah keputusan</span></button>`;
+                        else actionMO += `<span class="text-gray-400 text-[10px] italic font-medium bg-gray-50 px-2 py-1 rounded">Menunggu Keputusan User</span>`;
+                    } else actionMO += `<span class="text-gray-400 text-xs italic font-medium">Menunggu Validasi MO</span>`;
                 }
                 if (window.userRole === 'ETD') actionMO += `<button onclick="window.deleteSubmittedForm('${rec.formId}', 'mo')" class="mt-2 text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 px-2 py-1.5 rounded-lg text-[10px] font-bold transition-colors w-full text-center flex justify-center items-center gap-1 shadow-sm"><i data-lucide="trash-2" class="w-3 h-3"></i> Hapus Form</button>`;
                 actionMO += `</div>`;
@@ -1711,7 +1821,7 @@
 
         window.promptUserAction = function(formId, participantIndex, status, byId, byName, pName) {
             window.activeUserAction = { formId, participantIndex, status, byId: byId || null, byName: byName || '' }; { const d = document.getElementById('userActionDesc'); if (d) d.innerText = (pName ? pName + ' \u00b7 ' : '') + (byName ? 'atas nama ' + byName + '. ' : '') + 'Tindakan ini bersifat final. Silakan berikan alasan.'; } const modal = document.getElementById('userActionModal');
-            document.getElementById('userActionTitle').innerText = status === 'OK' ? 'Setujui Peserta (OK)' : 'Tolak Peserta (NOK)'; const reasonInput = document.getElementById('userActionReason'); const btnConfirm = document.getElementById('userActionConfirmBtn'); reasonInput.value = ''; 
+            document.getElementById('userActionTitle').innerText = status === 'OK' ? 'Meluluskan Peserta' : 'Tidak Meluluskan Peserta'; const reasonInput = document.getElementById('userActionReason'); const btnConfirm = document.getElementById('userActionConfirmBtn'); reasonInput.value = ''; 
             if(status === 'NOK') btnConfirm.className = "flex-1 bg-red-600 text-white font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-red-700 transition-colors text-xs sm:text-sm"; else btnConfirm.className = "flex-1 bg-green-600 text-white font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-green-700 transition-colors text-xs sm:text-sm"; 
             btnConfirm.onclick = window.executeUserAction; modal.classList.remove('hidden');
         }
@@ -1723,7 +1833,7 @@
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'submitted_forms', formId); const docSnap = await getDoc(docRef);
                 if(docSnap.exists()) {
                     let data = docSnap.data(); if(!data.userApprovals) data.userApprovals = Array(data.globalStore.participantCount).fill({status: 'PENDING', reason: ''});
-                    const curU = data.userApprovals[participantIndex]; if (curU && curU.status && curU.status !== 'PENDING') { window.closeUserModal(); return window.showModal('error', 'Sudah Dikonfirmasi', 'Peserta ini sudah dikonfirmasi sebelumnya.'); }
+                    const curU = data.userApprovals[participantIndex]; if (curU && curU.status && curU.status !== 'PENDING') { window.closeUserModal(); return window.showModal('error', 'Sudah Diputuskan', 'Peserta ini sudah diputuskan sebelumnya.'); }
                     if (byId && !(data.userAssignments && data.userAssignments[participantIndex] && data.userAssignments[participantIndex].uid === byId)) { window.closeUserModal(); return window.showModal('error', 'Assign Berubah', 'Peserta ini sudah dipindahkan ke User lain oleh ETD.'); }
                     data.userApprovals[participantIndex] = { status, reason, at: Date.now(), by: byName || null, byId: byId || null }; await updateDoc(docRef, { userApprovals: data.userApprovals, hasUnreadUpdate: true });
                     const formIdx = window.allSubmittedForms.findIndex(f => f.id === formId); if(formIdx !== -1) window.allSubmittedForms[formIdx].userApprovals = data.userApprovals;
@@ -1736,8 +1846,8 @@
 
         window.promptMOAction = function(formId, participantIndex, status) {
             window.activeMOAction = { formId, participantIndex, status }; const modal = document.getElementById('moActionModal');
-            document.getElementById('moActionTitle').innerText = status === 'ACCEPT' ? 'Terima Peserta (ACCEPT)' : 'Tolak Peserta (REJECT)'; const btnConfirm = document.getElementById('moActionConfirmBtn');
-            if(status === 'REJECT') { btnConfirm.className = "flex-1 bg-red-600 text-white font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-red-700 transition-colors text-xs sm:text-sm"; } else { btnConfirm.className = "flex-1 bg-green-600 text-white font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-green-700 transition-colors text-xs sm:text-sm"; }
+            document.getElementById('moActionTitle').innerText = 'Stempel Sudah Divalidasi'; const btnConfirm = document.getElementById('moActionConfirmBtn');
+            { btnConfirm.className = "flex-1 bg-green-600 text-white font-bold py-3 px-2 sm:px-4 rounded-xl hover:bg-green-700 transition-colors text-xs sm:text-sm"; }
             btnConfirm.onclick = window.executeMOAction; modal.classList.remove('hidden');
         }
         window.closeMOModal = function() { document.getElementById('moActionModal').classList.add('hidden'); }
@@ -1750,11 +1860,41 @@
                     data.moApprovals[participantIndex] = { status, reason: '', at: Date.now() }; await updateDoc(docRef, { moApprovals: data.moApprovals, hasUnreadUpdate: true });
                     const formIdx = window.allSubmittedForms.findIndex(f => f.id === formId); if(formIdx !== -1) window.allSubmittedForms[formIdx].moApprovals = data.moApprovals;
                     const recIdx = window.moParticipantRecords.findIndex(r => r.formId === formId && r.pIndex === participantIndex); if(recIdx !== -1) window.moParticipantRecords[recIdx].moApp = {status, reason: ''};
-                    window.renderMOTableData(); window.showModal('success', 'Berhasil Validasi', 'Data validasi MO telah tersimpan permanen.');
+                    window.renderMOTableData(); window.showModal('success', 'Berhasil Divalidasi', 'Stempel validasi MO telah tersimpan permanen.');
                 }
                 window.closeMOModal();
             } catch(e) { window.showModal('error', 'Gagal', 'Gagal mengupdate status.'); } finally { btnConfirm.innerText = "Konfirmasi Final"; btnConfirm.disabled = false; }
         }
+
+        // MO menyarankan perubahan: keputusan User direset ke PENDING agar User dapat meluluskan / tidak meluluskan lagi
+        window.promptMOSuggest = function(formId, participantIndex) {
+            const rec = (window.moParticipantRecords || []).find(r => r.formId === formId && r.pIndex === participantIndex); if (!rec) return;
+            window.activeMOSuggest = { formId, participantIndex };
+            const prev = window.userDecisionLabel(rec.userApp.status); const by = rec.userApp.by ? ' oleh ' + rec.userApp.by : '';
+            document.getElementById('moSuggestDesc').textContent = rec.participant.namaPeserta + ' \u00b7 Keputusan User saat ini: ' + prev + by + '. Peserta akan dikembalikan ke User untuk diputuskan ulang (meluluskan / tidak meluluskan).';
+            document.getElementById('moSuggestNote').value = ''; document.getElementById('moSuggestModal').classList.remove('hidden');
+        };
+        window.closeMOSuggestModal = function() { document.getElementById('moSuggestModal').classList.add('hidden'); };
+        window.executeMOSuggest = async function() {
+            if (!window.activeMOSuggest) return; const { formId, participantIndex } = window.activeMOSuggest; const note = document.getElementById('moSuggestNote').value.trim();
+            if (!note) return window.showModal('error', 'Catatan Wajib Diisi', 'Tuliskan catatan saran agar User memahami alasan peninjauan ulang.');
+            const btn = document.getElementById('moSuggestConfirmBtn'); btn.textContent = 'Mengirim...'; btn.disabled = true;
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'submitted_forms', formId); const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    let data = docSnap.data(); const n = data.globalStore.participantCount;
+                    if (!data.userApprovals) data.userApprovals = Array(n).fill({ status: 'PENDING', reason: '' });
+                    const curU = data.userApprovals[participantIndex]; const curM = data.moApprovals && data.moApprovals[participantIndex];
+                    if (!curU || !curU.status || curU.status === 'PENDING') { window.closeMOSuggestModal(); return window.showModal('error', 'Belum Ada Keputusan', 'Peserta ini belum diputuskan oleh User.'); }
+                    if (curM && curM.status && curM.status !== 'PENDING') { window.closeMOSuggestModal(); return window.showModal('error', 'Sudah Divalidasi', 'Peserta ini sudah distempel divalidasi. Minta ETD melakukan Undo (Reset) terlebih dahulu.'); }
+                    data.userApprovals[participantIndex] = { status: 'PENDING', reason: '', moSuggestion: { note, at: Date.now(), prevStatus: curU.status, prevReason: curU.reason || '', prevBy: curU.by || '' } };
+                    await updateDoc(docRef, { userApprovals: data.userApprovals, hasUnreadUpdate: true });
+                    const formIdx = window.allSubmittedForms.findIndex(f => f.id === formId); if (formIdx !== -1) window.allSubmittedForms[formIdx].userApprovals = data.userApprovals;
+                    const recIdx = window.moParticipantRecords.findIndex(r => r.formId === formId && r.pIndex === participantIndex); if (recIdx !== -1) window.moParticipantRecords[recIdx].userApp = data.userApprovals[participantIndex];
+                    window.closeMOSuggestModal(); window.renderMOTableData(); window.showModal('success', 'Saran Terkirim', 'Peserta dikembalikan ke User untuk meluluskan / tidak meluluskan kembali.');
+                } else { window.closeMOSuggestModal(); }
+            } catch (e) { window.showModal('error', 'Gagal', 'Gagal mengirim saran perubahan keputusan.'); } finally { btn.textContent = 'Kirim Saran'; btn.disabled = false; }
+        };
 
         window.undoAction = async function(formId, participantIndex, roleType) {
             if(!confirm(`Anda yakin ingin membatalkan (Undo) keputusan dari pihak ${roleType} untuk peserta ini?`)) return; window.showModal('loading', 'Memproses Undo...', 'Mohon tunggu sesaat.');
@@ -2098,7 +2238,7 @@
             try {
                 const ref = doc(db, 'artifacts', appId, 'public', 'data', 'submitted_forms', formId); const snap = await getDoc(ref); if (!snap.exists()) return;
                 const d = snap.data(); const st = (d.userApprovals && d.userApprovals[idx] && d.userApprovals[idx].status) || 'PENDING';
-                if (st !== 'PENDING') return window.showModal('error', 'Sudah Dikonfirmasi', 'Peserta ini sudah dikonfirmasi. Gunakan Undo (Reset) dulu jika ingin assign ulang.');
+                if (st !== 'PENDING') return window.showModal('error', 'Sudah Diputuskan', 'Keputusan User untuk peserta ini sudah ada. Gunakan Undo (Reset) dulu jika ingin assign ulang.');
                 const arr = (d.userAssignments || Array((d.globalStore && d.globalStore.participantCount) || 0).fill(null)).slice(); arr[idx] = a; await updateDoc(ref, { userAssignments: arr });
                 const f = (window.allSubmittedForms || []).find(x => x.id === formId); if (f) f.userAssignments = arr;
                 if (!document.getElementById('view-rekapan').classList.contains('hidden')) window.renderMOTableData(); window.miniToast(`Di-assign ke ${a.name}`);
@@ -2111,6 +2251,8 @@
         window.rekapUserPendingHtml = function(rec) {
             const a = rec.form.userAssignments && rec.form.userAssignments[rec.pIndex]; const nm = a ? ((window.usersMap[a.uid] && window.usersMap[a.uid].nama) || a.name) : null;
             let h = nm ? `<span class="text-gray-500 text-xs font-medium">Menunggu <b class="text-gray-700">${uEsc(nm)}</b></span>` : `<span class="text-amber-600 text-xs font-bold">Belum di-assign</span>`;
+            const sg = rec.userApp && rec.userApp.moSuggestion;
+            if (sg) h += `<div class="no-pp mt-1.5 text-left text-[10px] leading-tight text-amber-900 bg-amber-50 border border-amber-200 rounded-md px-1.5 py-1"><b>Saran MO:</b> ${uEsc(sg.note)}<div class="text-amber-700 mt-0.5">Sebelumnya: ${window.userDecisionLabel(sg.prevStatus)}</div></div>`;
             if (window.userRole === 'ETD') h += `<button onclick="window.reassignFromRekap('${rec.formId}', ${rec.pIndex})" class="mt-1 text-[10px] font-bold text-blue-600 hover:text-blue-800 underline w-full text-center py-1">${nm ? 'Assign ulang' : 'Assign'}</button>`;
             return h;
         };
@@ -2149,7 +2291,7 @@
         };
         window.konfGreet = function(uid, name, count) {
             const gd = uGender(uid), hon = gd === 'P' ? 'Ibu' : 'Bapak';
-            const msg = count > 0 ? `Terdapat <b class="text-white">${count}</b> peserta yang perlu Anda konfirmasi berikut!` : 'Tidak ada peserta yang perlu Anda konfirmasi saat ini.';
+            const msg = count > 0 ? `Terdapat <b class="text-white">${count}</b> peserta yang menunggu keputusan Anda berikut!` : 'Tidak ada peserta yang menunggu keputusan Anda saat ini.';
             return `<div class="etd-pop relative overflow-hidden bg-gradient-to-br from-misdo-800 to-misdo-900 text-white rounded-2xl p-4 sm:p-6 mb-4 shadow-md flex items-center gap-4 sm:gap-5"><div class="absolute -right-8 -top-8 w-32 h-32 bg-white/5 rounded-full pointer-events-none"></div>${uAvatar(gd, 'w-16 h-16 sm:w-20 sm:h-20 ring-4 ring-white/20')}<div class="relative min-w-0"><div class="text-sm sm:text-base font-semibold text-misdo-200">${uGreet()}</div><div class="text-sm sm:text-base text-misdo-100">${hon} :</div><div class="font-black text-xl sm:text-2xl leading-tight break-words">${uEsc(name)}</div><div class="text-xs sm:text-sm text-misdo-200 mt-1.5 leading-snug">${msg}</div></div></div>`;
         };
         window.renderKonfirmasi = function() {
@@ -2157,8 +2299,8 @@
             if (window.konfActiveUid) {
                 const g = groups.find(x => x.uid === window.konfActiveUid); const nm = g ? g.name : ((window.usersMap[window.konfActiveUid] || {}).nama || 'User');
                 const head = `<button onclick="window.konfBack()" class="mb-4 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-sm font-bold text-gray-700 transition-colors"><i data-lucide="arrow-left" class="w-4 h-4"></i> Semua nama</button>`;
-                if (!g) { sub.textContent = nm; body.innerHTML = head + window.konfGreet(window.konfActiveUid, nm, 0) + `<div class="text-center py-14 bg-white rounded-2xl border border-gray-200"><div class="mx-auto w-14 h-14 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-3"><i data-lucide="check-check" class="w-7 h-7"></i></div><div class="font-black text-gray-800 text-lg">Semua sudah dikonfirmasi</div><div class="text-sm text-gray-500 mt-1">Tidak ada lagi yang menunggu ${uEsc(nm)}.</div></div>`; if (window.lucide) window.lucide.createIcons(); return; }
-                sub.textContent = `${g.count} peserta menunggu konfirmasi Anda`;
+                if (!g) { sub.textContent = nm; body.innerHTML = head + window.konfGreet(window.konfActiveUid, nm, 0) + `<div class="text-center py-14 bg-white rounded-2xl border border-gray-200"><div class="mx-auto w-14 h-14 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-3"><i data-lucide="check-check" class="w-7 h-7"></i></div><div class="font-black text-gray-800 text-lg">Semua sudah diputuskan</div><div class="text-sm text-gray-500 mt-1">Tidak ada lagi yang menunggu ${uEsc(nm)}.</div></div>`; if (window.lucide) window.lucide.createIcons(); return; }
+                sub.textContent = `${g.count} peserta menunggu keputusan Anda`;
                 let h = head + window.konfGreet(g.uid, g.name, g.count) + `<div class="space-y-4">`;
                 g.forms.forEach(({ form: f, idx }) => {
                     const gs = f.globalStore || {}; const tgl = f.createdAt ? new Date(f.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
@@ -2166,14 +2308,14 @@
                     idx.forEach(i => {
                         const p = gs.selectedParticipants[i]; const sc = f.participants_scale14 && f.participants_scale14[i] || {}; const ok = (sc.status || 'Diluluskan') === 'Diluluskan';
                         const notes = [sc.strengths ? `<div><b>Dipertahankan:</b> ${uEsc(sc.strengths)}</div>` : '', sc.improvements ? `<div><b>Ditingkatkan:</b> ${uEsc(sc.improvements)}</div>` : '', (!ok && sc.rejectionReason) ? `<div><b>Alasan:</b> ${uEsc(sc.rejectionReason)}</div>` : ''].join('');
-                        h += `<div class="p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center gap-3"><div class="min-w-0 flex-1"><div class="flex flex-wrap items-center gap-2"><button onclick="window.openSubmittedForm('${f.id}')" class="font-bold text-gray-800 text-sm text-left hover:underline">${uEsc(p.namaPeserta)}</button><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${ok ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${ok ? 'Diluluskan' : 'Tidak Diluluskan'}</span></div><div class="mt-1.5 flex flex-wrap gap-1.5 text-[11px] font-bold"><span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700">Beverage ${kAvg(f.scores_beverage && f.scores_beverage[i])}</span><span class="px-2 py-0.5 rounded-full bg-purple-50 text-purple-700">Side Dish ${kAvg(f.scores_sidedish && f.scores_sidedish[i])}</span><span class="px-2 py-0.5 rounded-full bg-orange-50 text-orange-700">Teknis ${kTek(sc.scores)}</span></div>${notes ? `<details class="mt-2 text-xs text-gray-600"><summary class="cursor-pointer text-gray-400 hover:text-gray-600 select-none">Catatan mentor</summary><div class="mt-1.5 space-y-1 bg-gray-50 rounded-lg p-2.5">${notes}</div></details>` : ''}</div><div class="flex gap-2 sm:w-44 shrink-0"><button onclick="window.konfAct('${f.id}', ${i}, 'OK')" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl text-sm transition-transform active:scale-95 shadow-sm">OK</button><button onclick="window.konfAct('${f.id}', ${i}, 'NOK')" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-sm transition-transform active:scale-95 shadow-sm">NOK</button></div></div>`;
+                        h += `<div class="p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center gap-3"><div class="min-w-0 flex-1"><div class="flex flex-wrap items-center gap-2"><button onclick="window.openSubmittedForm('${f.id}')" class="font-bold text-gray-800 text-sm text-left hover:underline">${uEsc(p.namaPeserta)}</button><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${ok ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${ok ? 'Diluluskan' : 'Tidak Diluluskan'}</span></div><div class="mt-1.5 flex flex-wrap gap-1.5 text-[11px] font-bold"><span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700">Beverage ${kAvg(f.scores_beverage && f.scores_beverage[i])}</span><span class="px-2 py-0.5 rounded-full bg-purple-50 text-purple-700">Side Dish ${kAvg(f.scores_sidedish && f.scores_sidedish[i])}</span><span class="px-2 py-0.5 rounded-full bg-orange-50 text-orange-700">Teknis ${kTek(sc.scores)}</span></div>${(() => { const sg = f.userApprovals && f.userApprovals[i] && f.userApprovals[i].moSuggestion; return sg ? `<div class="mt-2 text-xs bg-amber-50 border border-amber-200 text-amber-900 rounded-lg p-2.5"><b>Saran MO:</b> ${uEsc(sg.note)}<div class="text-[11px] text-amber-700 mt-0.5">Keputusan sebelumnya: ${window.userDecisionLabel(sg.prevStatus)}${sg.prevReason ? ' \u2014 ' + uEsc(sg.prevReason) : ''}</div></div>` : ''; })()}${notes ? `<details class="mt-2 text-xs text-gray-600"><summary class="cursor-pointer text-gray-400 hover:text-gray-600 select-none">Catatan mentor</summary><div class="mt-1.5 space-y-1 bg-gray-50 rounded-lg p-2.5">${notes}</div></details>` : ''}</div><div class="flex gap-2 sm:w-80 shrink-0"><button onclick="window.konfAct('${f.id}', ${i}, 'OK')" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-2 rounded-xl text-sm leading-tight transition-transform active:scale-95 shadow-sm inline-flex items-center justify-center gap-1.5"><i data-lucide="check" class="w-4 h-4 shrink-0"></i>Meluluskan</button><button onclick="window.konfAct('${f.id}', ${i}, 'NOK')" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-2 rounded-xl text-sm leading-tight transition-transform active:scale-95 shadow-sm inline-flex items-center justify-center gap-1.5"><i data-lucide="x" class="w-4 h-4 shrink-0"></i>Tidak Meluluskan</button></div></div>`;
                     });
                     h += `</div></div>`;
                 });
                 body.innerHTML = h + `</div>`; if (window.lucide) window.lucide.createIcons(); return;
             }
-            sub.textContent = 'Pilih nama Anda untuk melihat peserta yang perlu Anda konfirmasi.';
-            if (!groups.length) { body.innerHTML = `<div class="text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300"><div class="mx-auto w-14 h-14 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mb-3"><i data-lucide="party-popper" class="w-7 h-7"></i></div><div class="font-black text-gray-800 text-lg">Tidak ada yang perlu dikonfirmasi</div><div class="text-sm text-gray-500 mt-1 px-6">Nama akan muncul di sini saat ETD meng-assign penilaian kepada Anda.</div></div>`; if (window.lucide) window.lucide.createIcons(); return; }
+            sub.textContent = 'Pilih nama Anda untuk melihat peserta yang menunggu keputusan Anda.';
+            if (!groups.length) { body.innerHTML = `<div class="text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300"><div class="mx-auto w-14 h-14 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mb-3"><i data-lucide="party-popper" class="w-7 h-7"></i></div><div class="font-black text-gray-800 text-lg">Tidak ada yang menunggu keputusan</div><div class="text-sm text-gray-500 mt-1 px-6">Nama akan muncul di sini saat ETD meng-assign penilaian kepada Anda.</div></div>`; if (window.lucide) window.lucide.createIcons(); return; }
             body.innerHTML = `<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">` + groups.map(g => `<button onclick="window.konfOpen('${g.uid}')" class="group relative text-left bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-sm hover:shadow-lg hover:border-teal-300 hover:-translate-y-0.5 transition-all active:scale-[.98]"><div class="flex items-start justify-between gap-2">${uAvatar(uGender(g.uid), 'w-12 h-12 sm:w-14 sm:h-14')}<span class="min-w-[28px] h-7 px-2 rounded-full bg-red-600 text-white text-sm font-black flex items-center justify-center shadow-sm">${g.count}</span></div><div class="mt-3 text-[11px] font-bold uppercase tracking-wide text-gray-400">${uGender(g.uid) === 'P' ? 'Ibu' : 'Bapak'}</div><div class="font-black text-gray-800 text-base sm:text-lg leading-tight break-words">${uEsc(g.name)}</div><div class="text-xs text-gray-500 mt-0.5">${g.count} peserta \u00b7 ${g.forms.length} form</div></button>`).join('') + `</div>`;
             if (window.lucide) window.lucide.createIcons();
         };
@@ -2184,7 +2326,7 @@
         const nAgo = (ms) => { const m = Math.floor(ms / 60000); if (m < 1) return 'baru saja'; if (m < 60) return m + ' menit lalu'; const h = Math.floor(m / 60); if (h < 24) return h + ' jam lalu'; return Math.floor(h / 24) + ' hari lalu'; };
         const nSeenLoad = () => { try { return JSON.parse(localStorage.getItem(ETD_SEEN_KEY) || '{}'); } catch (e) { return {}; } };
         const nSeenSave = (o) => { try { localStorage.setItem(ETD_SEEN_KEY, JSON.stringify(o)); } catch (e) {} };
-        const nLabels = { ACCEPT: 'Accept', REJECT: 'Reject', OK: 'OK', NOK: 'NOK' };
+        const nLabels = { ACCEPT: 'Sudah Divalidasi', REJECT: 'Sudah Divalidasi', OK: 'Meluluskan', NOK: 'Tidak Meluluskan' };
 
         // Konfirmasi User & MO 3 hari terakhir, dikelompokkan per form + pengonfirmasi
         window.etdBuildEvents = function(forms, now) {
@@ -2196,7 +2338,7 @@
                         if (!a || !a.status || a.status === 'PENDING' || !a.at || now - a.at > ETD_KEEP_MS) return;
                         const by = who === 'User' ? (a.by || '') : ''; const gk = `${f.id}|${who}|${by}`;
                         const g = groups[gk] || (groups[gk] = { formId: f.id, who, by, place: f.flagship || (f.globalStore && f.globalStore.flagship) || '', pos: [], neg: [], reasons: [], at: 0 });
-                        const positive = a.status === 'ACCEPT' || a.status === 'OK'; (positive ? g.pos : g.neg).push(nm); if (!positive && a.reason) g.reasons.push(a.reason); g.at = Math.max(g.at, a.at);
+                        const positive = who === 'MO' || a.status === 'ACCEPT' || a.status === 'OK'; (positive ? g.pos : g.neg).push(nm); if (!positive && a.reason) g.reasons.push(a.reason); g.at = Math.max(g.at, a.at);
                     }); } });
             return Object.values(groups).map(g => ({ ...g, key: `${g.formId}:${g.who}:${g.by}:${g.at}:${g.pos.length}-${g.neg.length}` })).sort((x, y) => y.at - x.at);
         };
@@ -2225,12 +2367,12 @@
             const unassigned = (window.etdForms || []).reduce((acc, f) => { if (f.isDeleted || f.isApprovedByETD !== true) return acc; const n = (f.globalStore && f.globalStore.participantCount) || 0; for (let i = 0; i < n; i++) { const p = f.globalStore.selectedParticipants && f.globalStore.selectedParticipants[i]; const st = (f.userApprovals && f.userApprovals[i] && f.userApprovals[i].status) || 'PENDING'; if (p && st === 'PENDING' && !(f.userAssignments && f.userAssignments[i])) acc++; } return acc; }, 0);
             if (unassigned) html += `<button onclick="window.etdFeedGo()" class="w-full text-left mt-2 px-3 py-2 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold transition-colors">${unassigned} peserta belum di-assign \u00b7 buka rekapan</button>`;
             if (evs.length) {
-                html += `<div class="px-1 pt-3 pb-1 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Konfirmasi terbaru</div>`;
-                evs.forEach(e => { const isSeen = !!seen[e.key]; const pl = e.who === 'MO' ? 'Accept' : 'OK', nl = e.who === 'MO' ? 'Reject' : 'NOK';
+                html += `<div class="px-1 pt-3 pb-1 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Keputusan &amp; validasi terbaru</div>`;
+                evs.forEach(e => { const isSeen = !!seen[e.key]; const pl = e.who === 'MO' ? 'Sudah divalidasi' : 'Meluluskan', nl = 'Tidak Meluluskan';
                     const mixed = e.pos.length && e.neg.length; const icon = mixed ? 'list-checks' : (e.pos.length ? 'check' : 'x'); const ic = mixed ? 'bg-blue-100 text-blue-700' : (e.pos.length ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600');
                     const line = (lab, tone, arr) => arr.length ? `<span class="block text-xs text-gray-700 break-words"><b class="${tone}">${lab}</b> peserta ${arr.map(nEsc).join(', ')}</span>` : '';
                     const reason = (e.neg.length === 1 && e.reasons[0]) ? `<span class="block text-xs text-gray-400 italic truncate">\u201c${nEsc(e.reasons[0])}\u201d</span>` : '';
-                    html += `<button onclick="window.etdFeedGo()" class="w-full text-left flex items-start gap-3 px-2 py-2 rounded-lg hover:bg-gray-50 transition-opacity ${isSeen ? 'opacity-50' : ''}"><span class="mt-0.5 w-6 h-6 shrink-0 rounded-full flex items-center justify-center ${ic}"><i data-lucide="${icon}" class="w-3.5 h-3.5"></i></span><span class="min-w-0 flex-1"><span class="block text-sm text-gray-800"><b>${nEsc(e.by || e.who)}</b> mengkonfirmasi</span>${line(pl, 'text-green-700', e.pos)}${line(nl, 'text-red-600', e.neg)}${reason}<span class="block text-[11px] text-gray-400 mt-0.5 truncate">${e.who}${e.place ? ' \u00b7 ' + nEsc(e.place) : ''} \u00b7 ${nAgo(now - e.at)}</span></span>${isSeen ? '' : '<span class="mt-2 w-2 h-2 rounded-full bg-misdo-600 shrink-0"></span>'}</button>`; });
+                    html += `<button onclick="window.etdFeedGo()" class="w-full text-left flex items-start gap-3 px-2 py-2 rounded-lg hover:bg-gray-50 transition-opacity ${isSeen ? 'opacity-50' : ''}"><span class="mt-0.5 w-6 h-6 shrink-0 rounded-full flex items-center justify-center ${ic}"><i data-lucide="${icon}" class="w-3.5 h-3.5"></i></span><span class="min-w-0 flex-1"><span class="block text-sm text-gray-800"><b>${nEsc(e.by || e.who)}</b> ${e.who === 'MO' ? 'memberi stempel validasi' : 'memberi keputusan'}</span>${line(pl, 'text-green-700', e.pos)}${line(nl, 'text-red-600', e.neg)}${reason}<span class="block text-[11px] text-gray-400 mt-0.5 truncate">${e.who}${e.place ? ' \u00b7 ' + nEsc(e.place) : ''} \u00b7 ${nAgo(now - e.at)}</span></span>${isSeen ? '' : '<span class="mt-2 w-2 h-2 rounded-full bg-misdo-600 shrink-0"></span>'}</button>`; });
                 html += `<div class="px-1 pt-2 text-[11px] text-gray-300">Hilang otomatis setelah 3 hari</div>`;
             }
             if (!html) html = `<div class="text-center py-8 text-sm text-gray-400">Semua beres, tidak ada yang menunggu.</div>`;
@@ -2285,7 +2427,7 @@
         }
 
         window.applyStateToDOM = function() {
-            document.getElementById('global_flagship').value = window.globalStore.flagship || ''; document.getElementById('global_batch_select').value = window.globalStore.batch || ''; document.getElementById('global_date').value = window.globalStore.date || ''; document.getElementById('global_participantCount').value = window.globalStore.participantCount || 1; document.getElementById('global_mentor').value = window.globalStore.mentorName || ''; window.updateMentorName(window.globalStore.mentorName); document.getElementById('comments_beverage').value = window.globalStore.commentsBeverage || ''; document.getElementById('comments_sidedish').value = window.globalStore.commentsSideDish || '';
+            document.getElementById('global_flagship').value = window.globalStore.flagship || ''; if (window.globalStore.batch) window.populateBatchSelect(); else document.getElementById('global_batch_select').value = ''; document.getElementById('global_date').value = window.globalStore.date || ''; document.getElementById('global_participantCount').value = window.globalStore.participantCount || 1; document.getElementById('global_mentor').value = window.globalStore.mentorName || ''; window.updateMentorName(window.globalStore.mentorName); document.getElementById('comments_beverage').value = window.globalStore.commentsBeverage || ''; document.getElementById('comments_sidedish').value = window.globalStore.commentsSideDish || '';
             window.updateAvailableBatchesByDate();
             if (window.globalStore.signatureDataUrl) { const img = new Image(); img.onload = () => { const canvas = document.getElementById('signatureCanvas_global'); const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.drawImage(img, 0, 0); window.syncSignatureToForms(); }; img.src = window.globalStore.signatureDataUrl; } else { window.clearGlobalSignature(); }
             window.renderGlobalParticipantInputs(); window.reRenderAllTables(); window.renderMOStampsInForm();
@@ -2302,12 +2444,11 @@
                     const userApp = (window.userApprovals && window.userApprovals[i]) ? window.userApprovals[i] : {status: 'PENDING', reason: ''};
                     const moApp = (window.moApprovals && window.moApprovals[i]) ? window.moApprovals[i] : {status: 'PENDING', reason: ''};
                     const p = window.globalStore.selectedParticipants[i]; const pName = p ? p.namaPeserta : `Peserta ${i+1}`;
-                    let userStamp = `<div class="font-black text-gray-400">PENDING USER</div>`;
-                    if(userApp.status === 'OK') userStamp = `<div class="font-black text-green-600">USER: OK</div><div class="text-[10px] italic text-gray-600 mt-1 leading-tight">${userApp.reason}</div>`;
-                    if(userApp.status === 'NOK') userStamp = `<div class="font-black text-red-600">USER: NOK</div><div class="text-[10px] italic text-red-700 mt-1 leading-tight">${userApp.reason}</div>`;
-                    let moStamp = `<div class="font-black text-gray-400">PENDING MO</div>`;
-                    if(moApp.status === 'ACCEPT' || moApp.status === 'OK') moStamp = `<div class="font-black text-green-600 text-lg uppercase tracking-wider">MO: ACCEPT</div>`;
-                    if(moApp.status === 'REJECT' || moApp.status === 'NOK') moStamp = `<div class="font-black text-red-600 text-lg uppercase tracking-wider">MO: REJECT</div>`;
+                    let userStamp = `<div class="font-black text-gray-400">MENUNGGU KEPUTUSAN USER</div>${userApp.moSuggestion ? `<div class="text-[10px] italic text-amber-700 mt-1 leading-tight">Saran MO: ${uEsc(userApp.moSuggestion.note)}</div>` : ''}`;
+                    if(userApp.status === 'OK') userStamp = `<div class="font-black text-green-600">USER: MELULUSKAN</div><div class="text-[10px] italic text-gray-600 mt-1 leading-tight">${userApp.reason}</div>`;
+                    if(userApp.status === 'NOK') userStamp = `<div class="font-black text-red-600">USER: TIDAK MELULUSKAN</div><div class="text-[10px] italic text-red-700 mt-1 leading-tight">${userApp.reason}</div>`;
+                    let moStamp = `<div class="font-black text-gray-400">MENUNGGU VALIDASI MO</div>`;
+                    if(window.moIsValidated(moApp.status)) moStamp = `<div class="font-black text-green-600 text-base uppercase tracking-wider">MO: SUDAH DIVALIDASI</div>`;
                     html += `<div class="p-4 bg-gray-50 border border-gray-200 rounded-xl text-center flex flex-col justify-between h-full shadow-sm"><div class="text-xs font-bold text-gray-800 uppercase mb-3 border-b border-gray-200 pb-2">${pName}</div><div class="space-y-3"><div class="bg-white p-3 rounded-lg border border-gray-100 shadow-sm">${userStamp}</div><div class="bg-white p-3 rounded-lg border border-gray-100 shadow-sm">${moStamp}</div></div></div>`;
                 }
                 html += `</div>`;
@@ -2322,19 +2463,23 @@
                 if (!window.globalStore.mentorName.trim() || !window.globalStore.signatureDataUrl) return window.showModal('error', 'Data Mentor Belum Lengkap', 'Nama dan Tanda Tangan Mentor wajib diisi.');
             }
             document.querySelectorAll('.form-tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.step-indicator').forEach(el => { el.className = "step-indicator px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg font-bold text-[10px] sm:text-sm shadow-md flex items-center gap-1.5 sm:gap-2 bg-misdo-700/80 text-white transition-all opacity-70 hover:opacity-100 cursor-pointer"; el.querySelector('span').className = "bg-white/20 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[10px] sm:text-xs"; });
+            document.querySelectorAll('.step-indicator').forEach(el => { el.className = "step-indicator px-3 py-1.5 rounded-lg font-bold text-[11px] sm:text-xs flex items-center gap-1.5 bg-misdo-700/60 text-white transition-all opacity-80 hover:opacity-100 cursor-pointer"; el.querySelector('span').className = "bg-white/20 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]"; });
             const activeStep = document.getElementById(`step-${step}`);
-            if(activeStep) { activeStep.className = "step-indicator px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg font-bold text-[10px] sm:text-sm shadow-md flex items-center gap-1.5 sm:gap-2 bg-white text-misdo-900 transition-all cursor-pointer border border-gray-200"; activeStep.querySelector('span').className = "bg-misdo-900 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[10px] sm:text-xs"; }
+            if(activeStep) { activeStep.className = "step-indicator px-3 py-1.5 rounded-lg font-bold text-[11px] sm:text-xs flex items-center gap-1.5 bg-white text-misdo-900 transition-all cursor-pointer"; activeStep.querySelector('span').className = "bg-misdo-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]"; }
             if(step === 1) document.getElementById('tab-content-scale14').classList.remove('hidden');
             if(step === 2) document.getElementById('tab-content-beverage').classList.remove('hidden');
             if(step === 3) document.getElementById('tab-content-sidedish').classList.remove('hidden');
+            { const gsx = window.globalStore || {}; const infoMain = document.getElementById('info-main'), infoSum = document.getElementById('info-summary');
+              if (infoMain && infoSum) { const compact = step > 1; infoMain.classList.toggle('hidden', compact); infoSum.classList.toggle('hidden', !compact);
+                const setT = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v || '-'; };
+                setT('sum-store', gsx.flagship); setT('sum-batch', gsx.batch); setT('sum-date', window.ppFmtDate ? window.ppFmtDate(gsx.date) : gsx.date); setT('sum-mentor', gsx.mentorName); const ib = document.getElementById('sum-info-btn'); if (ib) ib.textContent = window.userRole === 'ETD' ? 'Lihat / ubah info' : 'Lihat info'; } }
             if(window.relayoutBalancedTables) window.relayoutBalancedTables();
             window.scrollTo({ top: 0, behavior: 'smooth' }); if(window.lucide) window.lucide.createIcons();
         }
 
         window.syncGlobalData = function(field, value) { window.globalStore[field] = value; if (field === 'date') window.updateAvailableBatchesByDate(); }
         window.updateMentorName = function(name) { window.globalStore.mentorName = name; document.querySelectorAll('.display-mentor-name').forEach(el => el.innerText = name || '-'); }
-        window.populateBatchSelect = function() { const select = document.getElementById('global_batch_select'); if (window.availableBatches.length === 0) { select.innerHTML = `<option value="">-- Tidak ada Batch ditemukan --</option>`; return; } let html = `<option value="">-- Pilih Batch --</option>`; window.availableBatches.forEach(b => { html += `<option value="${b}">${b}</option>`; }); select.innerHTML = html; select.value = window.globalStore.batch || ''; }
+        window.populateBatchSelect = function() { const select = document.getElementById('global_batch_select'); const cur = (window.globalStore && window.globalStore.batch) || ''; const list = (window.availableBatches || []).slice(); if (cur && !list.includes(cur)) list.push(cur); if (list.length === 0) { select.innerHTML = `<option value="">-- Tidak ada Batch ditemukan --</option>`; return; } let html = `<option value="">-- Pilih Batch --</option>`; list.forEach(b => { html += `<option value="${b}">${b}</option>`; }); select.innerHTML = html; select.value = cur; }
         window.handleBatchSelect = function(batchVal) { window.globalStore.batch = batchVal; for (let i = 0; i < window.globalStore.participantCount; i++) window.globalStore.selectedParticipants[i] = null; window.renderGlobalParticipantInputs(); window.reRenderAllTables(); }
         window.syncGlobalParticipants = function(val) { let cnt = parseInt(val) || 1; if (cnt < 1) cnt = 1; if (cnt > 10) cnt = 10; document.getElementById('global_participantCount').value = cnt; window.globalStore.participantCount = cnt; while (window.globalStore.selectedParticipants.length < cnt) window.globalStore.selectedParticipants.push(null); if (window.globalStore.selectedParticipants.length > cnt) window.globalStore.selectedParticipants = window.globalStore.selectedParticipants.slice(0, cnt); window.renderGlobalParticipantInputs(); while (window.participants_scale14.length < cnt) window.participants_scale14.push({ scores: {}, status: 'Diluluskan', rejectionReason: '', improvements: '', strengths: '' }); if (window.participants_scale14.length > cnt) window.participants_scale14 = window.participants_scale14.slice(0, cnt); window.reRenderAllTables(); }
         
@@ -2361,44 +2506,44 @@
 
         window.renderScale14Table = function() {
             const thead = document.getElementById('tableHead_scale14'); const tbody = document.getElementById('tableBody_scale14');
-            let h1 = `<tr class="bg-misdo-100 text-misdo-900 border-b-2 border-misdo-200"><th class="border-r border-gray-300 p-3 text-center align-middle font-bold min-w-[250px] sm:w-[350px] whitespace-normal" rowspan="2">ASPEK PENILAIAN (TEKNIS & NON TEKNIS)</th>`;
-            for(let i = 0; i < window.globalStore.participantCount; i++) { const sel = window.globalStore.selectedParticipants[i]; const pName = sel ? sel.namaPeserta : `Peserta ${i+1}`; const pId = sel ? `ID: ${sel.idPelamar}` : 'Belum dipilih'; h1 += `<th class="border-r border-gray-300 p-3 text-center bg-gray-50 min-w-[220px] sm:minw-[280px]"><div class="text-xs text-gray-500 font-bold mb-1 uppercase">Peserta ${i + 1}</div><div class="space-y-1.5"><div class="w-full p-2 bg-white border border-gray-300 rounded text-sm font-bold text-gray-800 break-words print-border-none">${pName}</div><div class="text-[11px] text-misdo-800 font-semibold bg-misdo-50 py-0.5 px-2 rounded border border-misdo-200 print-border-none">${pId}</div></div></th>`; }
+            let h1 = `<tr class="bg-misdo-100 text-misdo-900 border-b-2 border-misdo-200"><th class="border-r border-gray-300 px-3 py-2 text-center align-middle font-bold min-w-[250px] sm:w-[350px] whitespace-normal" rowspan="2">ASPEK PENILAIAN (TEKNIS & NON TEKNIS)</th>`;
+            for(let i = 0; i < window.globalStore.participantCount; i++) { const sel = window.globalStore.selectedParticipants[i]; const pName = sel ? sel.namaPeserta : `Peserta ${i+1}`; const pId = sel ? `ID: ${sel.idPelamar}` : 'Belum dipilih'; h1 += `<th class="border-r border-gray-300 px-3 py-2 text-center bg-gray-50 min-w-[220px] sm:minw-[280px]"><div class="text-[11px] text-gray-500 font-bold mb-0.5 uppercase">Peserta ${i + 1}</div><div class="space-y-1.5"><div class="w-full px-2 py-1.5 bg-white border border-gray-300 rounded text-sm font-bold text-gray-800 break-words print-border-none">${pName}</div><div class="text-[11px] text-misdo-800 font-semibold bg-misdo-50 py-0.5 px-2 rounded border border-misdo-200 print-border-none">${pId}</div></div></th>`; }
             h1 += `</tr><tr class="bg-misdo-50">`;
             for(let i = 0; i < window.globalStore.participantCount; i++) { h1 += `<th class="border-r border-t border-gray-300 p-2 text-center text-[10px] sm:text-[11px] font-bold text-misdo-700 bg-misdo-100/50"><div class="flex justify-between sm:grid sm:grid-cols-4 gap-1 sm:gap-2 px-1 text-[10px]"><span>1 (Sangat Kurang)</span><span class="hidden sm:inline">2 (Kurang)</span><span class="hidden sm:inline">3 (Baik)</span><span class="hidden sm:inline">4 (Sangat Baik)</span></div></th>`; }
             thead.innerHTML = h1 + `</tr>`;
 
             let bHTML = '';
             scale14Categories.forEach(sec => {
-                bHTML += `<tr class="bg-gray-100 border-y border-gray-300"><td class="border-r border-gray-300 p-3 font-bold text-gray-800 uppercase text-xs bg-gray-200/60 whitespace-normal" colspan="${window.globalStore.participantCount + 1}">${sec.category}</td></tr>`;
+                bHTML += `<tr class="bg-gray-100 border-y border-gray-300"><td class="border-r border-gray-300 px-3 py-2 font-bold text-gray-800 uppercase text-xs bg-gray-200/60 whitespace-normal" colspan="${window.globalStore.participantCount + 1}">${sec.category}</td></tr>`;
                 sec.items.forEach(item => {
-                    bHTML += `<tr class="hover:bg-misdo-50/30 transition-colors border-b border-gray-200"><td class="border-r border-gray-300 p-3 text-sm font-medium text-gray-800 bg-white whitespace-normal">${item.name}</td>`;
+                    bHTML += `<tr class="hover:bg-misdo-50/30 transition-colors border-b border-gray-200"><td class="border-r border-gray-300 px-3 py-2 text-sm font-medium text-gray-800 bg-white whitespace-normal">${item.name}</td>`;
                     for(let pIdx = 0; pIdx < window.globalStore.participantCount; pIdx++) {
                         let cur = window.participants_scale14[pIdx].scores[item.id];
-                        bHTML += `<td class="border-r border-gray-200 p-1 sm:p-2 bg-white text-center align-middle"><div class="flex justify-between sm:grid sm:grid-cols-4 gap-2 items-center justify-items-center px-2">`;
-                        [1,2,3,4].forEach(num => { bHTML += `<label class="flex flex-col items-center cursor-pointer group p-1 sm:p-2"><input type="radio" name="s14_${pIdx}_${item.id}" ${cur === num ? 'checked' : ''} onchange="window.handleScoreS14(${pIdx}, '${item.id}', ${num})" class="w-5 h-5 sm:w-6 sm:h-6 text-misdo-600 accent-misdo-600 cursor-pointer" ${window.viewMode === 'READONLY'?'disabled':''}><span class="text-[10px] sm:text-xs text-gray-500 font-bold mt-1">${num}</span></label>`; });
+                        bHTML += `<td class="border-r border-gray-200 p-1 sm:p-2 bg-white text-center align-middle"><div class="flex justify-between sm:grid sm:grid-cols-4 gap-1 sm:gap-2 items-center justify-items-center px-1">`;
+                        [1,2,3,4].forEach(num => { bHTML += `<label class="flex items-center gap-1.5 cursor-pointer group p-1"><input type="radio" name="s14_${pIdx}_${item.id}" ${cur === num ? 'checked' : ''} onchange="window.handleScoreS14(${pIdx}, '${item.id}', ${num})" class="w-4 h-4 text-misdo-600 accent-misdo-600 cursor-pointer" ${window.viewMode === 'READONLY'?'disabled':''}><span class="text-xs text-gray-500 font-bold">${num}</span></label>`; });
                         bHTML += `</div></td>`;
                     }
                     bHTML += `</tr>`;
                 });
             });
 
-            bHTML += `<tr class="bg-gray-100 border-t-2 border-gray-300"><td class="border-r border-gray-300 p-3 text-right font-black text-gray-700 whitespace-nowrap">TOTAL POIN SKOR</td>`;
-            for(let pIdx = 0; pIdx < window.globalStore.participantCount; pIdx++) { let p = window.participants_scale14[pIdx] || { scores: {} }; let tot = 0; for (let k in p.scores) { let v = p.scores[k]; if (!isNaN(v)) tot += v; } bHTML += `<td class="border-r border-gray-300 p-3 text-center text-base font-black text-misdo-700" id="tot_s14_${pIdx}">${tot}</td>`; }
+            bHTML += `<tr class="bg-gray-100 border-t-2 border-gray-300"><td class="border-r border-gray-300 px-3 py-2 text-right font-black text-gray-700 whitespace-nowrap">TOTAL POIN SKOR</td>`;
+            for(let pIdx = 0; pIdx < window.globalStore.participantCount; pIdx++) { let p = window.participants_scale14[pIdx] || { scores: {} }; let tot = 0; for (let k in p.scores) { let v = p.scores[k]; if (!isNaN(v)) tot += v; } bHTML += `<td class="border-r border-gray-300 px-3 py-2 text-center text-base font-black text-misdo-700" id="tot_s14_${pIdx}">${tot}</td>`; }
             bHTML += `</tr>`;
 
-            bHTML += `<tr class="bg-misdo-100 border-b border-gray-300"><td class="border-r border-gray-300 p-3 text-right font-black text-misdo-900 whitespace-nowrap">NILAI RATA - RATA (Total / 6)</td>`;
-            for(let pIdx = 0; pIdx < window.globalStore.participantCount; pIdx++) { let p = window.participants_scale14[pIdx] || { scores: {} }; let tot = 0; for (let k in p.scores) { let v = p.scores[k]; if (!isNaN(v)) tot += v; } let avg = (tot / 6).toFixed(2); bHTML += `<td class="border-r border-gray-300 p-3 text-center text-lg font-black text-misdo-900" id="avg_s14_${pIdx}">${avg}</td>`; }
+            bHTML += `<tr class="bg-misdo-100 border-b border-gray-300"><td class="border-r border-gray-300 px-3 py-2 text-right font-black text-misdo-900 whitespace-nowrap">NILAI RATA - RATA (Total / 6)</td>`;
+            for(let pIdx = 0; pIdx < window.globalStore.participantCount; pIdx++) { let p = window.participants_scale14[pIdx] || { scores: {} }; let tot = 0; for (let k in p.scores) { let v = p.scores[k]; if (!isNaN(v)) tot += v; } let avg = (tot / 6).toFixed(2); bHTML += `<td class="border-r border-gray-300 px-3 py-2 text-center text-base font-black text-misdo-900" id="avg_s14_${pIdx}">${avg}</td>`; }
             bHTML += `</tr>`;
 
-            bHTML += `<tr class="bg-gray-50 border-b-2 border-gray-300"><td class="border-r border-gray-300 p-3 text-right font-bold text-gray-700 whitespace-nowrap">STATUS KELULUSAN (SISTEM)</td>`;
+            bHTML += `<tr class="bg-gray-50 border-b-2 border-gray-300"><td class="border-r border-gray-300 px-3 py-2 text-right font-bold text-gray-700 whitespace-nowrap">STATUS KELULUSAN (SISTEM)</td>`;
             for(let pIdx = 0; pIdx < window.globalStore.participantCount; pIdx++) { 
-                let p = window.participants_scale14[pIdx] || { scores: {} }; let tot = 0; for (let k in p.scores) { let v = p.scores[k]; if (!isNaN(v)) tot += v; } let avg = (tot / 6).toFixed(2); let statusAuto = (avg >= 6) ? 'Lulus' : 'Tidak Lulus'; let clsAuto = (avg >= 6) ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100'; bHTML += `<td class="border-r border-gray-300 p-3 text-center align-middle"><span id="auto_status_s14_${pIdx}" class="font-bold px-3 py-1 rounded-full text-xs ${clsAuto}">${statusAuto}</span></td>`; 
+                let p = window.participants_scale14[pIdx] || { scores: {} }; let tot = 0; for (let k in p.scores) { let v = p.scores[k]; if (!isNaN(v)) tot += v; } let avg = (tot / 6).toFixed(2); let statusAuto = (avg >= 6) ? 'Lulus' : 'Tidak Lulus'; let clsAuto = (avg >= 6) ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100'; bHTML += `<td class="border-r border-gray-300 px-3 py-2 text-center align-middle"><span id="auto_status_s14_${pIdx}" class="font-bold px-3 py-1 rounded-full text-xs ${clsAuto}">${statusAuto}</span></td>`; 
             }
             bHTML += `</tr>`;
 
-            bHTML += `<tr class="bg-white border-b-2 border-gray-300"><td class="border-r border-gray-300 p-3 text-right font-bold text-gray-700 whitespace-nowrap">STATUS REKOMENDASI</td>`;
+            bHTML += `<tr class="bg-white border-b-2 border-gray-300"><td class="border-r border-gray-300 px-3 py-2 text-right font-bold text-gray-700 whitespace-nowrap">STATUS REKOMENDASI</td>`;
             for(let i = 0; i < window.globalStore.participantCount; i++) {
-                let p = window.participants_scale14[i] || { status: 'Diluluskan', rejectionReason: '' }; let bgCls = p.status === 'Diluluskan' ? 'bg-green-50 text-green-700 border-green-300' : 'bg-red-50 text-red-700 border-red-300'; let dis = window.viewMode === 'READONLY' ? 'disabled' : ''; bHTML += `<td class="border-r border-gray-300 p-3 text-center align-top space-y-2"><select class="form-control w-full p-2 border rounded-lg text-sm font-bold outline-none cursor-pointer ${bgCls}" onchange="window.handleStatusS14(${i}, this.value)" ${dis}><option value="Diluluskan" ${p.status === 'Diluluskan' ? 'selected' : ''}>Diluluskan</option><option value="Tidak Diluluskan" ${p.status === 'Tidak Diluluskan' ? 'selected' : ''}>Tidak Diluluskan</option></select>`;
+                let p = window.participants_scale14[i] || { status: 'Diluluskan', rejectionReason: '' }; let bgCls = p.status === 'Diluluskan' ? 'bg-green-50 text-green-700 border-green-300' : 'bg-red-50 text-red-700 border-red-300'; let dis = window.viewMode === 'READONLY' ? 'disabled' : ''; bHTML += `<td class="border-r border-gray-300 px-3 py-2 text-center align-top space-y-2"><select class="form-control w-full p-2 border rounded-lg text-sm font-bold outline-none cursor-pointer ${bgCls}" onchange="window.handleStatusS14(${i}, this.value)" ${dis}><option value="Diluluskan" ${p.status === 'Diluluskan' ? 'selected' : ''}>Diluluskan</option><option value="Tidak Diluluskan" ${p.status === 'Tidak Diluluskan' ? 'selected' : ''}>Tidak Diluluskan</option></select>`;
                 if (p.status === 'Tidak Diluluskan') { bHTML += `<div class="mt-2 text-left"><label class="block text-[11px] font-bold text-red-600 mb-1">Alasan: *</label><textarea class="form-control w-full p-3 border border-red-200 rounded-md text-sm outline-none bg-red-50/20 text-gray-800 resize-none min-h-[70px] reason-s14" data-index="${i}" placeholder="Alasan..." ${dis}>${p.rejectionReason}</textarea></div>`; } bHTML += `</td>`;
             }
             bHTML += `</tr>`;
@@ -2410,9 +2555,12 @@
 
         window.renderParticipantFeedback = function() {
             const container = document.getElementById('participantFeedbackContainer'); let html = '';
-            for(let i = 0; i < window.globalStore.participantCount; i++) {
-                let p = window.participants_scale14[i]; const sel = window.globalStore.selectedParticipants[i]; const displayName = sel ? `${sel.namaPeserta} (${sel.idPelamar})` : `Peserta ${i + 1}`;
-                html += `<div class="bg-white p-4 sm:p-5 rounded-xl border border-misdo-200 shadow-sm flex flex-col gap-4 print-border-none"><div class="flex items-center justify-between border-b pb-3"><span class="bg-misdo-100 text-misdo-900 font-black text-[10px] sm:text-xs px-2.5 py-1 rounded-full uppercase shrink-0">Peserta ${i + 1}</span><span class="text-sm font-bold text-gray-800 truncate pl-2">${displayName}</span></div><div><label class="block text-xs font-bold text-gray-800 mb-1.5 flex items-center justify-between"><span class="text-misdo-900 uppercase">HAL YANG PERLU DITINGKATKAN</span><span class="text-red-500 text-[10px] readonly-hide">*Wajib</span></label><textarea class="form-control w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none resize-none text-sm bg-white min-h-[90px]" oninput="window.participants_scale14[${i}].improvements = this.value" placeholder="Tuliskan area pengembangan..." ${window.viewMode === 'READONLY'?'disabled':''}>${p.improvements || ''}</textarea></div><div><label class="block text-xs font-bold text-gray-800 mb-1.5 flex items-center justify-between"><span class="text-green-800 uppercase">HAL YANG PERLU DIPERTAHANKAN</span><span class="text-green-600 text-[10px] readonly-hide">*Wajib</span></label><textarea class="form-control w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none resize-none text-sm bg-white min-h-[90px]" oninput="window.participants_scale14[${i}].strengths = this.value" placeholder="Tuliskan potensi positif..." ${window.viewMode === 'READONLY'?'disabled':''}>${p.strengths || ''}</textarea></div></div>`;
+            const n = window.globalStore.participantCount; const ro = window.viewMode === 'READONLY' ? 'disabled' : '';
+            container.className = 'grid grid-cols-1 gap-3' + (n > 1 ? ' xl:grid-cols-2' : '');
+            const ta = (i, field, ph) => `<textarea class="form-control w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-misdo-500 outline-none resize-none text-sm bg-white min-h-[68px]" oninput="window.participants_scale14[${i}].${field} = this.value" placeholder="${ph}" ${ro}>${(window.participants_scale14[i] || {})[field] || ''}</textarea>`;
+            for(let i = 0; i < n; i++) {
+                const sel = window.globalStore.selectedParticipants[i]; const displayName = sel ? `${sel.namaPeserta} (${sel.idPelamar})` : `Peserta ${i + 1}`;
+                html += `<div class="bg-white p-3 rounded-lg border border-misdo-200 flex flex-col gap-2.5 print-border-none"><div class="flex items-center gap-2 border-b pb-2"><span class="bg-misdo-100 text-misdo-900 font-black text-[10px] px-2 py-0.5 rounded-full uppercase shrink-0">Peserta ${i + 1}</span><span class="text-sm font-bold text-gray-800 truncate">${displayName}</span></div><div class="grid grid-cols-1 ${n === 1 ? 'md:grid-cols-2' : ''} gap-2.5"><div><label class="text-[11px] font-bold mb-1 flex items-center justify-between"><span class="text-misdo-900 uppercase">Hal yang perlu ditingkatkan</span><span class="text-red-500 text-[10px] readonly-hide">*Wajib</span></label>${ta(i, 'improvements', 'Tuliskan area pengembangan...')}</div><div><label class="text-[11px] font-bold mb-1 flex items-center justify-between"><span class="text-green-800 uppercase">Hal yang perlu dipertahankan</span><span class="text-green-600 text-[10px] readonly-hide">*Wajib</span></label>${ta(i, 'strengths', 'Tuliskan potensi positif...')}</div></div></div>`;
             }
             container.innerHTML = html;
         }
@@ -2465,8 +2613,8 @@
 
         window.renderBeverageTable = function() {
             const thead = document.getElementById('tableHead_beverage'); const tbody = document.getElementById('tableBody_beverage');
-            let h1 = `<tr class="bg-misdo-100 text-misdo-900 border-b-2 border-misdo-200"><th class="border-r border-gray-300 p-3 text-center align-middle font-bold min-w-[100px] sm:w-[120px] whitespace-normal" rowspan="2">KATEGORI</th><th class="border-r border-gray-300 p-3 text-center align-middle font-bold min-w-[80px] sm:w-[100px] whitespace-normal" rowspan="2">HOT/ICE</th><th class="border-r border-gray-300 p-3 text-center align-middle font-bold min-w-[150px] sm:min-w-[180px] whitespace-normal" rowspan="2">NAMA MINUMAN</th>`;
-            for (let i = 0; i < window.globalStore.participantCount; i++) { const sel = window.globalStore.selectedParticipants[i]; const pName = sel ? sel.namaPeserta : `Peserta ${i+1}`; h1 += `<th class="border-r border-gray-300 p-3 text-center bg-gray-50 min-w-[220px] sm:min-w-[250px]" colspan="3"><div class="text-xs text-gray-500 font-bold mb-1 uppercase">Peserta ${i + 1}</div><div class="w-full p-2 bg-white border border-gray-300 rounded text-sm font-bold text-gray-800 break-words print-border-none">${pName}</div></th>`; }
+            let h1 = `<tr class="bg-misdo-100 text-misdo-900 border-b-2 border-misdo-200"><th class="border-r border-gray-300 px-3 py-2 text-center align-middle font-bold min-w-[100px] sm:w-[120px] whitespace-normal" rowspan="2">KATEGORI</th><th class="border-r border-gray-300 px-3 py-2 text-center align-middle font-bold min-w-[80px] sm:w-[100px] whitespace-normal" rowspan="2">HOT/ICE</th><th class="border-r border-gray-300 px-3 py-2 text-center align-middle font-bold min-w-[150px] sm:min-w-[180px] whitespace-normal" rowspan="2">NAMA MINUMAN</th>`;
+            for (let i = 0; i < window.globalStore.participantCount; i++) { const sel = window.globalStore.selectedParticipants[i]; const pName = sel ? sel.namaPeserta : `Peserta ${i+1}`; h1 += `<th class="border-r border-gray-300 px-3 py-2 text-center bg-gray-50 min-w-[220px] sm:min-w-[250px]" colspan="3"><div class="text-[11px] text-gray-500 font-bold mb-0.5 uppercase">Peserta ${i + 1}</div><div class="w-full px-2 py-1.5 bg-white border border-gray-300 rounded text-sm font-bold text-gray-800 break-words print-border-none">${pName}</div></th>`; }
             h1 += `</tr><tr class="bg-misdo-50">`;
             for (let i = 0; i < window.globalStore.participantCount; i++) { h1 += `<th class="border-r border-t border-gray-300 p-2 text-center text-[11px] font-bold text-gray-600 w-1/3">TIME</th><th class="border-r border-t border-gray-300 p-2 text-center text-[11px] font-bold text-gray-600 w-1/3">SIZE</th><th class="border-r border-t border-gray-300 p-2 text-center text-[11px] font-bold text-misdo-700 bg-misdo-100/50 w-1/3">NILAI</th>`; }
             thead.innerHTML = h1 + `</tr>`;
@@ -2485,12 +2633,12 @@
                 bHTML += `</tr>`;
             });
 
-            bHTML += `<tr class="bg-gray-100 border-t-2 border-gray-300"><td class="border-r border-gray-300 p-3 text-right font-black text-gray-700 whitespace-nowrap" colspan="3">TOTAL NILAI</td>`;
-            for (let p = 0; p < window.globalStore.participantCount; p++) { let tot = 0; if (window.scores_beverage[p]) { for (let d in window.scores_beverage[p]) { let v = parseFloat(window.scores_beverage[p][d].nilai); if (!isNaN(v)) tot += v; } } bHTML += `<td class="border-r border-gray-300 p-3 text-center text-lg font-black text-misdo-700" colspan="3" id="tot_bev_${p}">${tot}</td>`; }
+            bHTML += `<tr class="bg-gray-100 border-t-2 border-gray-300"><td class="border-r border-gray-300 px-3 py-2 text-right font-black text-gray-700 whitespace-nowrap" colspan="3">TOTAL NILAI</td>`;
+            for (let p = 0; p < window.globalStore.participantCount; p++) { let tot = 0; if (window.scores_beverage[p]) { for (let d in window.scores_beverage[p]) { let v = parseFloat(window.scores_beverage[p][d].nilai); if (!isNaN(v)) tot += v; } } bHTML += `<td class="border-r border-gray-300 px-3 py-2 text-center text-base font-black text-misdo-700" colspan="3" id="tot_bev_${p}">${tot}</td>`; }
             bHTML += `</tr>`;
 
-            bHTML += `<tr class="bg-misdo-100 border-b-2 border-gray-300"><td class="border-r border-gray-300 p-3 text-right font-black text-misdo-900 whitespace-nowrap" colspan="3">RATA - RATA</td>`;
-            for (let p = 0; p < window.globalStore.participantCount; p++) { let tot = 0, cnt = 0; if (window.scores_beverage[p]) { for (let d in window.scores_beverage[p]) { let v = parseFloat(window.scores_beverage[p][d].nilai); if (!isNaN(v)) { tot += v; cnt++; } } } let avg = cnt > 0 ? (tot / cnt).toFixed(2) : 0; bHTML += `<td class="border-r border-gray-300 p-3 text-center text-lg font-black text-misdo-900" colspan="3" id="avg_bev_${p}">${avg}</td>`; }
+            bHTML += `<tr class="bg-misdo-100 border-b-2 border-gray-300"><td class="border-r border-gray-300 px-3 py-2 text-right font-black text-misdo-900 whitespace-nowrap" colspan="3">RATA - RATA</td>`;
+            for (let p = 0; p < window.globalStore.participantCount; p++) { let tot = 0, cnt = 0; if (window.scores_beverage[p]) { for (let d in window.scores_beverage[p]) { let v = parseFloat(window.scores_beverage[p][d].nilai); if (!isNaN(v)) { tot += v; cnt++; } } } let avg = cnt > 0 ? (tot / cnt).toFixed(2) : 0; bHTML += `<td class="border-r border-gray-300 px-3 py-2 text-center text-base font-black text-misdo-900" colspan="3" id="avg_bev_${p}">${avg}</td>`; }
             bHTML += `</tr>`;
             thead.innerHTML = h1 + `</tr>`; tbody.innerHTML = bHTML; window.applyBalancedTable('tableHead_beverage', [110, 90, 200]);
         }
@@ -2498,15 +2646,15 @@
         const sideDishes = [ { id: 'mg_nanban', name: 'Mie Gordon Nanban' }, { id: 'mg_mentai', name: 'Mie Gordon Mentai' } ];
         window.renderSideDishTable = function() {
             const thead = document.getElementById('tableHead_sidedish'); const tbody = document.getElementById('tableBody_sidedish');
-            let h1 = `<tr class="bg-misdo-100 text-misdo-900 border-b-2 border-misdo-200"><th class="border-r border-gray-300 p-3 text-center align-middle font-bold min-w-[180px] sm:w-[250px] whitespace-normal" rowspan="2">MENU SIDE DISH</th>`;
-            for (let i = 0; i < window.globalStore.participantCount; i++) { const sel = window.globalStore.selectedParticipants[i]; const pName = sel ? sel.namaPeserta : `Peserta ${i+1}`; h1 += `<th class="border-r border-gray-300 p-3 text-center bg-gray-50 min-w-[220px] sm:min-w-[250px]" colspan="3"><div class="text-xs text-gray-500 font-bold mb-1 uppercase">Peserta ${i + 1}</div><div class="w-full p-2 bg-white border border-gray-300 rounded text-sm font-bold text-gray-800 break-words print-border-none">${pName}</div></th>`; }
+            let h1 = `<tr class="bg-misdo-100 text-misdo-900 border-b-2 border-misdo-200"><th class="border-r border-gray-300 px-3 py-2 text-center align-middle font-bold min-w-[180px] sm:w-[250px] whitespace-normal" rowspan="2">MENU SIDE DISH</th>`;
+            for (let i = 0; i < window.globalStore.participantCount; i++) { const sel = window.globalStore.selectedParticipants[i]; const pName = sel ? sel.namaPeserta : `Peserta ${i+1}`; h1 += `<th class="border-r border-gray-300 px-3 py-2 text-center bg-gray-50 min-w-[220px] sm:min-w-[250px]" colspan="3"><div class="text-[11px] text-gray-500 font-bold mb-0.5 uppercase">Peserta ${i + 1}</div><div class="w-full px-2 py-1.5 bg-white border border-gray-300 rounded text-sm font-bold text-gray-800 break-words print-border-none">${pName}</div></th>`; }
             h1 += `</tr><tr class="bg-misdo-50">`;
             for (let i = 0; i < window.globalStore.participantCount; i++) { h1 += `<th class="border-r border-t border-gray-300 p-2 text-center text-[11px] font-bold text-gray-600 w-1/3">TIME</th><th class="border-r border-t border-gray-300 p-2 text-center text-[11px] font-bold text-gray-600 w-1/3">SIZE / STD</th><th class="border-r border-t border-gray-300 p-2 text-center text-[11px] font-bold text-misdo-700 bg-misdo-100/50 w-1/3">NILAI</th>`; }
             thead.innerHTML = h1 + `</tr>`;
 
             let bHTML = '';
             sideDishes.forEach(dish => {
-                bHTML += `<tr class="hover:bg-misdo-50/30 transition-colors border-b border-gray-200"><td class="border-r border-gray-300 p-3 font-bold text-misdo-900 bg-misdo-50/40 whitespace-normal">${dish.name}</td>`;
+                bHTML += `<tr class="hover:bg-misdo-50/30 transition-colors border-b border-gray-200"><td class="border-r border-gray-300 px-3 py-2 font-bold text-misdo-900 bg-misdo-50/40 whitespace-normal">${dish.name}</td>`;
                 for (let p = 0; p < window.globalStore.participantCount; p++) {
                     const sc = (window.scores_sidedish[p] && window.scores_sidedish[p][dish.id]) || { time: '', size: '', nilai: '' }; let dis = window.viewMode === 'READONLY' ? 'disabled' : '';
                     let sizeSelect = `<select class="form-control w-full min-w-[60px] p-2 border border-transparent hover:border-gray-300 rounded text-center text-sm outline-none cursor-pointer appearance-none bg-transparent" onchange="window.updateScore('scores_sidedish', ${p}, '${dish.id}', 'size', this.value, this)" ${dis}><option value="" ${sc.size === '' ? 'selected' : ''}>-</option><option value="S" ${sc.size === 'S' ? 'selected' : ''}>S</option><option value="M" ${sc.size === 'M' ? 'selected' : ''}>M</option><option value="L" ${sc.size === 'L' ? 'selected' : ''}>L</option></select>`;
@@ -2515,12 +2663,12 @@
                 bHTML += `</tr>`;
             });
 
-            bHTML += `<tr class="bg-gray-100 border-t-2 border-gray-300"><td class="border-r border-gray-300 p-3 text-right font-black text-gray-700 whitespace-nowrap">TOTAL NILAI</td>`;
-            for (let p = 0; p < window.globalStore.participantCount; p++) { let tot = 0; if (window.scores_sidedish[p]) { for (let d in window.scores_sidedish[p]) { let v = parseFloat(window.scores_sidedish[p][d].nilai); if (!isNaN(v)) tot += v; } } bHTML += `<td class="border-r border-gray-300 p-3 text-center text-lg font-black text-misdo-700" colspan="3" id="tot_sd_${p}">${tot}</td>`; }
+            bHTML += `<tr class="bg-gray-100 border-t-2 border-gray-300"><td class="border-r border-gray-300 px-3 py-2 text-right font-black text-gray-700 whitespace-nowrap">TOTAL NILAI</td>`;
+            for (let p = 0; p < window.globalStore.participantCount; p++) { let tot = 0; if (window.scores_sidedish[p]) { for (let d in window.scores_sidedish[p]) { let v = parseFloat(window.scores_sidedish[p][d].nilai); if (!isNaN(v)) tot += v; } } bHTML += `<td class="border-r border-gray-300 px-3 py-2 text-center text-base font-black text-misdo-700" colspan="3" id="tot_sd_${p}">${tot}</td>`; }
             bHTML += `</tr>`;
 
-            bHTML += `<tr class="bg-misdo-100 border-b-2 border-gray-300"><td class="border-r border-gray-300 p-3 text-right font-black text-misdo-900 whitespace-nowrap">RATA - RATA</td>`;
-            for (let p = 0; p < window.globalStore.participantCount; p++) { let tot = 0, cnt = 0; if (window.scores_sidedish[p]) { for (let d in window.scores_sidedish[p]) { let v = parseFloat(window.scores_sidedish[p][d].nilai); if (!isNaN(v)) { tot += v; cnt++; } } } let avg = cnt > 0 ? (tot / cnt).toFixed(2) : 0; bHTML += `<td class="border-r border-gray-300 p-3 text-center text-lg font-black text-misdo-900" colspan="3" id="avg_sd_${p}">${avg}</td>`; }
+            bHTML += `<tr class="bg-misdo-100 border-b-2 border-gray-300"><td class="border-r border-gray-300 px-3 py-2 text-right font-black text-misdo-900 whitespace-nowrap">RATA - RATA</td>`;
+            for (let p = 0; p < window.globalStore.participantCount; p++) { let tot = 0, cnt = 0; if (window.scores_sidedish[p]) { for (let d in window.scores_sidedish[p]) { let v = parseFloat(window.scores_sidedish[p][d].nilai); if (!isNaN(v)) { tot += v; cnt++; } } } let avg = cnt > 0 ? (tot / cnt).toFixed(2) : 0; bHTML += `<td class="border-r border-gray-300 px-3 py-2 text-center text-base font-black text-misdo-900" colspan="3" id="avg_sd_${p}">${avg}</td>`; }
             bHTML += `</tr>`;
             tbody.innerHTML = bHTML; window.applyBalancedTable('tableHead_sidedish', [220]);
         }
@@ -2558,6 +2706,152 @@
                 if(totEl) totEl.innerText = tot; if(avgEl) avgEl.innerText = avg;
             }
         }
+
+        // ===== MODE HP (tampilan form per peserta untuk layar sempit) =====
+        // Memakai data yang sama dengan tabel (participants_scale14, scores_beverage, scores_sidedish), sehingga pindah tampilan tidak mengubah isian.
+        window.hpIdx = 0; window.hpOpen = { bev: undefined, sd: undefined };
+        window.hpPref = (function() { try { return localStorage.getItem('formViewMode'); } catch (e) { return null; } })();
+        window.hpIsOn = function() { return window.hpPref ? window.hpPref === 'hp' : (window.innerWidth || 1024) < 768; };
+        window.setFormView = function(m, persist) {
+            if (persist !== false) { window.hpPref = m; try { localStorage.setItem('formViewMode', m); } catch (e) {} }
+            const on = (m === 'hp'); document.documentElement.classList.toggle('hp-mode', on);
+            const b1 = document.getElementById('hp-btn-hp'), b2 = document.getElementById('hp-btn-table');
+            if (b1) b1.setAttribute('aria-pressed', on ? 'true' : 'false'); if (b2) b2.setAttribute('aria-pressed', on ? 'false' : 'true');
+            if (window.globalStore) { if (on) window.hpRender(); else { window.reRenderAllTables(); } }
+            if (window.relayoutBalancedTables) setTimeout(window.relayoutBalancedTables, 0);
+        };
+        (function() { let tm; window.addEventListener('resize', () => { clearTimeout(tm); tm = setTimeout(() => { if (!window.hpPref) window.setFormView(window.hpIsOn() ? 'hp' : 'desktop', false); }, 200); }); })();
+
+        window.hpEsc = function(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); };
+        window.hpRO = function() { return window.viewMode === 'READONLY'; };
+        window.hpN = function() { return Math.max(1, parseInt(window.globalStore.participantCount) || 1); };
+        window.hpFull = function(i) { const s = window.globalStore.selectedParticipants[i]; return s ? s.namaPeserta : 'Peserta ' + (i + 1); };
+        window.hpShort = function(i) {
+            const full = window.hpFull(i).trim().split(/\s+/); let short = full[0];
+            const dup = []; for (let k = 0; k < window.hpN(); k++) if (k !== i && window.hpFull(k).trim().split(/\s+/)[0] === short) dup.push(k);
+            if (dup.length && full.length > 1) short = full[0] + ' ' + full[1]; return short;
+        };
+        window.hpS14Items = function() { const a = []; scale14Categories.forEach(c => c.items.forEach(it => a.push(it))); return a; };
+        window.hpStat = function(tab, i) {
+            if (tab === 's14') {
+                const p = window.participants_scale14[i] || { scores: {} }; let tot = 0, done = 0;
+                window.hpS14Items().forEach(it => { const v = Number(p.scores && p.scores[it.id]); if (v >= 1 && v <= 4) { tot += v; done++; } });
+                return { done, total: 15, tot, avg: (tot / 6).toFixed(2) };
+            }
+            const store = tab === 'bev' ? window.scores_beverage : window.scores_sidedish; const list = tab === 'bev' ? beverages : sideDishes;
+            let tot = 0, done = 0; list.forEach(it => { const v = parseFloat(store[i] && store[i][it.id] && store[i][it.id].nilai); if (!isNaN(v)) { tot += v; done++; } });
+            return { done, total: list.length, tot, avg: done ? (tot / done).toFixed(2) : '0.00' };
+        };
+        window.hpTabs = { s14: { el: 'hp-scale14', label: 'Skala 1-4' }, bev: { el: 'hp-beverage', label: 'Beverage' }, sd: { el: 'hp-sidedish', label: 'Side Dish' } };
+
+        window.hpBarHtml = function(tab) {
+            let chips = ''; const n = window.hpN();
+            for (let i = 0; i < n; i++) { const st = window.hpStat(tab, i); chips += `<button type="button" class="hp-chip ${i === window.hpIdx ? 'on' : ''} ${st.done === st.total ? 'done' : ''}" data-hpchip="${tab}-${i}" onclick="window.hpSelect(${i})"><b>${window.hpEsc(window.hpShort(i))}</b><small data-hpcnt>${st.done === st.total ? 'Lengkap' : st.done + '/' + st.total}</small></button>`; }
+            const st = window.hpStat(tab, window.hpIdx);
+            return `<div class="hp-bar"><div class="hp-chips" data-hpchips="${tab}">${chips}</div><div class="hp-prog"><div class="hp-progtxt"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><b data-hpcur>${st.done}/${st.total}</b> ${window.hpTabs[tab].label} &middot; ${window.hpEsc(window.hpFull(window.hpIdx))}</span><span data-hpavg style="flex:none">Rata-rata <b>${st.avg}</b></span></div><div class="hp-track"><i data-hpbar style="width:${Math.round(st.done / st.total * 100)}%"></i></div></div></div>`;
+        };
+        window.hpRefresh = function() {
+            Object.keys(window.hpTabs).forEach(tab => {
+                const root = document.getElementById(window.hpTabs[tab].el); if (!root) return; const n = window.hpN();
+                for (let i = 0; i < n; i++) { const c = root.querySelector(`[data-hpchip="${tab}-${i}"]`); if (!c) continue; const st = window.hpStat(tab, i); c.classList.toggle('done', st.done === st.total); const sm = c.querySelector('[data-hpcnt]'); if (sm) sm.textContent = st.done === st.total ? 'Lengkap' : st.done + '/' + st.total; }
+                const st = window.hpStat(tab, window.hpIdx);
+                const cur = root.querySelector('[data-hpcur]'); if (cur) cur.textContent = st.done + '/' + st.total;
+                const av = root.querySelector('[data-hpavg] b'); if (av) av.textContent = st.avg;
+                const bar = root.querySelector('[data-hpbar]'); if (bar) bar.style.width = Math.round(st.done / st.total * 100) + '%';
+            });
+        };
+        window.hpSelect = function(i) {
+            if (i === window.hpIdx) return; window.hpIdx = i; window.hpOpen = { bev: undefined, sd: undefined }; window.hpRender();
+            const vis = ['hp-scale14', 'hp-beverage', 'hp-sidedish'].map(id => document.getElementById(id)).find(el => el && el.offsetParent !== null);
+            if (vis) { const r = vis.getBoundingClientRect(); if (r.top < 0) { const nav = document.querySelector('nav.sticky'); window.scrollTo({ top: window.pageYOffset + r.top - (nav && !document.documentElement.classList.contains('nav-hidden') ? nav.offsetHeight : 0), behavior: 'auto' }); }
+                const ch = vis.querySelector('.hp-chip.on'), box = vis.querySelector('.hp-chips'); if (ch && box) box.scrollLeft = Math.max(0, ch.offsetLeft - (box.clientWidth - ch.offsetWidth) / 2); }
+        };
+
+        // ---- Skala 1-4 ----
+        window.hpRenderS14 = function() {
+            const i = window.hpIdx, ro = window.hpRO(), p = window.participants_scale14[i] || { scores: {}, status: 'Diluluskan', rejectionReason: '', improvements: '', strengths: '' };
+            const dis = ro ? 'disabled' : ''; let body = '';
+            scale14Categories.forEach(sec => {
+                body += `<div class="hp-sec">${window.hpEsc(sec.category)}</div>`;
+                sec.items.forEach(it => {
+                    const k = it.name.indexOf('. '); const ttl = k > 0 ? it.name.slice(0, k) : it.name; const dsc = k > 0 ? it.name.slice(k + 2) : '';
+                    const cur = Number(p.scores && p.scores[it.id]);
+                    body += `<div class="hp-card ${cur ? 'ok' : ''}" data-hpq="${it.id}"><div class="hp-q">${window.hpEsc(ttl)}</div>${dsc ? `<div class="hp-d">${window.hpEsc(dsc)}</div>` : ''}<div class="hp-sc">${[1, 2, 3, 4].map(n => `<button type="button" class="${cur === n ? 'on' : ''}" ${dis} aria-label="Nilai ${n}" onclick="window.hpScore('${it.id}',${n})">${n}</button>`).join('')}</div><div class="hp-ends"><span>1 Sangat kurang</span><span>4 Sangat baik</span></div></div>`;
+                });
+            });
+            const st = window.hpStat('s14', i); const full = st.done === st.total; const lulus = Number(st.avg) >= 6;
+            body += `<div class="hp-sec">Ringkasan</div><div class="hp-card"><div class="hp-sum"><div>Total poin<strong data-hpv="tot">${st.tot}</strong></div><div>Rata-rata (÷6)<strong data-hpv="avg">${st.avg}</strong></div><div>Status sistem<span data-hpv="auto" class="pill ${full ? (lulus ? 'g' : 'r') : 'n'}">${full ? (lulus ? 'Lulus' : 'Tidak Lulus') : 'Belum lengkap'}</span></div></div></div>`;
+            const nok = p.status === 'Tidak Diluluskan';
+            body += `<div class="hp-sec">Status rekomendasi</div><div class="hp-card"><div class="hp-st"><button type="button" class="g ${!nok ? 'on' : ''}" ${dis} onclick="window.hpStatus('Diluluskan')">Diluluskan</button><button type="button" class="r ${nok ? 'on' : ''}" ${dis} onclick="window.hpStatus('Tidak Diluluskan')">Tidak Diluluskan</button></div><div data-hpreason style="${nok ? '' : 'display:none'};margin-top:10px"><div class="hp-lbl" style="color:#b91c1c">Alasan <span class="hp-req">*</span></div><textarea class="hp-ta" ${dis} placeholder="Tuliskan alasan..." oninput="window.participants_scale14[${i}].rejectionReason=this.value">${window.hpEsc(p.rejectionReason || '')}</textarea></div></div>`;
+            body += `<div class="hp-sec">Catatan pengembangan</div><div class="hp-card"><div class="hp-lbl">Hal yang perlu ditingkatkan ${ro ? '' : '<span class="hp-req">*</span>'}</div><textarea class="hp-ta" ${dis} placeholder="Tuliskan area pengembangan..." oninput="window.participants_scale14[${i}].improvements=this.value">${window.hpEsc(p.improvements || '')}</textarea><div class="hp-lbl">Hal yang perlu dipertahankan ${ro ? '' : '<span class="hp-req">*</span>'}</div><textarea class="hp-ta" ${dis} placeholder="Tuliskan potensi positif..." oninput="window.participants_scale14[${i}].strengths=this.value">${window.hpEsc(p.strengths || '')}</textarea></div>`;
+            document.getElementById('hp-scale14').innerHTML = window.hpBarHtml('s14') + `<div class="hp-body">${body}</div>`;
+        };
+        window.hpScore = function(id, n) {
+            const i = window.hpIdx; if (window.hpRO()) return; window.handleScoreS14(i, id, n);
+            const card = document.querySelector(`#hp-scale14 [data-hpq="${id}"]`); if (card) { card.classList.add('ok'); card.querySelectorAll('.hp-sc button').forEach((b, k) => b.classList.toggle('on', k + 1 === n)); }
+            const st = window.hpStat('s14', i), full = st.done === st.total, lulus = Number(st.avg) >= 6, root = document.getElementById('hp-scale14');
+            const set = (k, v) => { const el = root.querySelector(`[data-hpv="${k}"]`); if (el) el.textContent = v; };
+            set('tot', st.tot); set('avg', st.avg); const au = root.querySelector('[data-hpv="auto"]'); if (au) { au.textContent = full ? (lulus ? 'Lulus' : 'Tidak Lulus') : 'Belum lengkap'; au.className = 'pill ' + (full ? (lulus ? 'g' : 'r') : 'n'); }
+            window.hpRefresh();
+        };
+        window.hpStatus = function(val) {
+            if (window.hpRO()) return; const i = window.hpIdx; window.participants_scale14[i].status = val; const root = document.getElementById('hp-scale14'), nok = val === 'Tidak Diluluskan';
+            const g = root.querySelector('.hp-st .g'), r = root.querySelector('.hp-st .r'); if (g) g.classList.toggle('on', !nok); if (r) r.classList.toggle('on', nok);
+            const rs = root.querySelector('[data-hpreason]'); if (rs) { rs.style.display = nok ? '' : 'none'; if (nok) { const ta = rs.querySelector('textarea'); if (ta) ta.focus(); } }
+        };
+
+        // ---- Beverage & Side Dish (accordion per item) ----
+        window.hpRenderItems = function(tab) {
+            const i = window.hpIdx, ro = window.hpRO(), dis = ro ? 'disabled' : '', list = tab === 'bev' ? beverages : sideDishes, store = tab === 'bev' ? window.scores_beverage : window.scores_sidedish;
+            const get = id => (store[i] && store[i][id]) || { time: '', size: '', nilai: '' };
+            if (window.hpOpen[tab] === undefined) { const f = list.find(it => get(it.id).nilai === ''); window.hpOpen[tab] = f ? f.id : ''; }
+            let body = '', cat = '', type = '';
+            list.forEach(it => {
+                if (it.cat) { cat = it.cat; body += `<div class="hp-sec">${window.hpEsc(it.cat)}</div>`; } if (it.type) type = it.type;
+                const sc = get(it.id), open = window.hpOpen[tab] === it.id, bd = tab === 'bev' ? `<span class="hp-bd ${type === 'Hot' ? 'h' : 'i'}">${type}</span>` : '';
+                body += `<div class="hp-item ${open ? 'open' : ''} ${sc.nilai !== '' ? 'ok' : ''}" data-hpi="${tab}-${it.id}"><button type="button" class="hp-ih" onclick="window.hpToggle('${tab}','${it.id}')"><div class="t"><div class="n">${bd}${window.hpEsc(it.name)}</div><div class="s" data-hpsum></div></div><i data-lucide="chevron-down"></i></button><div class="hp-ib"><div class="hp-lbl">Waktu</div><input type="text" class="hp-in" ${dis} placeholder="mis. 1:20" autocomplete="off" value="${window.hpEsc(sc.time)}" oninput="window.hpField('${tab}','${it.id}','time',this.value)"><div class="hp-lbl">${tab === 'bev' ? 'Ukuran' : 'Ukuran / Standar'}</div><div class="hp-sz">${['S', 'M', 'L'].map(z => `<button type="button" class="${sc.size === z ? 'on' : ''}" ${dis} onclick="window.hpSize('${tab}','${it.id}','${z}')">${z}</button>`).join('')}</div><div class="hp-lbl">Nilai (1&ndash;10)</div><div class="hp-nl">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `<button type="button" class="${String(sc.nilai) === String(n) ? 'on' : ''}" ${dis} onclick="window.hpNilai('${tab}','${it.id}',${n})">${n}</button>`).join('')}</div></div></div>`;
+            });
+            const st = window.hpStat(tab, i);
+            body += `<div class="hp-sec">Ringkasan</div><div class="hp-card"><div class="hp-sum" style="grid-template-columns:repeat(2,1fr)"><div>Total nilai<strong data-hpv="tot">${st.tot}</strong></div><div>Rata-rata<strong data-hpv="avg">${st.avg}</strong></div></div></div>`;
+            const root = document.getElementById(window.hpTabs[tab].el); root.innerHTML = window.hpBarHtml(tab) + `<div class="hp-body">${body}</div>`;
+            list.forEach(it => window.hpItemSum(tab, it.id));
+            if (window.lucide) window.lucide.createIcons();
+        };
+        window.hpItemSum = function(tab, id) {
+            const i = window.hpIdx, store = tab === 'bev' ? window.scores_beverage : window.scores_sidedish, sc = (store[i] && store[i][id]) || { time: '', size: '', nilai: '' };
+            const root = document.getElementById(window.hpTabs[tab].el), item = root.querySelector(`[data-hpi="${tab}-${id}"]`); if (!item) return;
+            const el = item.querySelector('[data-hpsum]'); const parts = []; if (sc.nilai !== '') parts.push('Nilai ' + sc.nilai); if (sc.size) parts.push(sc.size); if (sc.time) parts.push(window.hpEsc(sc.time));
+            el.textContent = parts.length ? parts.join(' · ') : 'Belum diisi'; el.className = 's' + (sc.nilai !== '' ? ' v' : ''); item.classList.toggle('ok', sc.nilai !== '');
+        };
+        window.hpToggle = function(tab, id) {
+            const root = document.getElementById(window.hpTabs[tab].el); const was = window.hpOpen[tab] === id; window.hpOpen[tab] = was ? '' : id;
+            root.querySelectorAll('.hp-item').forEach(el => el.classList.toggle('open', el.getAttribute('data-hpi') === tab + '-' + window.hpOpen[tab]));
+            if (!was) { const el = root.querySelector(`[data-hpi="${tab}-${id}"]`); if (el) { const r = el.getBoundingClientRect(); if (r.top < 120 || r.top > window.innerHeight * 0.6) window.scrollTo({ top: window.pageYOffset + r.top - 130, behavior: 'smooth' }); } }
+        };
+        window.hpAfter = function(tab) {
+            const root = document.getElementById(window.hpTabs[tab].el), st = window.hpStat(tab, window.hpIdx);
+            const t = root.querySelector('[data-hpv="tot"]'), a = root.querySelector('[data-hpv="avg"]'); if (t) t.textContent = st.tot; if (a) a.textContent = st.avg; window.hpRefresh();
+        };
+        window.hpField = function(tab, id, f, v) { if (window.hpRO()) return; window.updateScore(tab === 'bev' ? 'scores_beverage' : 'scores_sidedish', window.hpIdx, id, f, v, null); window.hpItemSum(tab, id); window.hpAfter(tab); };
+        window.hpSize = function(tab, id, z) {
+            if (window.hpRO()) return; const store = tab === 'bev' ? window.scores_beverage : window.scores_sidedish; const cur = store[window.hpIdx] && store[window.hpIdx][id] ? store[window.hpIdx][id].size : '';
+            const v = cur === z ? '' : z; window.hpField(tab, id, 'size', v);
+            const item = document.querySelector(`[data-hpi="${tab}-${id}"]`); item.querySelectorAll('.hp-sz button').forEach(b => b.classList.toggle('on', b.textContent === v));
+        };
+        window.hpNilai = function(tab, id, n) {
+            if (window.hpRO()) return; const store = tab === 'bev' ? window.scores_beverage : window.scores_sidedish; const cur = store[window.hpIdx] && store[window.hpIdx][id] ? String(store[window.hpIdx][id].nilai) : '';
+            const v = cur === String(n) ? '' : String(n); window.hpField(tab, id, 'nilai', v);
+            const item = document.querySelector(`[data-hpi="${tab}-${id}"]`); item.querySelectorAll('.hp-nl button').forEach(b => b.classList.toggle('on', b.textContent === v));
+        };
+        window.hpRender = function() {
+            if (!window.globalStore || !document.getElementById('hp-scale14')) return;
+            window.hpIdx = Math.min(window.hpIdx, window.hpN() - 1); if (window.hpIdx < 0) window.hpIdx = 0;
+            window.hpRenderS14(); window.hpRenderItems('bev'); window.hpRenderItems('sd');
+        };
+        // render ulang panel HP setiap tabel dirender ulang (pilih peserta, buka form, dll)
+        (function() { const orig = window.reRenderAllTables; window.reRenderAllTables = function() { orig(); try { window.hpRender(); } catch (e) { console.error('hpRender', e); } }; })();
+        document.documentElement.classList.toggle('hp-mode', window.hpIsOn());
+        (function() { const on = window.hpIsOn(); const b1 = document.getElementById('hp-btn-hp'), b2 = document.getElementById('hp-btn-table'); if (b1) b1.setAttribute('aria-pressed', on ? 'true' : 'false'); if (b2) b2.setAttribute('aria-pressed', on ? 'false' : 'true'); })();
 
         // ===== Utilitas cetak PDF (A4, margin diatur lewat spacer tabel agar tetap aman walau opsi "Margins" browser diubah) =====
         window.ppEsc = function(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); };
@@ -2613,7 +2907,7 @@
                 .pp-data { width: 100%; border-collapse: collapse; table-layout: auto; }
                 .pp-data > thead { display: table-header-group; } .pp-data > tfoot { display: table-footer-group; }
                 .pp-data td.pp-plain { border: 0 !important; padding: 0; background: #fff !important; }
-                .pp-data th, .pp-data tbody td { border: 0.5pt solid #000 !important; padding: 3px 3.5px !important; font-size: 7.5px !important; line-height: 1.35 !important; vertical-align: middle; overflow-wrap: break-word; word-break: normal !important; min-width: 0 !important; width: auto !important; white-space: normal !important; }
+                .pp-data th, .pp-data tbody td { border: 0.5pt solid #000 !important; padding: 4px 5px !important; font-size: 7.5px !important; line-height: 1.35 !important; vertical-align: middle; overflow-wrap: break-word; word-break: normal !important; min-width: 0 !important; width: auto !important; white-space: normal !important; }
                 .pp-data th *, .pp-data tbody td * { font-size: 7.5px !important; line-height: 1.35 !important; }
                 .pp-data tbody tr { break-inside: avoid; page-break-inside: avoid; }
                 .pp-data th { background-color: #362219 !important; color: #fff !important; text-align: center; font-weight: bold; }
@@ -2627,6 +2921,8 @@
                 .pp-data .text-green-700 { color: #15803d !important; } .pp-data .text-red-700 { color: #b91c1c !important; }
                 .pp-data tbody div, .pp-data tbody span, .pp-data tbody p { white-space: normal !important; word-break: normal !important; }
                 .pp-data .inline-block { white-space: nowrap !important; word-break: normal !important; }
+                .pp-data .pp-decision { white-space: normal !important; text-align: center; }
+                .pp-data .no-pp { display: none !important; }
             </style>
             <div class="pp-wrap"><table class="pp-data">
                 <thead>
@@ -2705,7 +3001,7 @@
                 // Status + tanda tangan
                 const uApp = (window.userApprovals && window.userApprovals[i]) ? window.userApprovals[i] : {status: 'PENDING'}; const mApp = (window.moApprovals && window.moApprovals[i]) ? window.moApprovals[i] : {status: 'PENDING'};
                 const sigHtml = gs.signatureDataUrl ? `<img src="${gs.signatureDataUrl}" style="height: 50px; object-fit: contain; margin: 0 auto; display: block;" />` : `<div style="height: 50px;"></div>`;
-                const secEnd = `<div class="lp-keep"><div class="lp-status"><p><b>Status Rekomendasi Mentor:</b> <span style="padding: 2px 6px; border: 1px solid #000; border-radius: 4px; font-weight: bold; background: ${s14.status === 'Tidak Diluluskan' ? '#fee2e2' : '#dcfce7'};">${E(s14.status || 'Diluluskan')}</span></p>${s14.status === 'Tidak Diluluskan' ? `<p><b>Alasan Penolakan:</b> ${E(s14.rejectionReason || '-')}</p>` : ''}</div><div class="lp-sign"><div style="width: 45%;"><p style="margin: 0 0 10px 0;">Mentor,</p>${sigHtml}<p style="font-weight: bold; text-decoration: underline; margin: 5px 0 0 0;">${E(gs.mentorName || '-')}</p></div><div style="width: 45%; border: 1px dashed #ccc; padding: 10px; background: #fdf8f5;"><p style="margin: 0 0 10px 0; font-size: 10px; color: #8c6b5d;">Validasi Final (Otomatis Sistem)</p><p style="font-size: 12px; font-weight: bold; margin: 5px 0;">USER: ${uApp.status==='OK'?'<span style="color:green;">OK</span>':uApp.status==='NOK'?'<span style="color:red;">NOK</span>':'PENDING'}</p><p style="font-size: 12px; font-weight: bold; margin: 5px 0;">MO: ${mApp.status==='ACCEPT'||mApp.status==='OK'?'<span style="color:green;">ACCEPT</span>':mApp.status==='REJECT'||mApp.status==='NOK'?'<span style="color:red;">REJECT</span>':'PENDING'}</p></div></div></div>`;
+                const secEnd = `<div class="lp-keep"><div class="lp-status"><p><b>Status Rekomendasi Mentor:</b> <span style="padding: 2px 6px; border: 1px solid #000; border-radius: 4px; font-weight: bold; background: ${s14.status === 'Tidak Diluluskan' ? '#fee2e2' : '#dcfce7'};">${E(s14.status || 'Diluluskan')}</span></p>${s14.status === 'Tidak Diluluskan' ? `<p><b>Alasan Tidak Diluluskan:</b> ${E(s14.rejectionReason || '-')}</p>` : ''}</div><div class="lp-sign"><div style="width: 45%;"><p style="margin: 0 0 10px 0;">Mentor,</p>${sigHtml}<p style="font-weight: bold; text-decoration: underline; margin: 5px 0 0 0;">${E(gs.mentorName || '-')}</p></div><div style="width: 45%; border: 1px dashed #ccc; padding: 10px; background: #fdf8f5;"><p style="margin: 0 0 10px 0; font-size: 10px; color: #8c6b5d;">Keputusan User &amp; Validasi MO</p><p style="font-size: 12px; font-weight: bold; margin: 5px 0;">USER: ${uApp.status==='OK'?'<span style="color:green;">Meluluskan</span>':uApp.status==='NOK'?'<span style="color:red;">Tidak Meluluskan</span>':'Menunggu'}</p><p style="font-size: 12px; font-weight: bold; margin: 5px 0;">MO: ${window.moIsValidated(mApp.status)?'<span style="color:green;">Sudah Divalidasi</span>':'Menunggu'}</p></div></div></div>`;
 
                 const head = `<div class="lp-head"><h2>Lembar Penilaian OJT</h2><h3>${E(pName)}</h3><p><b>ID Pelamar:</b> ${E(pId)} | <b>Batch:</b> ${E(gs.batch)} | <b>Lokasi:</b> ${E(gs.flagship)}</p><p><b>Mentor:</b> ${E(gs.mentorName)} | <b>Tanggal:</b> ${E(window.ppFmtDate(gs.date))}</p></div>`;
 
@@ -2718,7 +3014,7 @@
         window.initGlobalSignature = function() {
             const cv = document.getElementById('signatureCanvas_global'); if (!cv) return;
             signatureGlobal.canvas = cv; signatureGlobal.ctx = cv.getContext('2d'); const sig = signatureGlobal;
-            const getPos = (e) => { const rect = cv.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: clientX - rect.left, y: clientY - rect.top }; };
+            const getPos = (e) => { const rect = cv.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; const kx = rect.width ? cv.width / rect.width : 1, ky = rect.height ? cv.height / rect.height : 1; return { x: (clientX - rect.left) * kx, y: (clientY - rect.top) * ky }; };
             const start = (e) => { e.preventDefault(); if(window.viewMode==='READONLY') return; sig.isDrawing = true; const pos = getPos(e); sig.ctx.lineWidth = 2; sig.ctx.lineCap = 'round'; sig.ctx.lineJoin = 'round'; sig.ctx.strokeStyle = '#362219'; sig.ctx.beginPath(); sig.ctx.moveTo(pos.x, pos.y); };
             const drawMove = (e) => { if (!sig.isDrawing || window.viewMode==='READONLY') return; e.preventDefault(); const pos = getPos(e); sig.ctx.lineTo(pos.x, pos.y); sig.ctx.stroke(); };
             const stop = () => { if (sig.isDrawing && window.viewMode!=='READONLY') { sig.isDrawing = false; window.syncSignatureToForms(); } };
@@ -2803,7 +3099,7 @@ function scoreFields(fields, req, soft) {
     return total;
 }
 
-const LULUS = new Set(['lulus', 'diluluskan', 'lolos', 'meluluskan']);
+const LULUS = new Set(['lulus', 'diluluskan', 'lolos']);
 const PENDING = new Set(['pending', 'menunggu', 'antrean', 'antri', 'belum']);
 const APPROVED = new Set(['approved', 'disetujui']);
 const TYPE_WORDS = { draft: 'draft', drafts: 'draft', peserta: 'participant', crew: 'participant', participant: 'participant', form: 'form', penilaian: 'form', riwayat: 'form', terkirim: 'form', sampah: 'trash', trash: 'trash', terhapus: 'trash' };
@@ -2819,10 +3115,10 @@ function parseQuery(raw) {
         if ((t === 'tidak' || t === 'belum') && n && LULUS.has(n)) { q.status.mentor = 'tidak'; i++; continue; }
         if (LULUS.has(t)) { q.status.mentor = 'lulus'; continue; }
         if (t === 'gagal') { q.status.mentor = 'tidak'; continue; }
+        if (t === 'tidak' && n === 'meluluskan') { q.status.user = 'NOK'; i++; continue; }
+        if (t === 'meluluskan' || t === 'ok') { q.status.user = 'OK'; continue; }
         if (t === 'nok') { q.status.user = 'NOK'; continue; }
-        if (t === 'ok') { q.status.user = 'OK'; continue; }
-        if (t === 'accept' || t === 'diterima') { q.status.mo = 'ACCEPT'; continue; }
-        if (t === 'reject' || t === 'ditolak') { q.status.mo = 'REJECT'; continue; }
+        if (t === 'divalidasi' || t === 'tervalidasi' || t === 'accept' || t === 'diterima') { q.status.mo = 'ACCEPT'; continue; }
         if (PENDING.has(t)) {
             // "menunggu approve/etd" = antrean ETD; "menunggu user"/"menunggu mo" = tahap itu; lainnya = tahap mana pun masih pending
             q.status.pending = toks.includes('approve') || toks.includes('etd') ? 'etd' : toks.includes('mo') ? 'mo' : toks.includes('user') ? 'user' : 'any';
@@ -2844,14 +3140,10 @@ function passRec(rec, st) {
     if (st.mentor === 'lulus' && rec.mentorStatus !== 'Diluluskan') return false;
     if (st.mentor === 'tidak' && rec.mentorStatus === 'Diluluskan') return false;
     if (st.user && rec.user.status !== st.user) return false;
-    if (st.mo) {
-        const m = rec.mo.status, acc = m === 'ACCEPT' || m === 'OK', rej = m === 'REJECT' || m === 'NOK';
-        if (st.mo === 'ACCEPT' && !acc) return false;
-        if (st.mo === 'REJECT' && !rej) return false;
-    }
+    if (st.mo && !(rec.mo.status && rec.mo.status !== 'PENDING')) return false; // MO hanya memvalidasi (stempel)
     if (st.approved && !rec.form.isApprovedByETD) return false;
     if (st.pending === 'etd' && rec.form.isApprovedByETD) return false;
-    // Urutan alur aplikasi: Mentor → ETD approve → User OK/NOK → MO Accept/Reject
+    // Urutan alur aplikasi: Mentor (rekomendasi) → ETD approve → User (meluluskan / tidak meluluskan) → MO (stempel sudah divalidasi)
     if (st.pending === 'user' && !(rec.form.isApprovedByETD && rec.user.status === 'PENDING')) return false;
     if (st.pending === 'mo' && !(rec.form.isApprovedByETD && rec.user.status !== 'PENDING' && rec.mo.status === 'PENDING')) return false;
     if (st.pending === 'any' && rec.form.isApprovedByETD && rec.user.status !== 'PENDING' && rec.mo.status !== 'PENDING') return false;
@@ -2935,7 +3227,7 @@ function menuList(role) {
     if (mt) add('new', 'Buat Penilaian Baru', 'Mulai lembar penilaian OJT baru', 'file-plus-2', 'buat baru tambah form isi mulai', () => window.createNewAssessment());
     if (mt) add('drafts', 'Lanjutkan / Edit Draft', 'Form yang disimpan sementara', 'folder-clock', 'draft simpan sementara lanjutkan edit', go('drafts'));
     if (mt) add('history', role === 'ETD' ? 'Antrean Approve ETD' : 'Riwayat Terkirim & Cetak', role === 'ETD' ? 'Setujui penilaian dari mentor' : 'Penilaian final dan unduh PDF', 'check-circle-2', 'riwayat terkirim antrean approve cetak pdf final', go('history'));
-    if (rv) add('rekapan', 'Rekap Penilaian', 'Rekap nilai per batch dan status persetujuan', 'clipboard-signature', 'rekap rekapan persetujuan stempel tabel cetak', go('rekapan'));
+    if (rv) add('rekapan', 'Rekap Penilaian', 'Rekap nilai per batch, keputusan User & validasi MO', 'clipboard-signature', 'rekap rekapan persetujuan keputusan meluluskan divalidasi stempel tabel cetak', go('rekapan'));
     if (rv) add('hasil', 'Hasil Penilaian Mentor', 'Form penilaian utuh per peserta', 'book-open', 'hasil mentor penilaian form utuh', go('hasil-mentor'));
     if (role === 'ETD') add('trash', 'Tempat Sampah', 'Data terhapus (30 hari)', 'trash-2', 'sampah trash hapus pulihkan restore', go('trash'));
     return m;
@@ -3066,7 +3358,7 @@ function run() {
     const { q, out } = search(text); state.last = q;
     const hl = [...q.req, ...q.soft];
     const chips = [];
-    const S = q.status; if (S.mentor) chips.push(S.mentor === 'lulus' ? 'Diluluskan' : 'Tidak diluluskan'); if (S.user) chips.push('User: ' + S.user); if (S.mo) chips.push('MO: ' + (S.mo === 'ACCEPT' ? 'Accept' : 'Reject')); if (S.pending) chips.push(S.pending === 'etd' ? 'Menunggu ETD' : S.pending === 'user' ? 'Menunggu User' : S.pending === 'mo' ? 'Menunggu MO' : 'Menunggu'); if (S.approved) chips.push('Disetujui ETD');
+    const S = q.status; if (S.mentor) chips.push(S.mentor === 'lulus' ? 'Diluluskan' : 'Tidak diluluskan'); if (S.user) chips.push('User: ' + (S.user === 'OK' ? 'Meluluskan' : 'Tidak Meluluskan')); if (S.mo) chips.push('MO: Sudah Divalidasi'); if (S.pending) chips.push(S.pending === 'etd' ? 'Menunggu ETD' : S.pending === 'user' ? 'Menunggu User' : S.pending === 'mo' ? 'Menunggu MO' : 'Menunggu'); if (S.approved) chips.push('Disetujui ETD');
     q.types.forEach(t => chips.push('Hanya: ' + GROUPS[t][0]));
     chipsEl.innerHTML = chips.map(c => `<span class="ss-chip">${esc(c)}</span>`).join(''); chipsEl.classList.toggle('on', chips.length > 0);
 
@@ -3098,7 +3390,7 @@ function renderHome() {
     html += `<div class="ss-group"><span>Pintasan</span></div>`;
     menus.forEach(m => { const idx = state.flat.length; state.flat.push(m); html += rowHtml({ it: m }, idx, []); });
     const eg = (state.role === 'MO' || state.role === 'USER') ? ['rekap', 'diluluskan', 'menunggu', 'batch 5'] : ['budi', 'draft', 'diluluskan', 'menunggu approve'];
-    html += `<div class="ss-tip">Coba: ${eg.map(e => `<code data-fill="${esc(e)}">${esc(e)}</code>`).join(' ')}<br>Cari berdasarkan nama, ID pelamar, store, mentor, batch, atau status (lulus, tidak lulus, menunggu, ok, nok).</div>`;
+    html += `<div class="ss-tip">Coba: ${eg.map(e => `<code data-fill="${esc(e)}">${esc(e)}</code>`).join(' ')}<br>Cari berdasarkan nama, ID pelamar, store, mentor, batch, atau status (lulus, tidak lulus, menunggu, meluluskan, tidak meluluskan, divalidasi).</div>`;
     results.innerHTML = html; statusEl.textContent = state.error ? 'Data gagal dimuat' : (state.loading ? 'Memperbarui data…' : 'Siap mencari'); setActive(0); icons();
 }
 
@@ -3138,14 +3430,14 @@ function openForm(id) {
 
 /* ---------- Detail peserta ---------- */
 const modal = document.createElement('div'); modal.id = 'ss-modal'; modal.className = 'no-print'; document.body.appendChild(modal);
-function stat(s, ok, bad) { return s === ok ? `<span class="ss-badge ss-b-green">${ok}</span>` : s === bad ? `<span class="ss-badge ss-b-red">${bad}</span>` : `<span class="ss-badge ss-b-gray">Pending</span>`; }
+function stat(s, ok, bad, okLabel, badLabel) { return s === ok ? `<span class="ss-badge ss-b-green">${okLabel || ok}</span>` : s === bad ? `<span class="ss-badge ss-b-red">${badLabel || bad}</span>` : `<span class="ss-badge ss-b-gray">Menunggu</span>`; }
 function openParticipant(e) {
     const i = e.info, recs = e.recs.slice().sort((a, b) => (b.form.createdAt || 0) - (a.form.createdAt || 0));
     const cell = (l, v) => `<div><small>${l}</small><span>${esc(v || '-')}</span></div>`;
     const recHtml = recs.length ? recs.map(r => {
         const a = avgs(r.form, r.pIndex), f = r.form, mo = r.mo.status;
         return `<div class="ssm-rec"><div style="display:flex;justify-content:space-between;gap:.5rem;align-items:flex-start"><div><div style="font-weight:800;color:#362219;font-size:.85rem">${esc(f.globalStore?.flagship || '-')}</div><div style="font-size:.7rem;color:#6b7280">${esc(r.formId)} · Batch ${esc(f.globalStore?.batch || '-')} · ${esc(f.mentorName || '-')} · ${esc(fmtDate(f.globalStore?.date))}</div></div><button class="ssm-open" data-open-form="${esc(r.formId)}">Buka Form</button></div>
-        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem">${r.mentorStatus === 'Diluluskan' ? '<span class="ss-badge ss-b-green">Mentor: Diluluskan</span>' : '<span class="ss-badge ss-b-red">Mentor: Tidak Lulus</span>'}${f.isApprovedByETD ? '<span class="ss-badge ss-b-green">ETD: Approved</span>' : '<span class="ss-badge ss-b-amber">ETD: Menunggu</span>'}<span class="ss-badge ss-b-gray">User:</span>${stat(r.user.status, 'OK', 'NOK')}<span class="ss-badge ss-b-gray">MO:</span>${mo === 'ACCEPT' || mo === 'OK' ? '<span class="ss-badge ss-b-green">Accept</span>' : mo === 'REJECT' || mo === 'NOK' ? '<span class="ss-badge ss-b-red">Reject</span>' : '<span class="ss-badge ss-b-gray">Pending</span>'}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem">${r.mentorStatus === 'Diluluskan' ? '<span class="ss-badge ss-b-green">Mentor: Diluluskan</span>' : '<span class="ss-badge ss-b-red">Mentor: Tidak Lulus</span>'}${f.isApprovedByETD ? '<span class="ss-badge ss-b-green">ETD: Approved</span>' : '<span class="ss-badge ss-b-amber">ETD: Menunggu</span>'}<span class="ss-badge ss-b-gray">User:</span>${stat(r.user.status, 'OK', 'NOK', 'Meluluskan', 'Tidak Meluluskan')}<span class="ss-badge ss-b-gray">MO:</span>${mo && mo !== 'PENDING' ? '<span class="ss-badge ss-b-green">Sudah Divalidasi</span>' : '<span class="ss-badge ss-b-gray">Menunggu</span>'}</div>
         <div style="display:flex;gap:1rem;margin-top:.6rem;font-size:.75rem;color:#6b7280"><span>Beverage <b style="color:#2563eb">${a.bev}</b></span><span>Side Dish <b style="color:#9333ea">${a.sd}</b></span><span>Teknis <b style="color:#ea580c">${a.teknis}</b></span></div>${r.mentorReason ? `<div style="margin-top:.5rem;font-size:.7rem;color:#6b7280;font-style:italic">Alasan: ${esc(r.mentorReason)}</div>` : ''}</div>`;
     }).join('') : `<div class="ss-empty" style="border:1px dashed #d2bab0;border-radius:1rem;margin-top:.7rem">Belum ada penilaian untuk peserta ini.</div>`;
     modal.innerHTML = `<div class="ssm-card" role="dialog" aria-modal="true"><div class="ssm-head"><div><div style="font-size:1.05rem;font-weight:900;color:#362219;text-transform:uppercase">${esc(i.name)}</div><div style="font-size:.7rem;color:#8c6b5d;font-weight:700">ID Pelamar: ${esc(i.id || '-')}</div></div><button class="ssm-x" data-close-modal aria-label="Tutup"><i data-lucide="x" class="w-4 h-4"></i></button></div>
