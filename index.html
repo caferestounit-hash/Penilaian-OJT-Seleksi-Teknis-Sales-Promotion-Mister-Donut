@@ -152,8 +152,15 @@
         #view-rekapan .rekap-hscroll .rekap-table thead th { top: 0; transition: none; }
         #view-rekapan .rekap-table { border-collapse: separate; border-spacing: 0; }
         #view-rekapan .rekap-table thead th { position: sticky; top: var(--nav-off, 0px); z-index: 5; transition: top .28s ease; }
-        @media (max-width: 767px) { #view-rekapan .rekap-tablewrap { display: none; } }
-        @media (min-width: 768px) { #view-rekapan .rekap-cards, #view-rekapan .rekap-sortm { display: none; } }
+        /* HP: default tampil kartu; tombol ikon di toolbar mengganti ke tabel (class .rv-table pada #view-rekapan) */
+        @media (max-width: 767px) {
+            #view-rekapan:not(.rv-table) .rekap-tablewrap { display: none; }
+            #view-rekapan.rv-table .rekap-cards, #view-rekapan.rv-table .rekap-sortm { display: none; }
+        }
+        @media (min-width: 768px) { #view-rekapan .rekap-cards, #view-rekapan .rekap-sortm, #view-rekapan .rv-toggle { display: none; } }
+        .rv-toggle { display: inline-flex; height: 36px; padding: 3px; gap: 2px; border-radius: 10px; border: 1px solid #d1d5db; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+        .rv-toggle button { width: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; color: #6b7280; background: transparent; border: 0; cursor: pointer; transition: none; }
+        .rv-toggle button[aria-pressed="true"] { background: #4d3327; color: #fff; }
         /* toolbar ringkas */
         .vtb .smart-back { height: 36px; min-width: 36px; padding: 0 9px; border-radius: 10px; }
         .vtb .smart-back .smart-back-label { display: none !important; }
@@ -203,6 +210,9 @@
         html.dark { color-scheme: dark }
         html.dark body.bg-misdo-50 { background-color:#17110e;color:#f4ebe6 }
         html.dark .bg-white { background-color:#221915 }
+        html.dark .rv-toggle { background:#221915; border-color:#4a3a32 }
+        html.dark .rv-toggle button { color:#b9a79c }
+        html.dark .rv-toggle button[aria-pressed="true"] { background:#8a5a3f; color:#fff }
         html.dark .bg-gray-50 { background-color:#2a201b }
         html.dark .bg-gray-100 { background-color:#33271f }
         html.dark .bg-gray-200 { background-color:#3d2f27 }
@@ -705,6 +715,10 @@
                 <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm"><i data-lucide="calendar" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="mo-year-filter-rekap" onchange="window.pg.rekap.page=1;window.renderMOTableData()" aria-label="Filter tahun" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer"><option value="">Semua Tahun</option></select></label>
                 <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm"><i data-lucide="filter" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="mo-batch-filter-rekap" onchange="window.pg.rekap.page=1;window.renderMOTableData()" aria-label="Filter batch" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer"><option value="">Semua Batch</option></select></label>
                 <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm"><i data-lucide="list-ordered" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="rekap-size" onchange="window.pgSize('rekap', this.value)" aria-label="Jumlah data per halaman" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer"><option value="10">10 Entries</option><option value="25">25 Entries</option><option value="50">50 Entries</option><option value="100">100 Entries</option></select></label>
+                <div class="rv-toggle" role="group" aria-label="Mode tampilan">
+                    <button type="button" id="rv-btn-card" onclick="window.setRekapView('card')" title="Tampilan kartu" aria-label="Tampilan kartu" aria-pressed="true"><i data-lucide="layout-grid" class="w-4 h-4"></i></button>
+                    <button type="button" id="rv-btn-table" onclick="window.setRekapView('table')" title="Tampilan tabel" aria-label="Tampilan tabel" aria-pressed="false"><i data-lucide="table-2" class="w-4 h-4"></i></button>
+                </div>
                 <label class="flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-gray-300 bg-white shadow-sm rekap-sortm"><i data-lucide="arrow-up-down" class="w-4 h-4 text-gray-400 shrink-0"></i><select id="rekap-sort-m" onchange="window.rekapSortMobile(this.value)" aria-label="Urutkan" class="bg-transparent outline-none font-bold text-gray-700 text-sm cursor-pointer" style="max-width:9.5rem"></select></label>
                 <button onclick="window.printRekapanTable()" title="Cetak PDF" aria-label="Cetak PDF" class="h-9 w-9 shrink-0 rounded-lg bg-misdo-800 hover:bg-misdo-900 text-white flex items-center justify-center shadow-sm transition-colors"><i data-lucide="printer" class="w-4 h-4"></i></button>
             </div>
@@ -1518,8 +1532,18 @@
             let cHtml = meta.items.map((r, i) => window.rekapCardHtml(r, meta.start + i + 1)).join('');
             if (!tHtml) { tHtml = `<tr><td colspan="14" class="p-8 text-center text-gray-500 font-bold bg-gray-50">${emptyMsg}</td></tr>`; cHtml = `<div class="p-8 text-center text-gray-500 font-bold bg-gray-50 rounded-xl border border-dashed border-gray-300">${emptyMsg}</div>`; }
             document.getElementById('mo-rekapan-tbody').innerHTML = tHtml; document.getElementById('mo-rekapan-cards').innerHTML = cHtml;
-            window.pgRender('rekap', meta); if (window.lucide) window.lucide.createIcons(); window.rekapFit();
+            window.pgRender('rekap', meta); if (window.lucide) window.lucide.createIcons(); window.setRekapView(window.rekapView);
         }
+        // mode tampilan HP: 'card' (default) atau 'table'; tersimpan di perangkat
+        window.setRekapView = function(m) {
+            m = (m === 'table') ? 'table' : 'card'; window.rekapView = m;
+            try { localStorage.setItem('rekapView', m); } catch (e) {}
+            const v = document.getElementById('view-rekapan'); if (v) v.classList.toggle('rv-table', m === 'table');
+            const bc = document.getElementById('rv-btn-card'), bt = document.getElementById('rv-btn-table');
+            if (bc) bc.setAttribute('aria-pressed', m === 'card'); if (bt) bt.setAttribute('aria-pressed', m === 'table');
+            window.rekapFit();
+        };
+        try { window.rekapView = localStorage.getItem('rekapView') === 'table' ? 'table' : 'card'; } catch (e) { window.rekapView = 'card'; }
         // pilih mode tabel: alir (halaman scroll, header menempel) atau scroll sendiri bila tabel lebih lebar dari layar
         window.rekapFit = function() {
             const w = document.querySelector('#view-rekapan .rekap-tablewrap'); const t = w && w.querySelector('table'); if (!w || !t || !w.offsetParent) return;
@@ -1682,7 +1706,7 @@
         window.eydName = function(raw) {
             const t = String(raw || '').replace(/\s+/g, ' ').trim(); if (!t) return '';
             return t.split(' ').map((w, i) => {
-                if (/[a-z]/.test(w) && /[A-Z]/.test(w)) return w;
+                if (/[a-z]/.test(w) && /[A-Z]/.test(w.slice(1))) return w;   // huruf besar di tengah kata (McDonald, S.Kom.) = disengaja, biarkan
                 const lw = w.toLowerCase(); if (i > 0 && EYD_LOW.has(lw.replace(/[.,]/g, ''))) return lw;
                 return lw.replace(/(^|[-.\/])([a-z\u00e0-\u024f])/g, (m, a, b) => a + b.toUpperCase());
             }).join(' ');
@@ -1857,6 +1881,17 @@
             });
             document.addEventListener('kd-changed', () => { if (document.activeElement === input) refresh(); });
         };
+        // Kolom nama orang (mentor & User): huruf pertama tiap kata otomatis kapital saat mengetik (setelah spasi, tanda hubung, atau titik gelar).
+        // Aturan lengkap EYD (partikel bin/binti, dll.) diterapkan saat kolom ditinggalkan.
+        window.liveCapName = (v) => String(v || '').replace(/(^|[\s\-.\/])([a-zà-ÿ])/g, (m, a, b) => a + b.toUpperCase());
+        document.addEventListener('input', (e) => {
+            const el = e.target; if (!e.isTrusted || !el || el.tagName !== 'INPUT' || e.isComposing || el.readOnly || el.disabled) return;   // abaikan event sintetis (mis. dari blur/format EYD)
+            const isName = el.id === 'global_mentor' || el.id === 'user-add-input' || el.id === 'user-edit-input' || el.id === 'kd-add-mentor' || (el.id === 'kd-edit-input' && window.kdEditing && window.kdEditing.t === 'mentor');
+            if (!isName) return;
+            const nv = window.liveCapName(el.value); if (nv === el.value) return;
+            const st = el.selectionStart, en = el.selectionEnd; el.value = nv; try { el.setSelectionRange(st, en); } catch (err) {}
+            el.dispatchEvent(new Event('input', { bubbles: true }));   // beri tahu handler lain (mis. simpan nama mentor) bahwa nilainya berubah
+        });
         window.attachSuggest(document.getElementById('global_flagship'), 'lokasi');
         window.attachSuggest(document.getElementById('global_mentor'), 'mentor', window.eydName);
 
